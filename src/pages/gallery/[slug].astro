@@ -7,7 +7,7 @@ import GallerySlider from "../../components/GallerySlider.svelte";
 export async function getStaticPaths() {
   const galleries = await getCollection("galleries");
   return galleries.map((gallery) => ({
-    params: { slug: gallery.slug },
+    params: { slug: gallery.id },
     props: { gallery },
   }));
 }

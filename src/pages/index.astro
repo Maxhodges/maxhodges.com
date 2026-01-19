@@ -15,7 +15,7 @@ const galleries = await getCollection("galleries");
     <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
       {galleries.map((gallery) => (
         <a
-          href={`/gallery/${gallery.slug}`}
+          href={`/gallery/${gallery.id}`}
           class="group relative overflow-hidden rounded-3xl border border-white/80 bg-white/70 shadow-[0_20px_60px_rgba(27,26,22,0.12)] transition hover:-translate-y-1 hover:shadow-[0_30px_70px_rgba(27,26,22,0.18)]"
         >
           <div class="aspect-[4/5] overflow-hidden">
