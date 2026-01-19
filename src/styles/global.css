@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@300;500;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-sans: "Space Grotesk", "Arial", sans-serif;
+  --ink: #1b1a16;
+  --sand: #f4efe7;
+  --rust: #b44f2c;
+  --sea: #2f4f7b;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: radial-gradient(circle at 15% 10%, #f7efe2 0%, #f4efe7 35%, #e7dfd4 100%);
+  min-height: 100vh;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--rust) 65%, white);
+  color: #11110f;
+}
