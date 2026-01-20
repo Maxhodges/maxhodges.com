@@ -98,17 +98,21 @@
   .frame {
     width: 100%;
     height: min(75vh, 900px);
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 1.5rem;
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(12px);
+    padding: 1rem;
     overflow: hidden;
   }
 
   img {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
     display: block;
   }
