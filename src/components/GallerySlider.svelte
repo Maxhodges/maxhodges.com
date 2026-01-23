@@ -78,15 +78,16 @@
 
   <div class="controls">
     <button type="button" on:click={goPrev} aria-label="Previous image">
-      Prev
+      ←
     </button>
     <div class="counter">
       {currentIndex + 1} / {images.length}
     </div>
     <button type="button" on:click={goNext} aria-label="Next image">
-      Next
+      →
     </button>
   </div>
+  <div class="hint">Use ← →</div>
 
 </div>
 
@@ -148,11 +149,13 @@
 
   .controls button {
     border: 1px solid rgba(231, 226, 216, 0.18);
-    padding: 0.6rem 1.4rem;
+    padding: 0.4rem 0.75rem;
     border-radius: 999px;
     background: #171614;
     color: var(--ink);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
   }
 
   .controls button:hover {
@@ -163,6 +166,14 @@
 
   .counter {
     color: rgba(231, 226, 216, 0.6);
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(231, 226, 216, 0.45);
   }
 
   .empty {

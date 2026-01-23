@@ -1,53 +1,50 @@
 title: "People"
-coverImage: ../../assets/images/people/Tumblr Image (2).jpg
+order: 80
+coverImage: ../../assets/images/people/DSC06669_1024.jpg
 images:
-  - src: ../../assets/images/people/Tumblr Image (2).jpg
-    alt: "Minimal horizon study"
+  - src: ../../assets/images/people/amy_dresser_20100828_155750_2.jpg
+    alt: "Amy Dresser - August 2010"
   - src: ../../assets/images/people/aram_clear_20090131_175058_56.jpg
     alt: "Aram Clear - January 2009"
   - src: ../../assets/images/people/Arisa_20090826_132944_6_Edit_2.jpg
     alt: "Arisa Portrait - August 2009"
   - src: ../../assets/images/people/china2012_20120709_113734_2187.jpg
-    alt: "China Trip - July 2012"
+    alt: "Portrait in China - July 2012"
   - src: ../../assets/images/people/china2012_20120711_001751_2614.jpg
-    alt: "China Trip Night - July 2012"
+    alt: "China Street Portrait - July 2012"
   - src: ../../assets/images/people/dragonball_20091009_110221_101_DUP.jpg
-    alt: "Dragonball Event"
+    alt: "Dragonball Portrait - October 2009"
+  - src: ../../assets/images/people/defTumblr Image.jpg
+    alt: "Def Portrait Study"
   - src: ../../assets/images/people/emi_ikejiri_20100425_204304_104.jpg
     alt: "Emi Ikejiri - April 2010"
-  - src: ../../assets/images/people/FetishBallHalloween_20091101_021449_234.jpg
-    alt: "Fetish Ball Halloween 2009"
+  - src: ../../assets/images/people/china2012_20120715_162040_3098.jpg
+    alt: "China Portrait - July 2012"
+  - src: ../../assets/images/people/DSC06669_1024.jpg
+    alt: "DSC06669 - October 2010"
   - src: ../../assets/images/people/Iriana_20100221_194015_107.jpg
     alt: "Iriana - February 2010"
-  - src: ../../assets/images/people/ishinomaki_20110316_070524_97.jpg
-    alt: "Ishinomaki - March 2011"
   - src: ../../assets/images/people/ko_20091110_083224_6.jpg
-    alt: "Ko - November 2009"
-  - src: ../../assets/images/people/Tumblr Image (1).jpg
-    alt: "High contrast skyline"
+    alt: "Ko Portrait - November 2009"
   - src: ../../assets/images/people/michiko1_20081019_093648_30.jpg
     alt: "Michiko - October 2008"
+  - src: ../../assets/images/people/Min_20100829_004405_12_DUP.jpg
+    alt: "Min Portrait - August 2010"
   - src: ../../assets/images/people/misascissors_20100703_125307_54.jpg
     alt: "Misa Scissors - July 2010"
   - src: ../../assets/images/people/ringtest_20090611_180856_25.jpg
-    alt: "Ring Test - June 2009"
+    alt: "Ring Test Portrait - June 2009"
   - src: ../../assets/images/people/sister_trump_20081220_235817_47.jpg
     alt: "Sister Trump - December 2008"
-  - src: ../../assets/images/people/tgxmas_2010_20101218_155457_460_Edit_2_Edit_Edit.jpg
-    alt: "TG Xmas Event 2010"
-  - src: ../../assets/images/people/TKS_FetishBall_20101121_022911_358.jpg
-    alt: "TKS Fetish Ball - November 2010"
-  - src: ../../assets/images/people/TKS_FetishBall_20101121_043246_583.jpg
-    alt: "TKS Fetish Ball Interior - November 2010"
+  - src: ../../assets/images/people/Tumblr Image (2).jpg
+    alt: "Tumblr Portrait Study"
   - src: ../../assets/images/people/untitled_20101207_192250_25_DUP.jpg
-    alt: "Untitled Study - December 2010"
+    alt: "Untitled Portrait - December 2010"
   - src: ../../assets/images/people/untitled_20110507_173057_315_DUP1.jpg
-    alt: "Untitled Study - May 2011"
+    alt: "Untitled Portrait - May 2011"
   - src: ../../assets/images/people/untitled_20110806_111546_71.jpg
-    alt: "Untitled Study A - August 2011"
+    alt: "Untitled Portrait A - August 2011"
   - src: ../../assets/images/people/untitled_20110806_140413_237.jpg
-    alt: "Untitled Study B - August 2011"
+    alt: "Untitled Portrait B - August 2011"
   - src: ../../assets/images/people/untitled_20130816_103424_56.jpg
-    alt: "Untitled Study - August 2013"
-  - src: ../../assets/images/people/xmasFetish_20091223_004446_92.jpg
-    alt: "Xmas Fetish - December 2009"
+    alt: "Untitled Portrait - August 2013"

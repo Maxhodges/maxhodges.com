@@ -5,6 +5,7 @@ const galleries = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      order: z.number().int(),
       coverImage: image(),
       images: z.array(
         z.object({

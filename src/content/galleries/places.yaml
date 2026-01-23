@@ -1,5 +1,6 @@
 title: "Places"
-coverImage: ../../assets/images/places/china2012_20120710_174132_2548_DUP1.jpg
+order: 90
+coverImage: ../../assets/images/places/IMG_0674_Edit.jpg
 images:
   - src: ../../assets/images/places/china2012_20120710_174132_2548_DUP1.jpg
     alt: "China - July 2012"

@@ -3,17 +3,19 @@ import { Picture } from "astro:assets";
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
 
-const galleries = await getCollection("galleries");
+const galleries = (await getCollection("galleries")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 ---
 
 <SiteLayout title="Max Hodges — Photography" breadcrumb="Home / Galleries">
   <section class="grid gap-10">
     <div
-      class="max-w-2xl text-balance font-[var(--font-display)] text-4xl leading-tight text-[color:var(--ink)] sm:text-5xl"
+      class="max-w-1xl text-balance font-[var(--font-display)] text-4xl leading-tight text-[color:var(--ink)] sm:text-5xl"
     >
-      People, Places, and Things
+      क्षण
     </div>
-
+    <!-- Kṣaṇa 刹那 -->
     <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
       {
         galleries.map((gallery) => (
