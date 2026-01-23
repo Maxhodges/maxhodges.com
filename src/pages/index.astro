@@ -27,8 +27,8 @@ const galleries = (await getCollection("galleries")).sort(
               <Picture
                 src={gallery.data.coverImage}
                 alt={`Cover image for ${gallery.data.title}`}
-                widths={[640, 1200, 1920, 2560]}
-                formats={["avif", "webp"]}
+                widths={[480, 960, 1440]}
+                formats={["webp", "jpeg"]}
                 sizes="(max-width: 768px) 92vw, (max-width: 1200px) 45vw, 30vw"
                 pictureAttributes={{ class: "h-full w-full block" }}
                 class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"

@@ -13,21 +13,17 @@ export async function getStaticPaths() {
 }
 
 const { gallery } = Astro.props;
-const widths = [640, 1200, 1800];
-const sizes = "(max-width: 768px) 92vw, 1800px";
+const widths = [480, 960, 1440];
+const sizes = "(max-width: 768px) 92vw, 1440px";
 
 const images = await Promise.all(
   gallery.data.images.map(async (image) => {
-    const avif = await getImage({ src: image.src, widths, format: "avif" });
     const webp = await getImage({ src: image.src, widths, format: "webp" });
     const fallback = await getImage({ src: image.src, widths, format: "jpeg" });
 
     return {
       alt: image.alt,
-      sources: [
-        { type: "image/avif", srcset: avif.srcSet.attribute, sizes },
-        { type: "image/webp", srcset: webp.srcSet.attribute, sizes },
-      ],
+      sources: [{ type: "image/webp", srcset: webp.srcSet.attribute, sizes }],
       fallback: {
         src: fallback.src,
         srcset: fallback.srcSet.attribute,
