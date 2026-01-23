@@ -1,5 +1,27 @@
 title: "Places"
-coverImage: ../../assets/images/people/Tumblr Image (1).jpg
+coverImage: ../../assets/images/places/china2012_20120710_174132_2548_DUP1.jpg
 images:
-  - src: ../../assets/images/people/Tumblr Image (1).jpg
-    alt: "High contrast skyline"
+  - src: ../../assets/images/places/china2012_20120710_174132_2548_DUP1.jpg
+    alt: "China - July 2012"
+  - src: ../../assets/images/places/hanatori_20090410_204118_27.jpg
+    alt: "Hanatori - April 2009"
+  - src: ../../assets/images/places/IMG_0674_Edit.jpg
+    alt: "Edited Landscape 0674"
+  - src: ../../assets/images/places/IMG_2001.jpg
+    alt: "Image 2001"
+  - src: ../../assets/images/places/IMG_2097.jpg
+    alt: "Image 2097"
+  - src: ../../assets/images/places/IMG_2810.jpg
+    alt: "Image 2810"
+  # - src: ../../assets/images/places/kamakura_20090801_194123_150.jpg
+  #   alt: "Kamakura - August 2009"
+  # - src: ../../assets/images/places/nara_20110102_160525_109.jpg
+  #   alt: "Nara - January 2011"
+  - src: ../../assets/images/places/nara_20110102_163842_161.jpg
+    alt: "Nara Temple - January 2011"
+  - src: ../../assets/images/places/nobiru_20110315_103215_306_DUP.jpg
+    alt: "Nobiru - March 2011"
+  - src: ../../assets/images/places/untitled_20110714_142819_25.jpg
+    alt: "Untitled Place - July 2011"
+  - src: ../../assets/images/places/untitled_20110714_143910_66.jpg
+    alt: "Untitled Place - July 2011"

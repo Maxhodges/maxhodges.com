@@ -1,8 +1,6 @@
 title: "People"
-coverImage: ../../assets/images/people/Tumblr Image (1).jpg
+coverImage: ../../assets/images/people/Tumblr Image (2).jpg
 images:
-  - src: ../../assets/images/people/Tumblr Image (1).jpg
-    alt: "High contrast skyline"
   - src: ../../assets/images/people/Tumblr Image (2).jpg
     alt: "Minimal horizon study"
   - src: ../../assets/images/people/aram_clear_20090131_175058_56.jpg
@@ -25,6 +23,8 @@ images:
     alt: "Ishinomaki - March 2011"
   - src: ../../assets/images/people/ko_20091110_083224_6.jpg
     alt: "Ko - November 2009"
+  - src: ../../assets/images/people/Tumblr Image (1).jpg
+    alt: "High contrast skyline"
   - src: ../../assets/images/people/michiko1_20081019_093648_30.jpg
     alt: "Michiko - October 2008"
   - src: ../../assets/images/people/misascissors_20100703_125307_54.jpg
