@@ -13,8 +13,8 @@ export async function getStaticPaths() {
 }
 
 const { gallery } = Astro.props;
-const widths = [640, 1200, 1920, 2560];
-const sizes = "(max-width: 768px) 92vw, 100vw";
+const widths = [640, 1200, 1800];
+const sizes = "(max-width: 768px) 92vw, 1800px";
 
 const images = await Promise.all(
   gallery.data.images.map(async (image) => {
