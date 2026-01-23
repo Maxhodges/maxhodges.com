@@ -22,6 +22,7 @@
   export let images: GalleryImage[] = [];
 
   let currentIndex = 0;
+  let isLightboxOpen = false;
 
   const clampIndex = (index: number) => {
     if (images.length === 0) return 0;
@@ -43,6 +44,9 @@
     if (event.key === "ArrowLeft") {
       goPrev();
     }
+    if (event.key === "Escape") {
+      isLightboxOpen = false;
+    }
   };
 
   onMount(() => {
@@ -54,21 +58,28 @@
 <div class="slider">
   {#if images.length > 0}
     {#key currentIndex}
-      <picture class="frame">
-        {#each images[currentIndex].sources as source}
-          <source type={source.type} srcset={source.srcset} sizes={source.sizes} />
-        {/each}
-        <img
-          src={images[currentIndex].fallback.src}
-          srcset={images[currentIndex].fallback.srcset}
-          sizes={images[currentIndex].fallback.sizes}
-          width={images[currentIndex].fallback.width}
-          height={images[currentIndex].fallback.height}
-          alt={images[currentIndex].alt}
-          loading="eager"
-          decoding="async"
-        />
-      </picture>
+      <button
+        type="button"
+        class="frame"
+        on:click={() => (isLightboxOpen = true)}
+        aria-label="Open full-screen image"
+      >
+        <picture>
+          {#each images[currentIndex].sources as source}
+            <source type={source.type} srcset={source.srcset} sizes={source.sizes} />
+          {/each}
+          <img
+            src={images[currentIndex].fallback.src}
+            srcset={images[currentIndex].fallback.srcset}
+            sizes={images[currentIndex].fallback.sizes}
+            width={images[currentIndex].fallback.width}
+            height={images[currentIndex].fallback.height}
+            alt={images[currentIndex].alt}
+            loading="eager"
+            decoding="async"
+          />
+        </picture>
+      </button>
     {/key}
   {:else}
     <div class="empty">No images available yet.</div>
@@ -85,6 +96,34 @@
       Next
     </button>
   </div>
+
+  {#if isLightboxOpen}
+    <div class="lightbox" role="dialog" aria-modal="true">
+      <button
+        type="button"
+        class="lightbox-close"
+        on:click={() => (isLightboxOpen = false)}
+        aria-label="Close full-screen image"
+      >
+        Close
+      </button>
+      <picture class="lightbox-image">
+        {#each images[currentIndex].sources as source}
+          <source type={source.type} srcset={source.srcset} sizes={source.sizes} />
+        {/each}
+        <img
+          src={images[currentIndex].fallback.src}
+          srcset={images[currentIndex].fallback.srcset}
+          sizes={images[currentIndex].fallback.sizes}
+          width={images[currentIndex].fallback.width}
+          height={images[currentIndex].fallback.height}
+          alt={images[currentIndex].alt}
+          loading="eager"
+          decoding="async"
+        />
+      </picture>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -106,9 +145,30 @@
     backdrop-filter: blur(12px);
     padding: 1rem;
     overflow: hidden;
+    border: 1px solid rgba(231, 226, 216, 0.08);
+    cursor: zoom-in;
+    transition: transform 0.2s ease, border-color 0.2s ease;
   }
 
-  img {
+  .frame:hover {
+    transform: translateY(-2px);
+    border-color: rgba(231, 226, 216, 0.2);
+  }
+
+  .frame picture {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .frame img {
     max-width: 100%;
     max-height: 100%;
     width: auto;
@@ -128,7 +188,7 @@
     font-size: 0.7rem;
   }
 
-  button {
+  .controls button {
     border: 1px solid rgba(231, 226, 216, 0.18);
     padding: 0.6rem 1.4rem;
     border-radius: 999px;
@@ -137,7 +197,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
-  button:hover {
+  .controls button:hover {
     transform: translateY(-2px);
     border-color: rgba(231, 226, 216, 0.35);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
@@ -153,6 +213,48 @@
     border-radius: 1rem;
     border: 1px dashed rgba(231, 226, 216, 0.25);
     color: rgba(231, 226, 216, 0.7);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 6, 6, 0.92);
+    display: grid;
+    place-items: center;
+    padding: min(6vw, 3rem);
+    z-index: 50;
+  }
+
+  .lightbox-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .lightbox-image img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    border: 1px solid rgba(231, 226, 216, 0.2);
+    background: rgba(18, 17, 15, 0.8);
+    color: rgba(231, 226, 216, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.65rem;
   }
 
   @media (max-width: 720px) {
