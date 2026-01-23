@@ -171,8 +171,8 @@
   .frame img {
     max-width: 100%;
     max-height: 100%;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     display: block;
   }
@@ -221,25 +221,26 @@
     background: rgba(6, 6, 6, 0.92);
     display: grid;
     place-items: center;
-    padding: min(6vw, 3rem);
+    padding: clamp(1rem, 4vw, 3rem);
     z-index: 50;
   }
 
   .lightbox-image {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - (clamp(1rem, 4vw, 3rem) * 2));
     display: flex;
     align-items: center;
     justify-content: center;
     max-width: 100%;
     max-height: 100%;
+    padding-top: 2.5rem;
   }
 
   .lightbox-image img {
     max-width: 100%;
     max-height: 100%;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 
