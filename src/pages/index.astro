@@ -8,36 +8,42 @@ const galleries = await getCollection("galleries");
 
 <SiteLayout title="Max Hodges — Photography" breadcrumb="Home / Galleries">
   <section class="grid gap-10">
-    <div class="max-w-2xl text-balance font-[var(--font-display)] text-4xl leading-tight text-[color:var(--ink)] sm:text-5xl">
-      High-performance photography with a tactile, cinematic edge.
+    <div
+      class="max-w-2xl text-balance font-[var(--font-display)] text-4xl leading-tight text-[color:var(--ink)] sm:text-5xl"
+    >
+      People, Places, and Things
     </div>
 
     <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-      {galleries.map((gallery) => (
-        <a
-          href={`/gallery/${gallery.id}`}
-          class="group relative overflow-hidden rounded-3xl border border-white/80 bg-white/70 shadow-[0_20px_60px_rgba(27,26,22,0.12)] transition hover:-translate-y-1 hover:shadow-[0_30px_70px_rgba(27,26,22,0.18)]"
-        >
-          <div class="aspect-[4/5] overflow-hidden">
-            <Picture
-              src={gallery.data.coverImage}
-              alt={`Cover image for ${gallery.data.title}`}
-              widths={[640, 1200, 1920, 2560]}
-              formats={["avif", "webp"]}
-              sizes="(max-width: 768px) 92vw, (max-width: 1200px) 45vw, 30vw"
-              pictureAttributes={{ class: "h-full w-full block" }}
-              class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-              loading="lazy"
-            />
-          </div>
-          <div class="flex items-center justify-between gap-4 px-6 py-5">
-            <div class="font-[var(--font-display)] text-xl">{gallery.data.title}</div>
-            <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--rust)]">
-              View
+      {
+        galleries.map((gallery) => (
+          <a
+            href={`/gallery/${gallery.id}`}
+            class="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/30 shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition hover:-translate-y-1 hover:shadow-[0_30px_70px_rgba(0,0,0,0.6)]"
+          >
+            <div class="aspect-[4/5] overflow-hidden">
+              <Picture
+                src={gallery.data.coverImage}
+                alt={`Cover image for ${gallery.data.title}`}
+                widths={[640, 1200, 1920, 2560]}
+                formats={["avif", "webp"]}
+                sizes="(max-width: 768px) 92vw, (max-width: 1200px) 45vw, 30vw"
+                pictureAttributes={{ class: "h-full w-full block" }}
+                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                loading="lazy"
+              />
             </div>
-          </div>
-        </a>
-      ))}
+            <div class="flex items-center justify-between gap-4 bg-[#141311] px-6 py-5 text-[color:var(--ink)]">
+              <div class="font-[var(--font-display)] text-xl">
+                {gallery.data.title}
+              </div>
+              <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--rust)]">
+                View
+              </div>
+            </div>
+          </a>
+        ))
+      }
     </div>
   </section>
 </SiteLayout>

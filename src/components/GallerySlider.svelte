@@ -102,7 +102,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 1.5rem;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(16, 15, 13, 0.72);
     backdrop-filter: blur(12px);
     padding: 1rem;
     overflow: hidden;
@@ -129,27 +129,30 @@
   }
 
   button {
-    border: 1px solid rgba(27, 26, 22, 0.2);
+    border: 1px solid rgba(231, 226, 216, 0.18);
     padding: 0.6rem 1.4rem;
     border-radius: 999px;
-    background: white;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #171614;
+    color: var(--ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(27, 26, 22, 0.15);
+    border-color: rgba(231, 226, 216, 0.35);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
   }
 
   .counter {
-    color: rgba(27, 26, 22, 0.6);
+    color: rgba(231, 226, 216, 0.6);
   }
 
   .empty {
     padding: 4rem 2rem;
     text-align: center;
     border-radius: 1rem;
-    border: 1px dashed rgba(27, 26, 22, 0.25);
+    border: 1px dashed rgba(231, 226, 216, 0.25);
+    color: rgba(231, 226, 216, 0.7);
   }
 
   @media (max-width: 720px) {
