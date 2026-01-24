@@ -18,10 +18,14 @@ const sizes = "(max-width: 768px) 92vw, 1440px";
 
 const images = await Promise.all(
   gallery.data.images.map(async (image) => {
+    const rawSrc = typeof image.src === "string" ? image.src : image.src.src;
+    const cleanSrc = rawSrc.split("?")[0].split("#")[0];
+    const fileName = cleanSrc.split("/").pop() ?? cleanSrc;
     const webp = await getImage({ src: image.src, widths, format: "webp" });
     const fallback = await getImage({ src: image.src, widths, format: "jpeg" });
 
     return {
+      fileName,
       alt: image.alt,
       sources: [{ type: "image/webp", srcset: webp.srcSet.attribute, sizes }],
       fallback: {
@@ -40,6 +44,21 @@ const images = await Promise.all(
   title={`Max Hodges — ${gallery.data.title}`}
   breadcrumb={`Home / ${gallery.data.title}`}
 >
+  <script is:inline>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("gridview")) {
+      document.documentElement.dataset.galleryView = "grid";
+    }
+  </script>
+  <style>
+    :root[data-gallery-view="grid"] .gallery-slider {
+      display: none;
+    }
+
+    :root:not([data-gallery-view="grid"]) .gallery-grid {
+      display: none;
+    }
+  </style>
   <section class="grid gap-10">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <!-- <div>
@@ -57,6 +76,44 @@ const images = await Promise.all(
       </div> -->
     </div>
 
-    <GallerySlider images={images} client:load />
+    <div class="gallery-slider">
+      <GallerySlider images={images} client:load />
+    </div>
+
+    <div class="gallery-grid">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="font-[var(--font-display)] text-2xl">Contact Sheet</div>
+        <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
+          {gallery.data.title}
+        </div>
+      </div>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {
+          images.map((image, index) => (
+            <figure class="rounded-2xl border border-white/10 bg-black/30 p-3">
+              <picture>
+                {image.sources.map((source) => (
+                  <source type={source.type} srcset={source.srcset} sizes="(max-width: 768px) 45vw, 300px" />
+                ))}
+                <img
+                  src={image.fallback.src}
+                  srcset={image.fallback.srcset}
+                  sizes="(max-width: 768px) 45vw, 300px"
+                  width={image.fallback.width}
+                  height={image.fallback.height}
+                  alt={image.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="h-64 w-full rounded-xl object-contain"
+                />
+              </picture>
+              <figcaption class="mt-3 text-[10px] uppercase tracking-[0.2em] text-[color:var(--sea)]">
+                {String(index + 1).padStart(2, "0")} — {image.fileName}
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
   </section>
 </SiteLayout>

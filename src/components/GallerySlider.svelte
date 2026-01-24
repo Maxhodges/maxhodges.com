@@ -8,6 +8,7 @@
   };
 
   export type GalleryImage = {
+    fileName: string;
     alt: string;
     sources: GallerySource[];
     fallback: {
@@ -22,6 +23,8 @@
   export let images: GalleryImage[] = [];
 
   let currentIndex = 0;
+  let mounted = false;
+  const urlParamKey = "photo";
 
   const clampIndex = (index: number) => {
     if (images.length === 0) return 0;
@@ -36,6 +39,26 @@
     currentIndex = clampIndex(currentIndex - 1);
   };
 
+  const syncFromUrl = () => {
+    if (images.length === 0 || typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const fileName = params.get(urlParamKey);
+    if (!fileName) return;
+    const index = images.findIndex((image) => image.fileName === fileName);
+    if (index >= 0) currentIndex = index;
+  };
+
+  const updateUrl = (index: number) => {
+    if (images.length === 0 || typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.set(urlParamKey, images[index].fileName);
+    window.history.replaceState({}, "", url);
+  };
+
+  $: if (mounted && images.length > 0) {
+    updateUrl(currentIndex);
+  }
+
   const onKeydown = (event: KeyboardEvent) => {
     if (event.key === "ArrowRight") {
       goNext();
@@ -46,8 +69,15 @@
   };
 
   onMount(() => {
+    mounted = true;
+    syncFromUrl();
+    updateUrl(currentIndex);
     window.addEventListener("keydown", onKeydown);
-    return () => window.removeEventListener("keydown", onKeydown);
+    window.addEventListener("popstate", syncFromUrl);
+    return () => {
+      window.removeEventListener("keydown", onKeydown);
+      window.removeEventListener("popstate", syncFromUrl);
+    };
   });
 </script>
 
