@@ -6,6 +6,7 @@ const galleries = defineCollection({
     z.object({
       title: z.string(),
       order: z.number().int(),
+      visible: z.boolean().optional().default(true),
       coverImage: image(),
       images: z.array(
         z.object({

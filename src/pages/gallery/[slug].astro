@@ -6,10 +6,12 @@ import GallerySlider from "../../components/GallerySlider.svelte";
 
 export async function getStaticPaths() {
   const galleries = await getCollection("galleries");
-  return galleries.map((gallery) => ({
-    params: { slug: gallery.id },
-    props: { gallery },
-  }));
+  return galleries
+    .filter((gallery) => gallery.data.visible !== false)
+    .map((gallery) => ({
+      params: { slug: gallery.id },
+      props: { gallery },
+    }));
 }
 
 const { gallery } = Astro.props;

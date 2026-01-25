@@ -3,9 +3,9 @@ import { Picture } from "astro:assets";
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
 
-const galleries = (await getCollection("galleries")).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const galleries = (await getCollection("galleries"))
+  .filter((gallery) => gallery.data.visible !== false)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <SiteLayout title="Max Hodges — Photography" breadcrumb="Home / Galleries">

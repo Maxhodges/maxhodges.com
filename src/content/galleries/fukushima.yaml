@@ -1,6 +1,6 @@
-title: "Fukushima"
-order: 40
-coverImage: "../../assets/images/fukushima/untitled_20110507_110455_270.jpg"
+title: "Fukushima Exclusion Zone"
+order: 5
+coverImage: "../../assets/images/fukushima/untitled_20110508_075442_339.jpg"
 images:
   - src: "../../assets/images/fukushima/untitled_20110613_151430_94.jpg"
     alt: "Fukushima - June 13, 2011"
@@ -77,11 +77,9 @@ images:
     alt: "Kanaya, Odaka, Fukushima XIX"
   - src: "../../assets/images/fukushima/fukushima2_22.jpg"
     alt: "Kanaya, Odaka, Fukushima XX"
+  - src: "../../assets/images/fukushima/untitled_20110508_115113_436.jpg"
+    alt: "Kanaya, Odaka, Fukushima - May 08, 2011"
   - src: "../../assets/images/fukushima/fukushima2_24.jpg"
     alt: "Kanaya, Odaka, Fukushima XXII"
   - src: "../../assets/images/fukushima/fukushima2_23.jpg"
     alt: "Kanaya, Odaka, Fukushima XXI"
-  - src: "../../assets/images/fukushima/untitled_20110508_115113_436.jpg"
-    alt: "Kanaya, Odaka, Fukushima - May 08, 2011"
-  
-  

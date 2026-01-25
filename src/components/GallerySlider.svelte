@@ -25,6 +25,12 @@
   let currentIndex = 0;
   let mounted = false;
   const urlParamKey = "photo";
+  const preloadCount = 3;
+  const preloaded = new Set<string>();
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isTouching = false;
+  const swipeThreshold = 40;
 
   const clampIndex = (index: number) => {
     if (images.length === 0) return 0;
@@ -55,8 +61,24 @@
     window.history.replaceState({}, "", url);
   };
 
+  const preloadNext = (count: number) => {
+    if (images.length === 0 || typeof window === "undefined") return;
+    const max = Math.min(count, images.length - 1);
+    for (let offset = 1; offset <= max; offset += 1) {
+      const index = clampIndex(currentIndex + offset);
+      const image = images[index];
+      if (preloaded.has(image.fileName)) continue;
+      const img = new Image();
+      img.srcset = image.fallback.srcset;
+      img.sizes = image.fallback.sizes;
+      img.src = image.fallback.src;
+      preloaded.add(image.fileName);
+    }
+  };
+
   $: if (mounted && images.length > 0) {
     updateUrl(currentIndex);
+    preloadNext(preloadCount);
   }
 
   const onKeydown = (event: KeyboardEvent) => {
@@ -68,10 +90,38 @@
     }
   };
 
+  const onTouchStart = (event: TouchEvent) => {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    isTouching = true;
+  };
+
+  const onTouchMove = (event: TouchEvent) => {
+    if (!isTouching || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+      if (deltaX < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+      isTouching = false;
+    }
+  };
+
+  const onTouchEnd = () => {
+    isTouching = false;
+  };
+
   onMount(() => {
     mounted = true;
     syncFromUrl();
     updateUrl(currentIndex);
+    preloadNext(preloadCount);
     window.addEventListener("keydown", onKeydown);
     window.addEventListener("popstate", syncFromUrl);
     return () => {
@@ -84,7 +134,13 @@
 <div class="slider">
   {#if images.length > 0}
     {#key currentIndex}
-      <div class="frame">
+      <div
+        class="frame"
+        on:touchstart={onTouchStart}
+        on:touchmove={onTouchMove}
+        on:touchend={onTouchEnd}
+        on:touchcancel={onTouchEnd}
+      >
         <picture>
           {#each images[currentIndex].sources as source}
             <source type={source.type} srcset={source.srcset} sizes={source.sizes} />
