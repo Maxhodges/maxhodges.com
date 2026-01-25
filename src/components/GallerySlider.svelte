@@ -31,6 +31,12 @@
   let touchStartY = 0;
   let isTouching = false;
   const swipeThreshold = 40;
+  const dragThreshold = 60;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragDeltaX = 0;
+  let isDragging = false;
+  let wasDragging = false;
 
   const clampIndex = (index: number) => {
     if (images.length === 0) return 0;
@@ -117,6 +123,39 @@
     isTouching = false;
   };
 
+  const onPointerDown = (event: PointerEvent) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragDeltaX = 0;
+    isDragging = true;
+    wasDragging = false;
+  };
+
+  const onPointerMove = (event: PointerEvent) => {
+    if (!isDragging) return;
+    const deltaX = event.clientX - dragStartX;
+    const deltaY = event.clientY - dragStartY;
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+    dragDeltaX = deltaX;
+    if (Math.abs(deltaX) > 4) {
+      wasDragging = true;
+    }
+  };
+
+  const onPointerUp = () => {
+    if (!isDragging) return;
+    if (Math.abs(dragDeltaX) > dragThreshold) {
+      if (dragDeltaX < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    }
+    isDragging = false;
+    dragDeltaX = 0;
+  };
+
   onMount(() => {
     mounted = true;
     syncFromUrl();
@@ -136,10 +175,15 @@
     {#key currentIndex}
       <div
         class="frame"
+        style={`transform: translateX(${isDragging ? dragDeltaX : 0}px);`}
         on:touchstart={onTouchStart}
         on:touchmove={onTouchMove}
         on:touchend={onTouchEnd}
         on:touchcancel={onTouchEnd}
+        on:pointerdown={onPointerDown}
+        on:pointermove={onPointerMove}
+        on:pointerup={onPointerUp}
+        on:pointercancel={onPointerUp}
       >
         <picture>
           {#each images[currentIndex].sources as source}
@@ -154,6 +198,7 @@
             alt={images[currentIndex].alt}
             loading="eager"
             decoding="async"
+            draggable={false}
           />
         </picture>
       </div>
@@ -198,6 +243,13 @@
     overflow: hidden;
     border: 1px solid rgba(231, 226, 216, 0.08);
     transition: transform 0.2s ease, border-color 0.2s ease;
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .frame:active {
+    cursor: grabbing;
   }
 
   .frame picture {
