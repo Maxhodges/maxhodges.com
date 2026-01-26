@@ -324,7 +324,9 @@
 
   @media (max-width: 720px) {
     .frame {
-      height: 60vh;
+      height: 70vh;
+      padding: 0.25rem;
+      border-radius: 1rem;
     }
 
     .controls {

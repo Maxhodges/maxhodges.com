@@ -1,5 +1,5 @@
 title: "Xuan"
-order: 200
+order: 900
 coverImage: "../../assets/images/xuan/china2012_20120710_000611_2319.jpg"
 images:
   - src: "../../assets/images/xuan/china2012_20120710_000611_2319.jpg"
@@ -10,3 +10,15 @@ images:
     alt: "Setsuna V - July 2012"
   - src: "../../assets/images/xuan/china2012_20120722_010937_5179.jpg"
     alt: "Setsuna VI - July 2012"
+  - src: "../../assets/images/xuan/33638228352.jpg"
+    alt: "Xuan Study - Portrait"
+  - src: "../../assets/images/xuan/38621807985.jpg"
+    alt: "Xuan Study - Movement"
+  - src: "../../assets/images/xuan/38622040547.jpg"
+    alt: "Xuan Study - Light"
+  - src: "../../assets/images/xuan/38623916348.jpg"
+    alt: "Xuan Study - Composition"
+  - src: "../../assets/images/xuan/45036158450.jpg"
+    alt: "Xuan Study - Detail"
+  - src: "../../assets/images/xuan/55793152157.jpg"
+    alt: "Xuan Study - Atmosphere"

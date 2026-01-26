@@ -1,5 +1,5 @@
 title: "People"
-order: 9
+order: 400
 coverImage: ../../assets/images/people/untitled_20101207_192250_25_DUP.jpg
 images:
   - src: ../../assets/images/people/aram_clear_20090131_175058_56.jpg
@@ -10,6 +10,8 @@ images:
     alt: "Def Portrait Study"
   - src: ../../assets/images/people/ko_20091110_083224_6.jpg
     alt: "Yulia Portrait - November 2009"
+  - src: ../../assets/images/people/30227912711.jpg
+    alt: "lipstick"
 
   - src: ../../assets/images/people/Tumblr Image (2).jpg
     alt: "Tumblr Portrait Study"
@@ -40,8 +42,15 @@ images:
     alt: "Ring Test Portrait - June 2009"
   - src: ../../assets/images/people/sister_trump_20081220_235817_47.jpg
     alt: "Sister Trump - December 2008"
+
+
+  - src: ../../assets/images/people/11611489403.jpg
+    alt: "Hiroko black eye"
   - src: ../../assets/images/people/untitled_20101207_192250_25_DUP.jpg
     alt: "Justin Untitled Portrait - December 2010"
+  - src: ../../assets/images/people/2130536065.jpg
+    alt: "black eye - December 2010"
+  
   - src: ../../assets/images/people/Iriana_20100221_194015_107.jpg
     alt: "Iriana - February 2010"
   
