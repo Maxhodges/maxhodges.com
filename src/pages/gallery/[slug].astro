@@ -27,6 +27,7 @@ const images = await Promise.all(
     const fallback = await getImage({ src: image.src, widths, format: "jpeg" });
 
     return {
+      rawSrc: cleanSrc,
       fileName,
       alt: image.alt,
       sources: [{ type: "image/webp", srcset: webp.srcSet.attribute, sizes }],
@@ -40,6 +41,34 @@ const images = await Promise.all(
     };
   }),
 );
+
+const galleryRaw = import.meta.glob("../../content/galleries/*.yaml", {
+  as: "raw",
+  eager: true,
+});
+const rawById = Object.fromEntries(
+  Object.entries(galleryRaw).map(([path, raw]) => {
+    const id = path.split("/").pop()?.replace(".yaml", "") ?? path;
+    return [id, raw];
+  }),
+);
+
+const rawYaml = rawById[gallery.id] ?? "";
+const rawImageItems = (() => {
+  const lines = rawYaml.split(/\r?\n/);
+  const items = [];
+  for (let i = 0; i < lines.length; i += 1) {
+    const srcMatch = lines[i].match(/^\s*-\s*src:\s*(.+)\s*$/);
+    if (!srcMatch) continue;
+    const altLine = lines[i + 1] ?? "";
+    const altMatch = altLine.match(/^\s*alt:\s*(.+)\s*$/);
+    items.push({
+      srcRaw: srcMatch[1],
+      altRaw: altMatch ? altMatch[1] : '""',
+    });
+  }
+  return items;
+})();
 ---
 
 <SiteLayout
@@ -59,6 +88,15 @@ const images = await Promise.all(
 
     :root:not([data-gallery-view="grid"]) .gallery-grid {
       display: none;
+    }
+
+    .gallery-grid [draggable="true"] {
+      cursor: grab;
+    }
+
+    .gallery-grid [data-dragging="true"] {
+      opacity: 0.5;
+      cursor: grabbing;
     }
   </style>
   <section class="grid gap-10">
@@ -82,7 +120,7 @@ const images = await Promise.all(
       <GallerySlider images={images} client:load />
     </div>
 
-    <div class="gallery-grid">
+    <div class="gallery-grid" data-raw-yaml={rawYaml}>
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="font-[var(--font-display)] text-2xl">Contact Sheet</div>
         <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
@@ -92,7 +130,13 @@ const images = await Promise.all(
       <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {
           images.map((image, index) => (
-            <figure class="rounded-2xl border border-white/10 bg-black/30 p-3">
+            <figure
+              class="rounded-2xl border border-white/10 bg-black/30 p-3"
+              draggable="true"
+              data-index={index}
+              data-raw-src={rawImageItems[index]?.srcRaw ?? image.rawSrc}
+              data-raw-alt={rawImageItems[index]?.altRaw ?? `"${image.alt}"`}
+            >
               <picture>
                 {image.sources.map((source) => (
                   <source type={source.type} srcset={source.srcset} sizes="(max-width: 768px) 45vw, 300px" />
@@ -110,12 +154,91 @@ const images = await Promise.all(
                 />
               </picture>
               <figcaption class="mt-3 text-[10px] uppercase tracking-[0.2em] text-[color:var(--sea)]">
-                {String(index + 1).padStart(2, "0")} — {image.fileName}
+                <span data-index-label>
+                  {String(index + 1).padStart(2, "0")}
+                </span>{" "}
+                — {image.fileName}
               </figcaption>
             </figure>
           ))
         }
       </div>
+      <textarea
+        class="mt-6 w-full rounded-2xl border border-white/10 bg-black/40 p-4 font-mono text-[0.65rem] leading-relaxed text-[color:var(--ink)] opacity-70"
+        rows="8"
+        readonly
+        spellcheck="false"
+        data-yaml-output
+      >
+        {rawById[gallery.id] ?? ""}
+      </textarea>
     </div>
   </section>
+
+  <script is:inline>
+    const root = document.documentElement;
+    if (root.dataset.galleryView === "grid") {
+      const grid = document.querySelector(".gallery-grid");
+      const list = grid?.querySelector(".gallery-grid > .mt-6");
+      const yamlOutput = grid?.querySelector("[data-yaml-output]");
+      const rawYaml = grid?.dataset.rawYaml || "";
+      if (grid && list && yamlOutput && rawYaml) {
+        const headerLines = rawYaml.split(/\r?\n/);
+        const imagesIndex = headerLines.findIndex((line) =>
+          line.trim().startsWith("images:"),
+        );
+        const baseLines =
+          imagesIndex >= 0 ? headerLines.slice(0, imagesIndex + 1) : ["images:"];
+        const updateYaml = () => {
+          const items = Array.from(list.querySelectorAll("figure"));
+          items.forEach((item, index) => {
+            const label = item.querySelector("[data-index-label]");
+            if (label) {
+              label.textContent = String(index + 1).padStart(2, "0");
+            }
+          });
+          const images = items.map((item) => ({
+            src: item.getAttribute("data-raw-src") || '""',
+            alt: item.getAttribute("data-raw-alt") || '""',
+          }));
+          const lines = [
+            ...baseLines,
+            ...images.flatMap((image) => [
+              `  - src: ${image.src}`,
+              `    alt: ${image.alt}`,
+            ]),
+          ];
+          yamlOutput.value = lines.join("\n").trim() + "\n";
+        };
+
+        let dragged;
+        list.addEventListener("dragstart", (event) => {
+          const target = event.target.closest("figure");
+          if (!target) return;
+          dragged = target;
+          target.dataset.dragging = "true";
+          event.dataTransfer.effectAllowed = "move";
+        });
+
+        list.addEventListener("dragend", () => {
+          if (dragged) {
+            delete dragged.dataset.dragging;
+          }
+          dragged = null;
+          updateYaml();
+        });
+
+        list.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          const target = event.target.closest("figure");
+          if (!target || target === dragged) return;
+          const rect = target.getBoundingClientRect();
+          const next = event.clientY > rect.top + rect.height / 2;
+          list.insertBefore(dragged, next ? target.nextSibling : target);
+        });
+
+        updateYaml();
+      }
+    }
+  </script>
 </SiteLayout>
