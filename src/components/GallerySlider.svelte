@@ -123,7 +123,8 @@
     const absX = Math.abs(deltaX);
     const absY = Math.abs(deltaY);
     const target = event.currentTarget;
-    if (absX > swipeThreshold && absX > absY) {
+    const allowSwipe = event.pointerType !== "touch";
+    if (allowSwipe && absX > swipeThreshold && absX > absY) {
       if (deltaX < 0) {
         goNext();
       } else {
