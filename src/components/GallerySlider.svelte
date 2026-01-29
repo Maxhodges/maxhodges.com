@@ -27,16 +27,14 @@
   const urlParamKey = "photo";
   const preloadCount = 3;
   const preloaded = new Set<string>();
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let isTouching = false;
-  const swipeThreshold = 40;
-  const dragThreshold = 60;
+  const swipeThreshold = 60;
+  const tapThreshold = 8;
   let dragStartX = 0;
   let dragStartY = 0;
   let dragDeltaX = 0;
   let isDragging = false;
-  let wasDragging = false;
+  let pointerId: number | null = null;
+  let frameWidth = 0;
 
   const clampIndex = (index: number) => {
     if (images.length === 0) return 0;
@@ -96,64 +94,59 @@
     }
   };
 
-  const onTouchStart = (event: TouchEvent) => {
-    if (event.touches.length !== 1) return;
-    const touch = event.touches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-    isTouching = true;
+  const onPointerDown = (event: PointerEvent) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    pointerId = event.pointerId;
+    const target = event.currentTarget;
+    if (target instanceof HTMLElement) {
+      frameWidth = target.clientWidth;
+      target.setPointerCapture(event.pointerId);
+    }
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragDeltaX = 0;
+    isDragging = true;
   };
 
-  const onTouchMove = (event: TouchEvent) => {
-    if (!isTouching || event.touches.length !== 1) return;
-    const touch = event.touches[0];
-    const deltaX = touch.clientX - touchStartX;
-    const deltaY = touch.clientY - touchStartY;
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+  const onPointerMove = (event: PointerEvent) => {
+    if (!isDragging || pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - dragStartX;
+    const deltaY = event.clientY - dragStartY;
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+    dragDeltaX = deltaX;
+  };
+
+  const onPointerUp = (event: PointerEvent) => {
+    if (!isDragging || pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - dragStartX;
+    const deltaY = event.clientY - dragStartY;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+    const target = event.currentTarget;
+    if (absX > swipeThreshold && absX > absY) {
       if (deltaX < 0) {
         goNext();
       } else {
         goPrev();
       }
-      isTouching = false;
-    }
-  };
-
-  const onTouchEnd = () => {
-    isTouching = false;
-  };
-
-  const onPointerDown = (event: PointerEvent) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    dragStartX = event.clientX;
-    dragStartY = event.clientY;
-    dragDeltaX = 0;
-    isDragging = true;
-    wasDragging = false;
-  };
-
-  const onPointerMove = (event: PointerEvent) => {
-    if (!isDragging) return;
-    const deltaX = event.clientX - dragStartX;
-    const deltaY = event.clientY - dragStartY;
-    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
-    dragDeltaX = deltaX;
-    if (Math.abs(deltaX) > 4) {
-      wasDragging = true;
-    }
-  };
-
-  const onPointerUp = () => {
-    if (!isDragging) return;
-    if (Math.abs(dragDeltaX) > dragThreshold) {
-      if (dragDeltaX < 0) {
-        goNext();
-      } else {
+    } else if (absX < tapThreshold && absY < tapThreshold) {
+      let localX = event.clientX;
+      if (target instanceof HTMLElement) {
+        const rect = target.getBoundingClientRect();
+        localX = event.clientX - rect.left;
+      }
+      if (localX < frameWidth * 0.5) {
         goPrev();
+      } else {
+        goNext();
       }
     }
     isDragging = false;
     dragDeltaX = 0;
+    if (target instanceof HTMLElement && pointerId !== null) {
+      target.releasePointerCapture(pointerId);
+    }
+    pointerId = null;
   };
 
   onMount(() => {
@@ -176,10 +169,6 @@
       <div
         class="frame"
         style={`transform: translateX(${isDragging ? dragDeltaX : 0}px);`}
-        on:touchstart={onTouchStart}
-        on:touchmove={onTouchMove}
-        on:touchend={onTouchEnd}
-        on:touchcancel={onTouchEnd}
         on:pointerdown={onPointerDown}
         on:pointermove={onPointerMove}
         on:pointerup={onPointerUp}
@@ -218,7 +207,7 @@
       →
     </button>
   </div>
-  <div class="hint">Use ← →</div>
+  <div class="hint">Swipe or tap left/right</div>
 
 </div>
 
