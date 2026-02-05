@@ -1,0 +1,97 @@
+---
+import { Picture } from "astro:assets";
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const formattedDate = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "2-digit",
+  year: "numeric",
+}).format(post.data.pubDate);
+---
+
+<SiteLayout
+  title={`Max Hodges — ${post.data.title}`}
+  breadcrumb={`Home / Blog / ${post.data.title}`}
+>
+  <article class="grid gap-10">
+    <header class="grid gap-4">
+      <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
+        {formattedDate}
+      </div>
+      <h1 class="font-[var(--font-display)] text-4xl leading-tight sm:text-5xl">
+        {post.data.title}
+      </h1>
+      <p class="max-w-2xl text-base text-white/70">
+        {post.data.description}
+      </p>
+    </header>
+
+    <div class="overflow-hidden rounded-3xl border border-white/10 bg-black/30">
+      <Picture
+        src={post.data.heroImage}
+        alt={post.data.title}
+        widths={[720, 1200, 1600]}
+        formats={["webp", "jpeg"]}
+        sizes="(max-width: 768px) 92vw, 70vw"
+        pictureAttributes={{ class: "h-full w-full block" }}
+        class="h-full w-full object-cover"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="post-body max-w-3xl text-[color:var(--ink)]">
+      <Content />
+    </div>
+  </article>
+</SiteLayout>
+
+<style>
+  .post-body :global(p) {
+    margin: 1.2rem 0;
+    line-height: 1.8;
+    color: rgba(231, 226, 216, 0.82);
+  }
+
+  .post-body :global(h2) {
+    margin-top: 2.6rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    letter-spacing: 0.01em;
+  }
+
+  .post-body :global(blockquote) {
+    margin: 1.6rem 0;
+    padding-left: 1.4rem;
+    border-left: 2px solid rgba(208, 122, 75, 0.5);
+    color: rgba(231, 226, 216, 0.85);
+  }
+
+  .post-body :global(strong) {
+    color: var(--ink);
+  }
+
+  .post-body :global(em) {
+    color: rgba(231, 226, 216, 0.9);
+  }
+
+  .post-body :global(a) {
+    color: var(--rust);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .post-body :global(iframe) {
+    max-width: 100%;
+  }
+</style>
