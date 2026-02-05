@@ -11,7 +11,7 @@ Recently, while chatting with Shanghainese painter **Altria Yang** at BnA_Wall N
 
 The term "AI Slop" has become a lazy shorthand -- a low-effort dismissal that deserves a retirement party. It’s the ultimate "get out of jail free" card for those who would rather avoid engaging with the medium than understand its potential. But using it to write off an entire field ignores **Sturgeon’s Law**: the universal truth that *ninety percent of everything is crap*.
 
-Ninety percent of movies are crap; ninety percent of music is crap; ninety percent of graffiti is juvenile scribbles. And, ninety percent of Tinder profiles are cringe. *Most everything is crap except the small sample of thing we're taking a liking to.*
+Ninety percent of movies are crap; ninety percent of music is crap; ninety percent of graffiti is juvenile scribbles. And, ninety percent of Tinder profiles are cringe. *Most everything is crap except the small sample of things we've taken a liking to.*
 
 So while it’s true that vast quantities of AI-generated imagery are rubbish, that’s a universal rule of human output, not a specific indictment of the technology. ***The best art where AI informs the process is as vital and moving as the best art made by any other means.***
 
