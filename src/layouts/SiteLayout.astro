@@ -1,7 +1,11 @@
 ---
 import "../styles/global.css";
 
-const { title, breadcrumb = "Home / Galleries" } = Astro.props;
+const {
+  title,
+  breadcrumb = "Home / Galleries",
+  breadcrumbItems,
+} = Astro.props;
 const homeLabel = "Home";
 const homePrefix = `${homeLabel} / `;
 const breadcrumbSuffix = breadcrumb.startsWith(homePrefix)
@@ -45,16 +49,21 @@ const breadcrumbSuffix = breadcrumb.startsWith(homePrefix)
   <body class="antialiased">
     <div class="min-h-screen px-4 pb-10 pt-4 sm:px-10 lg:px-16">
       <header class="flex flex-wrap items-start justify-between gap-4 pb-6">
-        <div
-          class="font-mono text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]"
-        >
+        <div class="font-mono text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
           <a href="/">{homeLabel}</a>
           {
-            breadcrumbSuffix
-              ? ` / ${breadcrumbSuffix}`
-              : breadcrumb !== homeLabel
-                ? ` / ${breadcrumb}`
-                : ""
+            breadcrumbItems?.length
+              ? breadcrumbItems.map((item) => (
+                  <>
+                    {" / "}
+                    {item.href ? <a href={item.href}>{item.label}</a> : item.label}
+                  </>
+                ))
+              : breadcrumbSuffix
+                ? ` / ${breadcrumbSuffix}`
+                : breadcrumb !== homeLabel
+                  ? ` / ${breadcrumb}`
+                  : ""
           }
         </div>
         <div class="flex items-center gap-3 text-right">

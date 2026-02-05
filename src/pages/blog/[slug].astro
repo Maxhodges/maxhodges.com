@@ -22,7 +22,10 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
 
 <SiteLayout
   title={`Max Hodges — ${post.data.title}`}
-  breadcrumb={`Home / Blog / ${post.data.title}`}
+  breadcrumbItems={[
+    { label: "Blog", href: "/blog" },
+    { label: post.data.title },
+  ]}
 >
   <article class="grid gap-10">
     <header class="grid gap-4">
