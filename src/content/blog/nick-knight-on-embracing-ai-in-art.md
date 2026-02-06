@@ -7,11 +7,13 @@ heroImage: "../../assets/images/things/5005347918.jpg"
 
 *Photo by Max Hodges*
 
-Recently, while chatting with Shanghainese painter **Altria Yang** at BnA_Wall Nihonbashi, we drifted onto the topic of whether artists should fear or embrace AI. We agreed that Instagram has never been more exciting, with new artists using AI to amplify their creativity in fun and inspiring ways.
+Recently, while chatting with Shanghainese artist **Altria Yang** at BnA_Wall Nihonbashi, we drifted onto the topic of whether artists should fear or embrace AI. We agreed that Instagram has never been more exciting, with new artists using AI to amplify their creativity in fun and inspiring ways.
 
-The term "AI Slop" has become a lazy shorthand -- a low-effort dismissal that deserves a retirement party. It’s the ultimate "get out of jail free" card for those who would rather avoid engaging with the medium than understand its potential. But using it to write off an entire field ignores **Sturgeon’s Law**: the universal truth that *ninety percent of everything is crap*.
+The term "AI Slop" has become a lazy shorthand -- a low-effort dismissal that deserves a retirement party. While it’s true that the internet is being flooded with junk, applying the label broadly to an entire suite of transformative technology is as reductive as dismissing all electronic music as "bleeps and bloops."
 
-Ninety percent of movies are crap; ninety percent of music is crap; ninety percent of graffiti is juvenile scribbles. And, ninety percent of Tinder profiles are cringe. *Most everything is crap except the small sample of things we've taken a liking to.*
+More often, "AI slop" is used as a defensive crouch by creatives who feel threatened by the shift, or who would simply rather avoid engaging with the medium than understand its potential. But writing off the field ignores **Sturgeon’s Law**: *the universal truth that ninety percent of everything is crap.*
+
+Ninety percent of music, movies, and YouTube videos are crap; ninety percent graffiti is crap. And, ninety percent of Tinder profiles are crap. *Most everything is crap except the small sample of things we've taken a liking to.*
 
 So while it’s true that vast quantities of AI-generated imagery are rubbish, that’s a universal rule of human output, not a specific indictment of the technology. ***The best art where AI informs the process is as vital and moving as the best art made by any other means.***
 
