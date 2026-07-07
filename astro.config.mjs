@@ -7,6 +7,10 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   integrations: [svelte()],
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
+  },
   image: {
     service: {
       entrypoint: './src/lib/cached-sharp-service.mjs'

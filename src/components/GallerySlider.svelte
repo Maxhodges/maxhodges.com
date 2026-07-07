@@ -65,18 +65,31 @@
     window.history.replaceState({}, "", url);
   };
 
+  const preloadImage = (image: GalleryImage) => {
+    if (preloaded.has(image.fileName)) return;
+    // The visible <picture> renders the webp <source>, so warm the webp
+    // srcset — preloading the jpeg fallback would fetch bytes never shown.
+    const webp = image.sources.find((s) => s.type === "image/webp");
+    const img = new Image();
+    if (webp) {
+      img.sizes = webp.sizes;
+      img.srcset = webp.srcset;
+    } else {
+      img.sizes = image.fallback.sizes;
+      img.srcset = image.fallback.srcset;
+      img.src = image.fallback.src;
+    }
+    preloaded.add(image.fileName);
+  };
+
   const preloadNext = (count: number) => {
     if (images.length === 0 || typeof window === "undefined") return;
     const max = Math.min(count, images.length - 1);
     for (let offset = 1; offset <= max; offset += 1) {
-      const index = clampIndex(currentIndex + offset);
-      const image = images[index];
-      if (preloaded.has(image.fileName)) continue;
-      const img = new Image();
-      img.srcset = image.fallback.srcset;
-      img.sizes = image.fallback.sizes;
-      img.src = image.fallback.src;
-      preloaded.add(image.fileName);
+      preloadImage(images[clampIndex(currentIndex + offset)]);
+    }
+    if (images.length > 2) {
+      preloadImage(images[clampIndex(currentIndex - 1)]);
     }
   };
 
@@ -100,7 +113,11 @@
     const target = event.currentTarget;
     if (target instanceof HTMLElement) {
       frameWidth = target.clientWidth;
-      target.setPointerCapture(event.pointerId);
+      try {
+        target.setPointerCapture(event.pointerId);
+      } catch {
+        // capture is best-effort; drag still works without it
+      }
     }
     dragStartX = event.clientX;
     dragStartY = event.clientY;
@@ -116,6 +133,23 @@
     dragDeltaX = deltaX;
   };
 
+  // The browser fires pointercancel when it claims the gesture (e.g. a
+  // vertical pan-y scroll). Routing it through onPointerUp used to register
+  // small deltas as taps and flip the image mid-scroll — just reset instead.
+  const onPointerCancel = (event: PointerEvent) => {
+    if (pointerId !== event.pointerId) return;
+    const target = event.currentTarget;
+    if (
+      target instanceof HTMLElement &&
+      target.hasPointerCapture(event.pointerId)
+    ) {
+      target.releasePointerCapture(event.pointerId);
+    }
+    isDragging = false;
+    dragDeltaX = 0;
+    pointerId = null;
+  };
+
   const onPointerUp = (event: PointerEvent) => {
     if (!isDragging || pointerId !== event.pointerId) return;
     const deltaX = event.clientX - dragStartX;
@@ -123,8 +157,7 @@
     const absX = Math.abs(deltaX);
     const absY = Math.abs(deltaY);
     const target = event.currentTarget;
-    const allowSwipe = event.pointerType !== "touch";
-    if (allowSwipe && absX > swipeThreshold && absX > absY) {
+    if (absX > swipeThreshold && absX > absY) {
       if (deltaX < 0) {
         goNext();
       } else {
@@ -144,7 +177,11 @@
     }
     isDragging = false;
     dragDeltaX = 0;
-    if (target instanceof HTMLElement && pointerId !== null) {
+    if (
+      target instanceof HTMLElement &&
+      pointerId !== null &&
+      target.hasPointerCapture(pointerId)
+    ) {
       target.releasePointerCapture(pointerId);
     }
     pointerId = null;
@@ -173,7 +210,7 @@
         on:pointerdown={onPointerDown}
         on:pointermove={onPointerMove}
         on:pointerup={onPointerUp}
-        on:pointercancel={onPointerUp}
+        on:pointercancel={onPointerCancel}
       >
         <picture>
           {#each images[currentIndex].sources as source}
@@ -201,7 +238,7 @@
     <button type="button" on:click={goPrev} aria-label="Previous image">
       ←
     </button>
-    <div class="counter">
+    <div class="counter" aria-live="polite">
       {currentIndex + 1} / {images.length}
     </div>
     <button type="button" on:click={goNext} aria-label="Next image">
@@ -315,12 +352,19 @@
   @media (max-width: 720px) {
     .frame {
       height: 70vh;
+      height: min(70svh, 900px);
       padding: 0.25rem;
       border-radius: 1rem;
     }
 
     .controls {
-      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .controls button {
+      flex: 1;
+      min-height: 44px;
+      padding: 0.6rem 1rem;
     }
   }
 </style>
