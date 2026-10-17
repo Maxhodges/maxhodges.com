@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /gallery/*/edit
+
+Sitemap: https://maxhodges.com/sitemap-index.xml

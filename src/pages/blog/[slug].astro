@@ -1,5 +1,5 @@
 ---
-import { Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 
@@ -13,6 +13,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+const ogImage = (
+  await getImage({ src: post.data.heroImage, width: 1200, format: "jpeg" })
+).src;
 const formattedDate = new Intl.DateTimeFormat("en-US", {
   month: "long",
   day: "2-digit",
@@ -22,17 +25,19 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
 
 <SiteLayout
   title={`Max Hodges — ${post.data.title}`}
+  description={post.data.description}
+  ogImage={ogImage}
   breadcrumbItems={[
     { label: "Blog", href: "/blog" },
     { label: post.data.title },
   ]}
 >
-  <article class="grid gap-10">
+  <article class="mx-auto grid w-full max-w-3xl gap-10">
     <header class="grid gap-4">
       <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
         {formattedDate}
       </div>
-      <h1 class="font-[var(--font-display)] text-4xl leading-tight sm:text-5xl">
+      <h1 class="font-display text-4xl leading-tight sm:text-5xl">
         {post.data.title}
       </h1>
       <p class="max-w-2xl text-base text-white/70">
@@ -40,20 +45,21 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
       </p>
     </header>
 
-    <div class="overflow-hidden rounded-3xl border border-white/10 bg-black/30">
+    <div class="overflow-hidden rounded-2xl border border-white/10 bg-black/30">
       <Picture
         src={post.data.heroImage}
         alt={post.data.title}
         widths={[720, 1200, 1600]}
         formats={["webp", "jpeg"]}
-        sizes="(max-width: 768px) 92vw, 70vw"
+        sizes="(max-width: 768px) 92vw, 768px"
         pictureAttributes={{ class: "h-full w-full block" }}
         class="h-full w-full object-cover"
-        loading="lazy"
+        loading="eager"
+        fetchpriority="high"
       />
     </div>
 
-    <div class="post-body max-w-3xl text-[color:var(--ink)]">
+    <div class="post-body text-[color:var(--ink)]">
       <Content />
     </div>
   </article>

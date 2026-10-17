@@ -21,6 +21,7 @@
   };
 
   export let images: GalleryImage[] = [];
+  export let title = "";
 
   let currentIndex = 0;
   let mounted = false;
@@ -188,6 +189,15 @@
   };
 
   onMount(() => {
+    // Back-compat: the old ?gridview admin mode now lives at ./edit
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("gridview")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("gridview");
+      url.pathname = url.pathname.replace(/\/*$/, "/edit");
+      window.location.replace(url.href);
+      return;
+    }
     mounted = true;
     syncFromUrl();
     updateUrl(currentIndex);
@@ -224,6 +234,7 @@
             height={images[currentIndex].fallback.height}
             alt={images[currentIndex].alt}
             loading="eager"
+            fetchpriority="high"
             decoding="async"
             draggable={false}
           />
@@ -235,41 +246,45 @@
   {/if}
 
   <div class="controls">
-    <button type="button" on:click={goPrev} aria-label="Previous image">
-      ←
-    </button>
-    <div class="counter" aria-live="polite">
-      {currentIndex + 1} / {images.length}
+    <div class="meta">
+      {#if title}
+        <span class="title">{title}</span>
+      {/if}
+      <span class="counter" aria-live="polite">
+        {currentIndex + 1} / {images.length}
+      </span>
+      <span class="hint" aria-hidden="true">Swipe or tap to browse</span>
     </div>
-    <button type="button" on:click={goNext} aria-label="Next image">
-      →
-    </button>
+    <div class="buttons">
+      <button type="button" on:click={goPrev} aria-label="Previous image">
+        ←
+      </button>
+      <button type="button" on:click={goNext} aria-label="Next image">
+        →
+      </button>
+    </div>
   </div>
-  <div class="hint">Swipe or tap left/right</div>
-
 </div>
 
 <style>
   .slider {
     position: relative;
-    display: grid;
-    gap: 1.5rem;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: 0.75rem;
   }
 
   .frame {
     width: 100%;
-    height: min(82vh, 980px);
+    flex: 1;
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 1.5rem;
-    background: rgba(16, 15, 13, 0.72);
-    backdrop-filter: blur(12px);
-    padding: 0.5rem;
     overflow: hidden;
-    border: 1px solid rgba(231, 226, 216, 0.08);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease;
     touch-action: pan-y;
     cursor: grab;
     user-select: none;
@@ -302,25 +317,49 @@
   }
 
   .controls {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    font-family: "Space Grotesk", "Arial", sans-serif;
+    padding-bottom: 0.75rem;
+    font-family: var(--font-sans);
     text-transform: uppercase;
     letter-spacing: 0.2em;
     font-size: 0.7rem;
   }
 
+  .meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
   .controls button {
     border: 1px solid rgba(231, 226, 216, 0.18);
-    padding: 0.4rem 0.75rem;
+    padding: 0.4rem 1.1rem;
     border-radius: 999px;
     background: #171614;
     color: var(--ink);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     font-size: 0.8rem;
-    letter-spacing: 0.1em;
   }
 
   .controls button:hover {
@@ -331,14 +370,15 @@
 
   .counter {
     color: rgba(231, 226, 216, 0.6);
+    white-space: nowrap;
   }
 
   .hint {
-    text-align: center;
+    display: none;
     font-size: 0.6rem;
     letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(231, 226, 216, 0.45);
+    color: rgba(231, 226, 216, 0.4);
+    white-space: nowrap;
   }
 
   .empty {
@@ -349,21 +389,24 @@
     color: rgba(231, 226, 216, 0.7);
   }
 
-  @media (max-width: 720px) {
-    .frame {
-      height: 70vh;
-      height: min(70svh, 900px);
-      padding: 0.25rem;
-      border-radius: 1rem;
+  @media (hover: none) and (pointer: coarse) {
+    .hint {
+      display: inline;
     }
+  }
 
+  @media (max-width: 720px) {
     .controls {
       gap: 0.75rem;
     }
 
+    .hint {
+      display: none;
+    }
+
     .controls button {
-      flex: 1;
       min-height: 44px;
+      min-width: 72px;
       padding: 0.6rem 1rem;
     }
   }

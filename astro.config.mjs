@@ -2,11 +2,18 @@
 import { defineConfig } from 'astro/config';
 
 import svelte from '@astrojs/svelte';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [svelte()],
+  site: 'https://maxhodges.com',
+  integrations: [
+    svelte(),
+    sitemap({
+      filter: (page) => !page.includes('/edit/'),
+    }),
+  ],
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport'

@@ -1,16 +1,25 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 
 const {
   title,
-  breadcrumb = "Home / Galleries",
-  breadcrumbItems,
+  description = "Photography by Max Hodges — documentary and street photography from Japan and beyond.",
+  ogImage,
+  breadcrumbItems = [],
+  noindex = false,
+  fullHeight = false,
 } = Astro.props;
-const homeLabel = "Home";
-const homePrefix = `${homeLabel} / `;
-const breadcrumbSuffix = breadcrumb.startsWith(homePrefix)
-  ? breadcrumb.slice(homePrefix.length)
-  : "";
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+const currentPath = Astro.url.pathname;
+const navItems = [
+  { label: "Galleries", href: "/" },
+  { label: "Blog", href: "/blog" },
+];
+const isActive = (href) =>
+  href === "/" ? currentPath === "/" || currentPath.startsWith("/gallery") : currentPath.startsWith(href);
 ---
 
 <html lang="en">
@@ -20,74 +29,101 @@ const breadcrumbSuffix = breadcrumb.startsWith(homePrefix)
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <meta
-      name="description"
-      content="High-performance photography portfolio."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <style>
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background:
-          radial-gradient(
-            circle at 75% 8%,
-            rgba(208, 122, 75, 0.18),
-            transparent 60%
-          ),
-          radial-gradient(
-            circle at 12% 85%,
-            rgba(108, 143, 184, 0.18),
-            transparent 55%
-          );
-        z-index: -1;
-      }
-    </style>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Max Hodges" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    <ClientRouter />
   </head>
   <body class="antialiased">
-    <div class="min-h-screen px-4 pb-10 pt-4 sm:px-10 lg:px-16">
-      <header class="flex flex-wrap items-start justify-between gap-4 pb-6">
-        <div class="font-mono text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
-          <a href="/">{homeLabel}</a>
+    <div
+      class:list={[
+        "px-4 sm:px-10 lg:px-16",
+        fullHeight ? "flex h-svh flex-col overflow-hidden" : "min-h-screen",
+      ]}
+    >
+      <header
+        class:list={[
+          "flex items-baseline justify-between gap-4",
+          fullHeight ? "shrink-0 py-3 sm:py-4" : "py-5 sm:py-6",
+        ]}
+      >
+        <div class="flex min-w-0 items-baseline gap-4 sm:gap-6">
+          <a
+            href="/"
+            class="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight transition hover:text-[color:var(--rust)] sm:text-2xl"
+          >
+            Max Hodges
+          </a>
           {
-            breadcrumbItems?.length
-              ? breadcrumbItems.map((item) => (
+            breadcrumbItems.length > 0 && (
+              <nav
+                aria-label="Breadcrumb"
+                class="hidden min-w-0 truncate font-sans text-[0.65rem] uppercase tracking-[0.3em] text-[color:var(--sea)] sm:block"
+              >
+                {breadcrumbItems.map((item, i) => (
                   <>
-                    {" / "}
-                    {item.href ? <a href={item.href}>{item.label}</a> : item.label}
+                    {i > 0 && <span class="opacity-50">{" / "}</span>}
+                    {item.href ? (
+                      <a class="transition hover:text-[color:var(--rust)]" href={item.href}>
+                        {item.label}
+                      </a>
+                    ) : (
+                      <span class="text-[color:var(--ink)]/70">{item.label}</span>
+                    )}
                   </>
-                ))
-              : breadcrumbSuffix
-                ? ` / ${breadcrumbSuffix}`
-                : breadcrumb !== homeLabel
-                  ? ` / ${breadcrumb}`
-                  : ""
+                ))}
+              </nav>
+            )
           }
         </div>
-        <div class="flex items-center gap-3 text-right">
-          <div class="font-[var(--font-display)] text-2xl font-semibold tracking-tight">
-            Max Hodges
-          </div>
-          <a
-            href="/blog"
-            class="text-xs uppercase tracking-[0.3em] text-[color:var(--sea)] transition hover:text-[color:var(--rust)]"
-          >
-            Blog
-          </a>
-        </div>
+        <nav class="flex shrink-0 items-baseline gap-5 text-[0.65rem] uppercase tracking-[0.3em]">
+          {
+            navItems.map((item) => (
+              <a
+                href={item.href}
+                class:list={[
+                  "transition hover:text-[color:var(--rust)]",
+                  isActive(item.href)
+                    ? "text-[color:var(--ink)]"
+                    : "text-[color:var(--sea)]",
+                ]}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
       </header>
 
-      <main>
+      <main class:list={[fullHeight ? "flex min-h-0 flex-1 flex-col" : "pb-10"]}>
         <slot />
       </main>
+
+      {
+        !fullHeight && (
+          <footer class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 py-6 text-[0.65rem] uppercase tracking-[0.25em] text-[color:var(--ink)]/50">
+            <div>© {new Date().getFullYear()} Max Hodges</div>
+            <div class="flex gap-5">
+              <a class="transition hover:text-[color:var(--rust)]" href="/">
+                Galleries
+              </a>
+              <a class="transition hover:text-[color:var(--rust)]" href="/blog">
+                Blog
+              </a>
+            </div>
+          </footer>
+        )
+      }
     </div>
   </body>
 </html>
-
-<style is:global>
-  .font-mono {
-    font-family: "Space Grotesk", "Arial", sans-serif;
-  }
-</style>

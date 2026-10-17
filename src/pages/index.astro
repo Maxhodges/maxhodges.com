@@ -1,46 +1,56 @@
 ---
-import { Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
 
 const galleries = (await getCollection("galleries"))
   .filter((gallery) => gallery.data.visible !== false)
   .sort((a, b) => a.data.order - b.data.order);
+
+const ogImage =
+  galleries.length > 0
+    ? (await getImage({ src: galleries[0].data.coverImage, width: 1200, format: "jpeg" })).src
+    : undefined;
 ---
 
-<SiteLayout title="Max Hodges — Photography" breadcrumb="Home / Galleries">
-  <section class="grid gap-6">
-    <!-- Kṣaṇa 刹那 -->
-    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-      {
-        galleries.map((gallery) => (
-          <a
-            href={`/gallery/${gallery.id}`}
-            class="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/30 shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition hover:-translate-y-1 hover:shadow-[0_30px_70px_rgba(0,0,0,0.6)]"
-          >
-            <div class="aspect-[4/5] overflow-hidden">
-              <Picture
-                src={gallery.data.coverImage}
-                alt={`Cover image for ${gallery.data.title}`}
-                widths={[480, 960, 1440]}
-                formats={["webp", "jpeg"]}
-                sizes="(max-width: 768px) 92vw, (max-width: 1200px) 45vw, 30vw"
-                pictureAttributes={{ class: "h-full w-full block" }}
-                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                loading="lazy"
-              />
+<SiteLayout
+  title="Max Hodges — Photography"
+  description="Photography by Max Hodges — documentary and street photography from Japan and beyond."
+  ogImage={ogImage}
+>
+  <!-- Kṣaṇa 刹那 -->
+  <section class="columns-1 gap-6 md:columns-2 xl:columns-3">
+    {
+      galleries.map((gallery, index) => (
+        <a
+          href={`/gallery/${gallery.id}`}
+          class="group mb-6 block break-inside-avoid overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_30px_70px_rgba(0,0,0,0.6)]"
+        >
+          <div class="overflow-hidden">
+            <Picture
+              src={gallery.data.coverImage}
+              alt={`Cover image for ${gallery.data.title}`}
+              widths={[480, 960, 1440]}
+              formats={["webp", "jpeg"]}
+              sizes="(max-width: 768px) 92vw, (max-width: 1280px) 45vw, 30vw"
+              pictureAttributes={{ class: "block w-full" }}
+              class="h-auto w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+              loading={index < 2 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : undefined}
+            />
+          </div>
+          <div class="grid gap-1.5 bg-[#141311] px-6 py-5">
+            <div class="font-display text-xl text-[color:var(--ink)]">
+              {gallery.data.title}
             </div>
-            <div class="flex items-center justify-between gap-4 bg-[#141311] px-6 py-5 text-[color:var(--ink)]">
-              <div class="font-[var(--font-display)] text-xl">
-                {gallery.data.title}
-              </div>
-              {/* <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--rust)]">
-                View
-              </div> */}
-            </div>
-          </a>
-        ))
-      }
-    </div>
+            {gallery.data.description && (
+              <p class="text-sm leading-relaxed text-[color:var(--ink)]/60">
+                {gallery.data.description}
+              </p>
+            )}
+          </div>
+        </a>
+      ))
+    }
   </section>
 </SiteLayout>

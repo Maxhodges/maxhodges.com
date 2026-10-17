@@ -1,10 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@300;500;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/space-grotesk";
 @import "tailwindcss";
+
+/* Build-check scripts mention CSS property names Tailwind would
+   otherwise pick up as utility candidates. */
+@source not "../../scripts";
+
+@theme {
+  --font-sans: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces", Georgia, serif;
+}
 
 :root {
   color-scheme: dark;
-  --font-display: "Fraunces", "Times New Roman", serif;
-  --font-sans: "Space Grotesk", "Arial", sans-serif;
   --ink: #e7e2d8;
   --sand: #12110f;
   --rust: #d07a4b;
@@ -14,7 +23,10 @@
 body {
   font-family: var(--font-sans);
   color: var(--ink);
-  background:
+  background-color: #0c0b0a;
+  background-image:
+    radial-gradient(circle at 75% 0%, rgba(208, 122, 75, 0.1), transparent 55%),
+    radial-gradient(circle at 10% 100%, rgba(108, 143, 184, 0.08), transparent 50%),
     radial-gradient(circle at 20% 0%, #1a1a18 0%, #12110f 45%, #0c0b0a 100%);
   min-height: 100vh;
 }
