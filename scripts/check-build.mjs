@@ -122,11 +122,32 @@ check(
   index.includes("sleepless town"),
 );
 
-// --- 8. Existing behavior preserved ---
+// --- 8. Scrollable gallery + PhotoSwipe lightbox ---
+const photoCount = (galleryHtml.match(/<img\s/g) ?? []).length;
 check(
-  "slider island still present on gallery page",
-  galleryHtml.includes("astro-island"),
+  "gallery photos server-rendered in scrollable page",
+  photoCount >= 9,
+  `found ${photoCount} imgs`,
 );
+check(
+  "photos wired for PhotoSwipe (data-pswp-width)",
+  galleryHtml.includes("data-pswp-width"),
+);
+check(
+  "lightbox deep-link filenames present",
+  galleryHtml.includes("data-filename"),
+);
+check("photoswipe styles bundled", allCss.includes(".pswp"));
+check(
+  "gallery description shown on gallery page",
+  galleryHtml.includes("sleepless town"),
+);
+check(
+  "no leftover Svelte island on gallery page",
+  !galleryHtml.includes("astro-island"),
+);
+
+// --- 9. Existing behavior preserved ---
 check("blog index renders posts", blogIndex.includes("Nick Knight"));
 
 console.log("");

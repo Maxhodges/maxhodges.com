@@ -18,8 +18,21 @@ export async function buildGalleryImages(
         widths,
         format: "jpeg",
       });
+      // Large rendition the lightbox zooms into.
+      const sourceWidth = typeof image.src === "string" ? 2048 : image.src.width;
+      const full = await getImage({
+        src: image.src,
+        width: Math.min(2048, sourceWidth),
+        format: "webp",
+      });
 
       return {
+        full: {
+          src: full.src,
+          width: full.attributes.width,
+          height: full.attributes.height,
+          srcset: webp.srcSet.attribute,
+        },
         rawSrc: cleanSrc,
         fileName,
         alt: image.alt,

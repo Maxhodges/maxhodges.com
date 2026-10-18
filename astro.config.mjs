@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-import svelte from '@astrojs/svelte';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -9,7 +8,6 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://maxhodges.com',
   integrations: [
-    svelte(),
     sitemap({
       filter: (page) => !page.includes('/edit/'),
     }),

@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import GallerySlider from "../../components/GallerySlider.svelte";
 import { buildGalleryImages } from "../../lib/gallery-images";
 
 export async function getStaticPaths() {
@@ -23,17 +22,133 @@ const ogImage = (
 const description =
   gallery.data.description ??
   `${gallery.data.title} — a photo series by Max Hodges.`;
+const pageSizes = "(max-width: 768px) 100vw, (max-width: 1104px) 92vw, 1024px";
 ---
 
 <SiteLayout
   title={`Max Hodges — ${gallery.data.title}`}
   description={description}
   ogImage={ogImage}
-  fullHeight
   breadcrumbItems={[
     { label: "Galleries", href: "/" },
     { label: gallery.data.title },
   ]}
 >
-  <GallerySlider images={images} title={gallery.data.title} client:load />
+  <section class="mx-auto w-full max-w-5xl">
+    <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pb-6 pt-2 sm:pt-4">
+      <h1 class="font-display text-3xl leading-tight sm:text-4xl">
+        {gallery.data.title}
+      </h1>
+      <div class="text-[0.65rem] uppercase tracking-[0.3em] text-[color:var(--sea)]">
+        {images.length} photographs · tap to view
+      </div>
+      {
+        gallery.data.description && (
+          <p class="w-full max-w-2xl text-sm leading-relaxed text-[color:var(--ink)]/60">
+            {gallery.data.description}
+          </p>
+        )
+      }
+    </header>
+
+    <div class="-mx-4 grid gap-3 sm:mx-0 sm:gap-6" data-pswp-gallery>
+      {
+        images.map((image, index) => (
+          <a
+            href={image.full.src}
+            target="_blank"
+            rel="noopener"
+            data-pswp-width={image.full.width}
+            data-pswp-height={image.full.height}
+            data-pswp-srcset={image.full.srcset}
+            data-filename={image.fileName}
+            class="group block overflow-hidden sm:rounded-xl"
+            aria-label={`View ${image.alt || `photo ${index + 1}`} full screen`}
+          >
+            <picture>
+              {image.sources.map((source) => (
+                <source
+                  type={source.type}
+                  srcset={source.srcset}
+                  sizes={pageSizes}
+                />
+              ))}
+              <img
+                src={image.fallback.src}
+                srcset={image.fallback.srcset}
+                sizes={pageSizes}
+                width={image.fallback.width}
+                height={image.fallback.height}
+                alt={image.alt}
+                loading={index < 2 ? "eager" : "lazy"}
+                fetchpriority={index === 0 ? "high" : undefined}
+                decoding="async"
+                class="h-auto w-full"
+              />
+            </picture>
+          </a>
+        ))
+      }
+    </div>
+  </section>
 </SiteLayout>
+
+<script>
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+  import "photoswipe/style.css";
+
+  let lightbox: PhotoSwipeLightbox | undefined;
+  const urlKey = "photo";
+
+  const syncUrl = (fileName: string | null) => {
+    const url = new URL(window.location.href);
+    if (fileName) {
+      url.searchParams.set(urlKey, fileName);
+    } else {
+      url.searchParams.delete(urlKey);
+    }
+    window.history.replaceState({}, "", url);
+  };
+
+  const init = () => {
+    const gallery = document.querySelector<HTMLElement>("[data-pswp-gallery]");
+    lightbox?.destroy();
+    lightbox = undefined;
+    if (!gallery) return;
+
+    const params = new URLSearchParams(window.location.search);
+    // Back-compat: the old ?gridview admin mode now lives at ./edit
+    if (params.has("gridview")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("gridview");
+      url.pathname = url.pathname.replace(/\/*$/, "/edit");
+      window.location.replace(url.href);
+      return;
+    }
+
+    lightbox = new PhotoSwipeLightbox({
+      gallery,
+      children: "a",
+      bgOpacity: 1,
+      pswpModule: () => import("photoswipe"),
+    });
+    lightbox.on("change", () => {
+      const element = lightbox?.pswp?.currSlide?.data?.element;
+      syncUrl(element?.dataset.filename ?? null);
+    });
+    lightbox.on("close", () => syncUrl(null));
+    lightbox.init();
+
+    // Deep link: ?photo=<file> opens the lightbox at that photo.
+    const fileName = params.get(urlKey);
+    if (fileName) {
+      const anchors = Array.from(gallery.querySelectorAll("a"));
+      const index = anchors.findIndex(
+        (a) => (a as HTMLElement).dataset.filename === fileName,
+      );
+      if (index >= 0) lightbox.loadAndOpen(index, { gallery });
+    }
+  };
+
+  document.addEventListener("astro:page-load", init);
+</script>
