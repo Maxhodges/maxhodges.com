@@ -64,7 +64,8 @@ const ogImage = new URL(
       @media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
       .plot{min-width:0}
       .plot svg{width:100%;height:auto;display:block}
-      .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px}
+      .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:18px}
+      .legend .hintlabel{color:var(--fg)}
       .legend span{display:inline-flex;align-items:center;gap:6px}
       .sw{width:10px;height:10px;border-radius:50%;display:inline-block}
 
@@ -97,6 +98,10 @@ const ogImage = new URL(
       @media (prefers-reduced-motion:no-preference){
         .node.lit .halo{animation:pulse 2.4s ease-in-out infinite}
         @keyframes pulse{0%,100%{opacity:.15}50%{opacity:.7}}
+        /* Until the first interaction, every dot breathes faintly so the
+           map reads as tappable. */
+        svg.idle .node:not(.sel) .halo{animation:breathe 3.2s ease-in-out infinite}
+        @keyframes breathe{0%,100%{opacity:.06}50%{opacity:.35}}
       }
 
       /* panel */
@@ -160,14 +165,14 @@ const ogImage = new URL(
       <nav class="sitenav" aria-label="Site">
         <a href="/">Max Hodges</a><span>/</span><a href="/blog">Blog</a>
       </nav>
-      <div class="eyebrow">Day 0 mood board · industrial techno · Max Hodges</div>
+      <div class="eyebrow">Day 0 mood board · industrial techno · interactive</div>
       <h1>Triangulation</h1>
       <p class="lede">Three territories run through the artists I study: <b style="color:var(--machine)">Pressure</b> (weight, distortion, noise), <b style="color:var(--loop)">Hypnosis</b> (strict repetition, groove, trance) and <b style="color:var(--space)">Atmosphere</b> (space, sci-fi worlds, sound treated as material). I sit where all three overlap. Tap an artist for a readout, or pick a thread to see who shares it.</p>
       <p class="credit">Inspired by <b>Day 0: Vision &amp; Planning</b> in Oscar Verlinden's <a href="https://courses.underdog.brussels/courses/techno-entire-track-creation" target="_blank" rel="noopener">Industrial Techno: Start to Finish</a> course at Underdog Electronic Music School, Brussels. His point: get clear on what you're making and why before you open the DAW, or the tools lead you into random territory. A mood board collects the key stylistic references and asks which part of each one is crucial to the project. This is mine.</p>
 
       <div class="main">
         <div class="plot">
-          <svg viewBox="0 0 1000 970" role="img" aria-label="Venn diagram of three territories, Pressure, Hypnosis and Atmosphere, with twelve artists placed in their regions and me at the centre">
+          <svg viewBox="0 -50 1000 1090" class="venn idle" role="img" aria-label="Venn diagram of three territories, Pressure, Hypnosis and Atmosphere, with twelve artists placed in their regions and me at the centre">
             <g aria-hidden="true">
               <circle class="radar" cx="500" cy="470" r="90"/>
               <circle class="radar" cx="500" cy="470" r="190"/>
@@ -176,12 +181,12 @@ const ogImage = new URL(
               <circle class="ring" cx="370" cy="360" r="300" fill="var(--machine)" stroke="var(--machine)"/>
               <circle class="ring" cx="630" cy="360" r="300" fill="var(--loop)" stroke="var(--loop)"/>
               <circle class="ring" cx="500" cy="585" r="300" fill="var(--space)" stroke="var(--space)"/>
-              <text class="ringlabel" x="20" y="62" fill="var(--machine)">PRESSURE</text>
-              <text class="ringsub" x="22" y="88">distortion · noise · weight</text>
-              <text class="ringlabel" x="980" y="62" fill="var(--loop)" text-anchor="end">HYPNOSIS</text>
-              <text class="ringsub" x="978" y="88" text-anchor="end">repetition · groove · trance</text>
-              <text class="ringlabel" x="500" y="938" fill="var(--space)" text-anchor="middle">ATMOSPHERE</text>
-              <text class="ringsub" x="500" y="962" text-anchor="middle">space · sci-fi · sound as material</text>
+              <text class="ringlabel" x="20" y="8" fill="var(--machine)">PRESSURE</text>
+              <text class="ringsub" x="22" y="42">distortion · noise · weight</text>
+              <text class="ringlabel" x="980" y="8" fill="var(--loop)" text-anchor="end">HYPNOSIS</text>
+              <text class="ringsub" x="978" y="42" text-anchor="end">repetition · groove · trance</text>
+              <text class="ringlabel" x="500" y="958" fill="var(--space)" text-anchor="middle">ATMOSPHERE</text>
+              <text class="ringsub" x="500" y="992" text-anchor="middle">space · sci-fi · sound as material</text>
               <text class="zonelabel" x="505" y="128" text-anchor="middle">RITUAL</text>
               <text class="zonelabel" x="255" y="505" text-anchor="middle">DYSTOPIA</text>
               <text class="zonelabel" x="745" y="505" text-anchor="middle">MEDITATIVE</text>
@@ -194,6 +199,7 @@ const ogImage = new URL(
             <g id="nodes"></g>
           </svg>
           <div class="legend">
+            <span class="hintlabel">Tap an artist for a readout</span>
             <span><i class="sw" style="background:var(--machine)"></i>Pressure</span>
             <span><i class="sw" style="background:var(--loop)"></i>Hypnosis</span>
             <span><i class="sw" style="background:var(--space)"></i>Atmosphere</span>
@@ -502,6 +508,13 @@ function setThread(id){
 }
 let start="vsk";try{const s=localStorage.getItem("tri-sel");if(s&&A.some(a=>a.id===s))start=s}catch(e){}
 select(start);
+
+// Stop the idle "tappable" breathing after the first interaction.
+const venn=document.querySelector("svg.venn");
+const wake=()=>venn&&venn.classList.remove("idle");
+venn?.addEventListener("pointerdown",wake,{once:true});
+venn?.addEventListener("keydown",wake,{once:true});
+chips.addEventListener("click",wake,{once:true});
     </script>
   </body>
 </html>

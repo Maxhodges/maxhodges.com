@@ -204,6 +204,10 @@ check(
     "triangulation has social meta",
     tri.includes('property="og:title"') && tri.includes('rel="canonical"'),
   );
+  check(
+    "diagram affordance hints present",
+    tri.includes("Tap an artist for a readout") && tri.includes("interactive"),
+  );
 }
 
 // --- 12. Existing behavior preserved ---
