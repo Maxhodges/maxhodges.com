@@ -1,0 +1,508 @@
+---
+// Interactive blog article: a Day-0 mood board for industrial techno.
+// Deliberately standalone (no SiteLayout/Tailwind) to keep the piece's
+// own art direction; fonts are self-hosted like the rest of the site.
+import "@fontsource-variable/big-shoulders-display";
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/martian-mono";
+import { getImage } from "astro:assets";
+import heroSrc from "../../assets/images/blog/triangulation.jpg";
+
+const title = "Triangulation — Max Hodges";
+const description =
+  "A Day-0 mood board for industrial techno: twelve artists mapped across Pressure, Hypnosis and Atmosphere, sized by a year of listening data.";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(
+  (await getImage({ src: heroSrc, width: 1200, format: "jpeg" })).src,
+  Astro.site,
+).href;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Max Hodges" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <style is:global>
+      :root{
+        --bg:#0d1013; --panel:#141a1f; --raise:#1a2128; --fg:#e7e2d6; --muted:#8d959c; --line:#28313a;
+        --machine:#d36a40; --loop:#9b8cf2; --space:#47b5aa;
+        --display:"Big Shoulders Display Variable", "Arial Narrow", Impact, sans-serif;
+        --body:"Archivo Variable", "Helvetica Neue", Arial, sans-serif;
+        --mono:"Martian Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+        color-scheme:dark;
+      }
+      *,*::before,*::after{box-sizing:border-box}
+      html,body{margin:0;padding:0}
+      img{max-width:100%}
+      body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55}
+      .wrap{max-width:1200px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 64px}
+      .sitenav{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;margin-bottom:26px}
+      .sitenav a{color:var(--muted);text-decoration:none}
+      .sitenav a:hover{color:var(--fg)}
+      .sitenav span{color:var(--line);padding:0 6px}
+      .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+      h1{font-family:var(--display);font-weight:800;font-size:clamp(56px,11vw,128px);line-height:.86;letter-spacing:.01em;margin:8px 0 14px;text-transform:uppercase;text-wrap:balance}
+      .lede{max-width:64ch;color:var(--fg);font-size:17px;margin:0}
+      .lede b{font-weight:600}
+      .main{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;margin-top:28px;align-items:start}
+      @media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
+      .plot{min-width:0}
+      .plot svg{width:100%;height:auto;display:block}
+      .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px}
+      .legend span{display:inline-flex;align-items:center;gap:6px}
+      .sw{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+      /* threads */
+      .threads{margin-top:16px}
+      .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+      .chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+      .chip:hover{border-color:var(--muted)}
+      .chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+      .chip:focus-visible,.node:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+      .threadnote{min-height:3.2em;margin:10px 0 0;color:var(--muted);font-size:14px;max-width:70ch}
+      .threadnote b{color:var(--fg);font-weight:600}
+
+      /* svg */
+      .ring{fill-opacity:.07;stroke-width:1.5}
+      .ringlabel{font-family:var(--display);font-weight:800;font-size:56px;letter-spacing:.04em}
+      .ringsub{font-family:var(--mono);font-size:15px;fill:var(--muted)}
+      .zonelabel{font-family:var(--mono);font-size:14px;letter-spacing:.14em;fill:var(--muted)}
+      .radar{fill:none;stroke:var(--line);stroke-dasharray:2 6}
+      .node{cursor:pointer;transition:opacity .25s}
+      .node circle.dot{fill:var(--bg);stroke:var(--fg);stroke-width:1.5;transition:fill .2s}
+      .node text{font-family:var(--mono);font-size:17px;fill:var(--fg);text-anchor:middle;letter-spacing:.04em}
+      .node:hover circle.dot{fill:var(--raise)}
+      .node.sel circle.dot{fill:var(--fg)}
+      .node.dim{opacity:.16}
+      .node .halo{fill:none;stroke:var(--fg);stroke-width:1;opacity:0}
+      .node.lit .halo{opacity:.55}
+      .you text{font-family:var(--display);font-weight:800;font-size:22px;fill:var(--fg);text-anchor:middle;letter-spacing:.1em}
+      .you line{stroke:var(--fg);stroke-width:1.2}
+      @media (prefers-reduced-motion:no-preference){
+        .node.lit .halo{animation:pulse 2.4s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:.15}50%{opacity:.7}}
+      }
+
+      /* panel */
+      .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:22px 22px 18px;min-width:0;position:sticky;top:16px}
+      @media (max-width:900px){.panel{position:static}}
+      .panel h2{font-family:var(--display);font-weight:800;font-size:46px;line-height:.95;margin:6px 0 4px;text-transform:uppercase}
+      .meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.6}
+      .zonepill{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;margin-top:10px;color:var(--bg)}
+      .mins{font-family:var(--mono);font-size:12px;margin-top:12px;color:var(--fg)}
+      .mins .bar{height:4px;background:var(--line);border-radius:2px;margin-top:6px;overflow:hidden}
+      .mins .bar i{display:block;height:100%;background:var(--fg)}
+      .panel .aes{font-size:16px;margin:16px 0 0}
+      .panel h3{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px;font-weight:500}
+      .panel ul{margin:0;padding-left:18px;display:grid;gap:5px}
+      .try{margin-top:16px;border-left:3px solid var(--fg);padding:10px 12px;background:var(--raise);border-radius:0 4px 4px 0}
+      .try p{margin:0}
+      .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+      .tags span{font-family:var(--mono);font-size:10.5px;border:1px solid var(--line);border-radius:3px;padding:2px 7px;color:var(--muted)}
+      .src{font-size:13px;color:var(--muted)}
+      .src a{color:var(--fg);text-underline-offset:3px;text-decoration-color:var(--muted)}
+
+      /* reading sections */
+      section.read{margin-top:56px;border-top:1px solid var(--line);padding-top:22px}
+      section.read h2{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,52px);text-transform:uppercase;margin:6px 0 16px;line-height:.95;text-wrap:balance}
+      .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+      .zone{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+      .zone h4{margin:0 0 4px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:flex;gap:8px;align-items:center;font-weight:500}
+      .zone .who{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px}
+      .zone p{margin:0;font-size:14px}
+      .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
+      @media (max-width:800px){.cols{grid-template-columns:minmax(0,1fr)}}
+      .prose p{max-width:64ch;margin:0 0 12px}
+      ol.recipe{margin:0;padding-left:22px;display:grid;gap:10px;max-width:64ch}
+      ol.recipe b{font-weight:600}
+      .q{margin-top:18px;font-family:var(--display);font-weight:700;font-size:26px;line-height:1.1;max-width:30ch;text-wrap:balance}
+      .notes{font-size:13px;color:var(--muted);max-width:80ch}
+      .keygrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:32px}
+      @media (max-width:800px){.keygrid{grid-template-columns:minmax(0,1fr)}}
+      .keylist{display:grid;gap:12px;margin:0}
+      .keyrow{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:center}
+      .keyrow svg{width:56px;height:40px;display:block}
+      .keyrow dt{display:contents}
+      .keyrow dd{margin:0;font-size:14px}
+      .keyrow dd b{font-weight:600}
+      .sizes svg{width:100%;max-width:340px;height:auto;display:block}
+      .sizes text{font-family:var(--mono);font-size:12px;fill:var(--muted);text-anchor:middle}
+      .gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px 24px;margin:0}
+      .gloss div{min-width:0}
+      .gloss dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg)}
+      .gloss dd{margin:2px 0 0;font-size:14px;color:var(--muted)}
+      .notes p{margin:0 0 8px}
+      .credit{max-width:72ch;margin:16px 0 0;padding:12px 14px;border-left:2px solid var(--fg);background:var(--panel);color:var(--muted);font-size:14px;border-radius:0 4px 4px 0}
+      .credit b{color:var(--fg);font-weight:600}
+      .credit a{color:var(--fg);text-underline-offset:3px;text-decoration-color:var(--muted)}
+      ol.story{margin:0;padding-left:22px;display:grid;gap:12px;max-width:68ch}
+      ol.story b{font-weight:600}
+      .madewith{margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+    </style>
+
+    <div class="wrap">
+      <nav class="sitenav" aria-label="Site">
+        <a href="/">Max Hodges</a><span>/</span><a href="/blog">Blog</a>
+      </nav>
+      <div class="eyebrow">Day 0 mood board · industrial techno · Max Hodges</div>
+      <h1>Triangulation</h1>
+      <p class="lede">Three territories run through the artists I study: <b style="color:var(--machine)">Pressure</b> (weight, distortion, noise), <b style="color:var(--loop)">Hypnosis</b> (strict repetition, groove, trance) and <b style="color:var(--space)">Atmosphere</b> (space, sci-fi worlds, sound treated as material). I sit where all three overlap. Tap an artist for a readout, or pick a thread to see who shares it.</p>
+      <p class="credit">Inspired by <b>Day 0: Vision &amp; Planning</b> in Oscar Verlinden's <a href="https://courses.underdog.brussels/courses/techno-entire-track-creation" target="_blank" rel="noopener">Industrial Techno: Start to Finish</a> course at Underdog Electronic Music School, Brussels. His point: get clear on what you're making and why before you open the DAW, or the tools lead you into random territory. A mood board collects the key stylistic references and asks which part of each one is crucial to the project. This is mine.</p>
+
+      <div class="main">
+        <div class="plot">
+          <svg viewBox="0 0 1000 970" role="img" aria-label="Venn diagram of three territories, Pressure, Hypnosis and Atmosphere, with twelve artists placed in their regions and me at the centre">
+            <g aria-hidden="true">
+              <circle class="radar" cx="500" cy="470" r="90"/>
+              <circle class="radar" cx="500" cy="470" r="190"/>
+              <circle class="radar" cx="500" cy="470" r="300"/>
+              <circle class="radar" cx="500" cy="470" r="420"/>
+              <circle class="ring" cx="370" cy="360" r="300" fill="var(--machine)" stroke="var(--machine)"/>
+              <circle class="ring" cx="630" cy="360" r="300" fill="var(--loop)" stroke="var(--loop)"/>
+              <circle class="ring" cx="500" cy="585" r="300" fill="var(--space)" stroke="var(--space)"/>
+              <text class="ringlabel" x="20" y="62" fill="var(--machine)">PRESSURE</text>
+              <text class="ringsub" x="22" y="88">distortion · noise · weight</text>
+              <text class="ringlabel" x="980" y="62" fill="var(--loop)" text-anchor="end">HYPNOSIS</text>
+              <text class="ringsub" x="978" y="88" text-anchor="end">repetition · groove · trance</text>
+              <text class="ringlabel" x="500" y="938" fill="var(--space)" text-anchor="middle">ATMOSPHERE</text>
+              <text class="ringsub" x="500" y="962" text-anchor="middle">space · sci-fi · sound as material</text>
+              <text class="zonelabel" x="505" y="128" text-anchor="middle">RITUAL</text>
+              <text class="zonelabel" x="255" y="505" text-anchor="middle">DYSTOPIA</text>
+              <text class="zonelabel" x="745" y="505" text-anchor="middle">MEDITATIVE</text>
+            </g>
+            <g class="you" aria-hidden="true">
+              <line x1="470" y1="497" x2="530" y2="497"/><line x1="500" y1="467" x2="500" y2="527"/>
+              <circle cx="500" cy="497" r="12" fill="none" stroke="var(--fg)" stroke-width="1.2"/>
+              <text x="500" y="562">ME</text>
+            </g>
+            <g id="nodes"></g>
+          </svg>
+          <div class="legend">
+            <span><i class="sw" style="background:var(--machine)"></i>Pressure</span>
+            <span><i class="sw" style="background:var(--loop)"></i>Hypnosis</span>
+            <span><i class="sw" style="background:var(--space)"></i>Atmosphere</span>
+            <span>Dot size = my Apple Music Replay minutes, Jan–Sep 2026</span>
+          </div>
+
+          <div class="threads">
+            <div class="eyebrow">Shared threads</div>
+            <div class="chips" id="chips"></div>
+            <p class="threadnote" id="threadnote">Each thread cuts across the circles. Pick one to light up the artists who share it.</p>
+          </div>
+        </div>
+
+        <aside class="panel" id="panel" aria-live="polite"></aside>
+      </div>
+
+      <section class="read">
+        <div class="eyebrow">How to read the map</div>
+        <h2>Three circles, three overlaps, one centre</h2>
+        <div class="zones">
+          <div class="zone"><h4><i class="sw" style="background:var(--machine)"></i>Pressure</h4><div class="who">Ansome · 93sovage</div><p>Physical weight. Booming or staggered kicks, sheet-noise distortion, one-note subs, rave stabs, noise played as texture. Hardware and modular first, little melody. Atonal and harsh in timbre, but rarely dissonant in the harmonic sense.</p></div>
+          <div class="zone"><h4><i class="sw" style="background:var(--loop)"></i>Hypnosis</h4><div class="who">Truncate · Developer</div><p>Tracks as tools. A few layers built to be mixed, jacking Chicago or tunnel-like warehouse grooves, numbered rather than named.</p></div>
+          <div class="zone"><h4><i class="sw" style="background:var(--space)"></i>Atmosphere</h4><div class="who">Kangding Ray</div><p>Sound as architecture. Granular texture, broken uneven rhythm, emotional and cinematic, built mostly by taking things away.</p></div>
+          <div class="zone"><h4>Ritual · Pressure × Hypnosis</h4><div class="who">Regis · Surgeon</div><p>The Birmingham method: strict sequences, no breakdowns or fills, a mantra built from layered percussion and dub space.</p></div>
+          <div class="zone"><h4>Dystopia · Pressure × Atmosphere</h4><div class="who">Tommy Four Seven · Scalameriya · Headless Horseman</div><p>Sci-fi, horror and gothic worlds over broken, syncopated drums. All three have released on Tommy Four Seven's 47 label, and VSK has too.</p></div>
+          <div class="zone"><h4>Meditative · Hypnosis × Atmosphere</h4><div class="who">Dotdat</div><p>One motif held for the whole track while drums and noise shift around it. Heavy but meditative, Detroit-leaning groove.</p></div>
+          <div class="zone"><h4>Centre · all three</h4><div class="who">VSK · me</div><p>VSK sits closest to me: hard industrial on one side, "mental" hypnotic tracks on the other, cosmology in the titles. What all twelve share is the brief my notes keep circling: few elements, short sounds, change by subtraction, and processing that turns a plain source into a character.</p></div>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="eyebrow">My plan</div>
+        <h2>Start in the Hypnosis circle, make tools</h2>
+        <div class="cols">
+          <div class="prose">
+            <p>My sticking point is development: I get a loop going and stall on how to grow it into a track. Minimal techno doesn't remove development. It moves it out of the arrangement and into mutes, filter moves, effect sends and velocity. That suits a modular rig and the "mute, don't edit" rule I wrote down after studying Kone.</p>
+            <p>A <b>DJ tool</b> is a track made to be used inside a DJ set instead of listened to on its own. It's a working loop with a long, stable groove, mostly drums and one or two elements, that a DJ layers on top of another record for a few minutes. It has no real intro, no story and no big drop, and on its own it can sound almost unfinished. That's intentional.</p>
+            <p>Truncate and Developer get around the problem by not making songs. Truncate began as numbered DJ tools and keeps tracks "simple and not too complicated". Developer's <i>In Pure Form</i> is 25 numbered tracks billed as no-filler tools. A tool doesn't need a story. It needs to hold a dancefloor for six minutes while someone mixes it.</p>
+            <p>So "how do I develop this?" gets a smaller answer: I don't, past four or five mute moves. I'll number the tracks instead of naming them, so none of them has to be the important one.</p>
+          </div>
+          <div>
+            <ol class="recipe">
+              <li><b>Kick plus a VSK tail.</b> Dry kick, plus a send through delay, distortion and reverb on the matrix mixer, pitched slightly and blended low so it swells and recedes.</li>
+              <li><b>Toms from the kick.</b> The same kick voice, pitched up per step from Hermod+, random velocity, two hits pushed late, a stereo delay to glue them. This is VSK's method, as he teaches it in his Home of Sound course.</li>
+              <li><b>One motif.</b> A short stab or acid figure. Never change the notes, only the filter and the sends (Dotdat).</li>
+              <li><b>One space layer.</b> A drone or a resampled effects return sitting under the kick (Kangding Ray, Tommy Four Seven).</li>
+              <li><b>Arrange by muting.</b> Record a 7-minute pass into Bitwig with four mute moves and no breakdown (Regis). Export the same day as Tool 01.</li>
+            </ol>
+            <p class="q">Which part will I want to keep "developing", and what happens if I leave it as a tool?</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="read" id="legend">
+        <div class="eyebrow">Legend</div>
+        <h2>Key and terms</h2>
+        <div class="keygrid">
+          <div>
+            <dl class="keylist">
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="28" cy="20" r="17" fill="var(--machine)" fill-opacity=".12" stroke="var(--machine)" stroke-width="1.5"/></svg></dt><dd><b style="color:var(--machine)">Pressure</b>: weight, distortion, noise. Physical force from the kick and sub.</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="28" cy="20" r="17" fill="var(--loop)" fill-opacity=".12" stroke="var(--loop)" stroke-width="1.5"/></svg></dt><dd><b style="color:var(--loop)">Hypnosis</b>: strict repetition and groove that pulls you into a trance.</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="28" cy="20" r="17" fill="var(--space)" fill-opacity=".12" stroke="var(--space)" stroke-width="1.5"/></svg></dt><dd><b style="color:var(--space)">Atmosphere</b>: space, sci-fi worlds, sound treated as a material.</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="var(--machine)" fill-opacity=".14" stroke="var(--machine)" stroke-width="1.2"/><circle cx="36" cy="20" r="14" fill="var(--loop)" fill-opacity=".14" stroke="var(--loop)" stroke-width="1.2"/></svg></dt><dd><b>Overlaps</b>: Ritual (Pressure × Hypnosis), Dystopia (Pressure × Atmosphere), Meditative (Hypnosis × Atmosphere).</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><line x1="14" y1="20" x2="42" y2="20" stroke="var(--fg)" stroke-width="1.2"/><line x1="28" y1="6" x2="28" y2="34" stroke="var(--fg)" stroke-width="1.2"/><circle cx="28" cy="20" r="7" fill="none" stroke="var(--fg)" stroke-width="1.2"/></svg></dt><dd><b>Me</b>: the point where all three circles meet.</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="28" cy="20" r="11" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.5"/></svg></dt><dd><b>Artist</b>: tap it for a readout.</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="28" cy="20" r="11" fill="var(--fg)" stroke="var(--fg)" stroke-width="1.5"/></svg></dt><dd><b>Filled</b>: the artist shown in the readout.</dd></div>
+              <div class="keyrow"><dt><svg viewBox="0 0 56 40" aria-hidden="true"><circle cx="28" cy="20" r="17" fill="none" stroke="var(--fg)" stroke-width="1" opacity=".6"/><circle cx="28" cy="20" r="11" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.5"/></svg></dt><dd><b>Ring</b>: shares the thread you picked. Faded dots don't.</dd></div>
+            </dl>
+            <div class="sizes" style="margin-top:20px">
+              <div class="eyebrow" style="margin-bottom:6px">Dot size · my 2026 listening minutes</div>
+              <svg viewBox="0 0 340 96" aria-label="Dot sizes for 100, 500, 1,000 and 2,500 minutes">
+                <circle cx="30" cy="42" r="11.9" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.2"/><text x="30" y="90">100</text>
+                <circle cx="100" cy="42" r="17.4" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.2"/><text x="100" y="90">500</text>
+                <circle cx="180" cy="42" r="21.6" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.2"/><text x="180" y="90">1,000</text>
+                <circle cx="280" cy="42" r="33.3" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.2"/><text x="280" y="90">2,500</text>
+              </svg>
+            </div>
+          </div>
+          <dl class="gloss">
+            <div><dt>DJ tool</dt><dd>A track built to be mixed inside a set: a long, steady groove with few elements and no story. Done when the groove holds.</dd></div>
+            <div><dt>Motif</dt><dd>One short figure, stab or note repeated for the whole track instead of a melody that develops.</dd></div>
+            <div><dt>Atonal</dt><dd>No key centre. Different from dissonant, which means clashing pitches.</dd></div>
+            <div><dt>Broken beat</dt><dd>Syncopated percussion off the straight 4/4 grid. In this scene it mostly comes from UK bass, jungle and drum &amp; bass.</dd></div>
+            <div><dt>Kick tail</dt><dd>VSK's rumble: the dry kick plus a delayed, distorted, reverbed copy blended low so it swells and recedes.</dd></div>
+            <div><dt>Dub space</dt><dd>Delay and reverb sends played live, so the echoes become part of the arrangement.</dd></div>
+            <div><dt>Resampling</dt><dd>Recording your own output, such as an effects return, back as audio and cutting it into a new part.</dd></div>
+            <div><dt>Granular</dt><dd>Chopping a sound into tiny grains and rearranging them into textures, for example with a Morphagene.</dd></div>
+            <div><dt>Hard mute vs fade</dt><dd>A hard mute on a phrase boundary punctuates. A fade or filter ride evolves.</dd></div>
+            <div><dt>HPF roll-off</dt><dd>Sweeping a high-pass filter up so the kick thins out without disappearing. A DJ move that works in arrangements too.</dd></div>
+            <div><dt>47 · Perc Trax · Downwards</dt><dd>Labels that link these artists: Tommy Four Seven's 47, Perc's Perc Trax, and Regis's Downwards.</dd></div>
+            <div><dt>Threads</dt><dd>Traits that cut across the circles. Pick one under the diagram to light up who shares it.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="eyebrow">How I made this</div>
+        <h2>Make your own in six steps</h2>
+        <ol class="story">
+          <li><b>Keep a journal.</b> A couple of years ago I started keeping a music journal. I use it to plan and reflect on my studio sessions, and to take active-listening notes on tracks by the artists I admire, from quick reference entries to full analyses, like a charted breakdown of Tommy Four Seven's "Sevals" that tracks the kick, toms, highs and lead across all eight minutes.</li>
+          <li><b>Find the patterns.</b> I gave Claude the journal's reference list and asked who was represented most and what themes it pointed to. VSK came out on top by a wide margin. The themes were clinical, systems-style sci-fi, restraint, atmosphere doing the emotional work, and arranging by subtraction.</li>
+          <li><b>Ingest your library.</b> In the Music app on the Mac, File → Library → Export Library writes an XML file of every saved track with play counts and dates. Mine had about 7,600 tracks and 25,000 plays going back to 2004. Parsing it showed the long habits: Phil Western and Download on top, then Kangding Ray, Tommy Four Seven and Orphx.</li>
+          <li><b>Add your streaming history.</b> The library only counts tracks I've saved, so we went month by month through Apple Music Replay for January to September 2026 in the browser. That changed the picture. VSK was my top artist of the year at 2,600+ minutes, followed by Dotdat, Regis and Scalameriya, the only one in my top list every month. My notes had been right after all.</li>
+          <li><b>Research each artist.</b> For each artist, Claude read reviews, interviews and label pages in parallel and summarised the aesthetic, signature techniques and scene, checking VSK's against my notes from his course. Along the way it corrected a few things I had wrong: names, labels, which record a track is on.</li>
+          <li><b>Draw the map.</b> We placed the artists in three overlapping territories and sized each dot by my listening, then reworked it together. Machine, Loop and Space became Pressure, Hypnosis and Atmosphere.</li>
+        </ol>
+        <p class="madewith">Built in conversation with Claude, October 2026.</p>
+      </section>
+
+      <section class="read notes">
+        <div class="eyebrow">Notes on the data</div>
+        <p>Minutes are lower bounds from Apple Music Replay, January to September 2026. Each month only shows its top 14 to 20 artists. Truncate's figure leaves out his joint tracks with Dotdat. 93sovage's minutes are all from June and July.</p>
+        <p>93sovage has no reviews; his profile comes from a radio-show bio and an event listing.</p>
+        <p>Profiles summarise reviews and interviews linked in each readout. Dotdat has only bios and event listings, no proper reviews. Scalameriya has no documented gear or process. VSK's tom and kick-tail technique comes from my notes on his Home of Sound course, not from press.</p>
+        <p>Corrections found along the way: Ansome is Kieran Whitefield. Developer is Adrian Sandoval. VSK's Polarization LP came out on Warm Up, not 47. "Colony" is a track on Tommy Four Seven's Veer.</p>
+      </section>
+    </div>
+
+    <script is:inline>
+const ZC = {machine:"var(--machine)", loop:"var(--loop)", space:"var(--space)"};
+const ZONES = {
+  center:{label:"Centre · all three", color:"var(--fg)"},
+  machine:{label:"Pressure", color:ZC.machine},
+  loop:{label:"Hypnosis", color:ZC.loop},
+  space:{label:"Atmosphere", color:ZC.space},
+  ml:{label:"Ritual · Pressure × Hypnosis", color:"linear-gradient(90deg,var(--machine),var(--loop))"},
+  ms:{label:"Dystopia · Pressure × Atmosphere", color:"linear-gradient(90deg,var(--machine),var(--space))"},
+  ls:{label:"Meditative · Hypnosis × Atmosphere", color:"linear-gradient(90deg,var(--loop),var(--space))"}
+};
+const A = [
+ {id:"vsk",name:"VSK",x:500,y:385,min:2631,zone:"center",lx:0,ly:1,
+  who:"Francesco Visconti · Rome, based in Berlin",
+  aes:"Two sides at once: hard industrial techno and deeper, \"mental\" hypnotic tracks. He talks about duality, and his titles lean on cosmology and science (Occam's Razor, Multiverse).",
+  sig:["Toms made from his own kick, re-pitched through an FM synth, sequenced with random velocity, some hits deliberately off-grid, glued with stereo delay","Kick tail: a dry kick plus a smeared delay, reverb and distortion layer with pitch variation, blended so it breathes","Broken-beat and drum & bass tension under the 4/4; he called one 47 track essentially a DnB track","Works mostly in Ableton, although label copy calls Polarization modular-driven"],
+  tryit:"Build the groove engine before anything else: kick, tail, tom loop. If those three hold for two minutes, the track has a spine.",
+  tags:["industrial","hypnotic","broken-beat","cosmic","duality"],
+  labels:"47 · Perc Trax · Warm Up · Modularz · Soma · Planet Rhythm",
+  src:[["Mixmag","https://mixmag.net/read/premiere-vsks-frame-brings-malicious-techno-on-tommy-four-sevens-label-music"],["XLR8R","https://xlr8r.com/news/vsk-returns-to-47/"],["RA","https://ra.co/dj/vsk"]]},
+ {id:"dotdat",name:"Dotdat",x:690,y:575,min:1024,zone:"ls",lx:0,ly:1,
+  who:"Sidhant Naren · Pune, based in Goa",
+  aes:"Hypnotic, sci-fi techno that stays meditative even when it's heavy. He describes making music as a way to put order on restless energy.",
+  sig:["One repeating motif carries the track; drums and noise shift around it","Acid-like arpeggios hold the motif on Volatile Evolution and Portal","Dense textures that change gradually rather than in sections","Detroit-leaning groove, minimal but physical; working with modular since 2023"],
+  tryit:"Hold one motif for seven minutes. Let only the filter, the sends and the drums move.",
+  tags:["hypnotic","sci-fi","acid motif","Detroit groove","meditative"],
+  labels:"Symbolism (Ben Sims) · Truncate · Spazio Magnetico · K S R · HYD EP with Truncate",
+  src:[["RA biography","https://ra.co/dj/dotdat/biography"],["Wild City","https://www.thewildcity.com/news/17748-dotdat-drops-his-high-octane-debut-ep-subtrap"],["Bandcamp","https://dotdat.bandcamp.com/music"]]},
+ {id:"regis",name:"Regis",x:455,y:215,min:895,zone:"ml",lx:0,ly:1,
+  who:"Karl O'Connor · Birmingham",
+  aes:"Ritual and confrontation from a post-punk lineage: D.A.F., Test Dept, Scorn, Jeff Mills, dub.",
+  sig:["Aims for \"giant slabs\": no melody, no breakdowns, no fills, built up like a mantra","Grainy, distorted kicks under layered percussion","Heavy dub reverb and phasing, atonal loops","Low-tech by choice; keeps mistakes in"],
+  tryit:"Write a track with no breakdown at all. All change comes from adding layers and opening dub sends.",
+  tags:["ritual","atonal","dub space","post-punk","Birmingham"],
+  labels:"Downwards (founder) · British Murder Boys with Surgeon · Sandwell District",
+  src:[["The Quietus","https://thequietus.com/?p=13564"],["FACT","https://www.factmag.com/2010/06/09/regis-blood-into-gold"],["RA review","https://ra.co/reviews/21655"]]},
+ {id:"scalameriya",name:"Scalameriya",x:345,y:495,min:455,zone:"ms",lx:0,ly:1,
+  who:"Nikola Grebović · Serbia · runs Genesa Records",
+  aes:"Dark, forceful sci-fi with horror-film menace. Influences: Ghost in the Shell, Akira, Evangelion, Metroid, R-Type, machinery and \"ancient technology\". He separates forceful from simply aggressive.",
+  sig:["Piledriving kicks with broken beats and electro folded into hard techno","Noisy growls that a reviewer compared to a malfunctioning motor; metallic screeches","Texture under strain rather than harmony","Early records were atmospheric, dystopian minimal; the industrial turn came around 2015"],
+  tryit:"Give the noise a job a machine would have: a motor, a servo, an alarm. It reads as world-building, not as dissonance.",
+  tags:["sci-fi","industrial","broken beat","metallic","horror"],
+  labels:"Perc Trax (Haka with VSK) · Power Vacuum · 47 · Planet Rhythm",
+  src:[["RA review","https://nl.ra.co/reviews/18001"],["Trebuchet","https://www.trebuchet-magazine.com/scalameriya/"],["Keyi interview","https://www.keyimagazine.com/2024/12/17/scalameriya-interview"]]},
+ {id:"kangding",name:"Kangding Ray",x:430,y:770,min:237,zone:"space",lx:0,ly:1,
+  who:"David Letellier · French, based in Berlin · trained as an architect",
+  aes:"Architectural and sculptural: sound as a physical material. Emotional and cinematic; he scored Sirāt (2025), which won the Cannes Jury Prize for its soundtrack.",
+  sig:["Moved from Raster-Noton precision to dirtier, less-edited records","Broken, uneven club rhythms; granular textures; rising arpeggios","Works slowly and mostly subtractively","Plays live on all-hardware setups, including modular"],
+  tryit:"Build a loop that's too dense on purpose, then spend the session taking things out.",
+  tags:["architectural","granular","cinematic","subtractive","hardware"],
+  labels:"Raster-Noton · Stroboscopic Artefacts",
+  src:[["RBMA interview","https://daily.redbullmusicacademy.com/2015/12/kangding-ray-interview"],["The Quietus","https://thequietus.com/?p=16880"],["Crack on Sirāt","https://crackmagazine.net/article/long-reads/kangding-ray-sirat-score/"]]},
+ {id:"surgeon",name:"Surgeon",x:560,y:265,min:169,zone:"ml",lx:0,ly:1,
+  who:"Anthony Child · Birmingham",
+  aes:"Hypnotic, physical and dark, drawing on Coil, Throbbing Gristle, Burroughs cut-ups and Lynch.",
+  sig:["Strict sequences; booming loops, cavernous subs, hiss and static","Dub-style effects played live from the desk","Improvises on hardware and modular, multitracks it, arranges later","Keeps his live rig small enough for a carry-on as a deliberate limit"],
+  tryit:"Record a 15-minute improvisation to multitrack, then arrange only by cutting and muting.",
+  tags:["hypnotic","strict","modular","improvised","cut-up"],
+  labels:"Downwards · Tresor · Counterbalance · Dynamic Tension · British Murder Boys",
+  src:[["The Quietus","https://thequietus.com/?p=18123"],["MusicRadar","https://www.musicradar.com/news/surgeon-interview"],["Ableton","https://www.ableton.com/en/blog/surgeon-plugging-moment"]]},
+ {id:"ansome",name:"Ansome",x:205,y:310,min:162,zone:"machine",lx:0,ly:1,
+  who:"Kieran Whitefield · UK, later Berlin",
+  aes:"Brutal, grimy and theatrical, with a distinctly British menace.",
+  sig:["Booming or staggered four-to-the-floor kicks","Sheet-noise distortion, an acid edge, Mentasm hoover stabs","One-note sub pressure; very little melody","Hardware and modular first, some circuit-bent; computer only to arrange"],
+  tryit:"One-note sub plus one distorted stab is a whole track. Prove it once.",
+  tags:["industrial","acid","distorted","hardware","brutal"],
+  labels:"Perc Trax (Stowaway, Hounds of the Harbour) · S.L.A.M.",
+  src:[["The Quietus","https://thequietus.com/?p=17333"],["RA review","https://ra.co/reviews/18013"],["Electronic Sound","https://electronicsound.co.uk/reviews/ansome-stowaway-perc-trax/"]]},
+ {id:"t47",name:"Tommy Four Seven",x:395,y:640,min:147,zone:"ms",lx:0,ly:1,
+  who:"Thomas Boardley · UK-born, based in Berlin · runs 47",
+  aes:"Cinematic and narrative. Veer imagines people leaving a ruined Earth; Colony is on it.",
+  sig:["Primate used field and voice recordings instead of synths and stock drums","Beats run through delays, then cut up and resampled","Uses modular as a giant effects chain; granular parts from a Morphagene","Broken but controlled rhythm with UK bass, garage and drum & bass syncopation even in 4/4"],
+  tryit:"Print an effects return to audio, chop it, and make the chopped version a part.",
+  tags:["cinematic","dystopian","found sound","resampling","broken techno"],
+  labels:"CLR · 47 · peers Kwartz, Killawatt, Scalameriya",
+  src:[["Electronic Beats","https://www.electronicbeats.net/tommy-four-seven-veer/"],["Attack","https://www.attackmagazine.com/features/my-studio/these-hidden-hands/"],["Magnetic","https://magneticmag.com/2019/02/tommy-47-announces-veer/"]]},
+ {id:"hh",name:"Headless Horseman",x:240,y:600,min:144,zone:"ms",lx:0,ly:1,
+  who:"Anonymous · based in Berlin · performs masked",
+  aes:"Gothic, hallucinatory industrial techno drawn from 19th-century speculative fiction. Vice called it necromantic and playful.",
+  sig:["Sledgehammer kicks, fractured drums, sharp snare bursts","Gothic atmospheres, knotty feedback, hypnotic synth lines, blade-like ticks","Says less is more and he's increasingly into sound design; made his hoofbeat samples by hand","Elektron Octatrack, Analog Rytm and Machinedrum; hybrid live sets"],
+  tryit:"Make one signature sound by hand from a real object, and let it recur across tracks.",
+  tags:["gothic","industrial","broken-beat","ritual","masked"],
+  labels:"Headless Horseman (HDL) · 47",
+  src:[["RA review","https://fr.ra.co/reviews/22337"],["Vice Q&A","https://www.vice.com/en/article/headless-horseman-bleeding-arrows-q-and-a"],["XLR8R","https://xlr8r.com/news/headless-horseman-returns-to-47/"]]},
+ {id:"developer",name:"Developer",x:805,y:390,min:121,zone:"loop",lx:0,ly:1,
+  who:"Adrian Sandoval · Los Angeles · runs Modularz",
+  aes:"Tunnel-like, relentless warehouse techno, neither dark nor bright; reviewers call it melancholic.",
+  sig:["Reduced, pummelling drums with skittering percussion and shifting hats","Amorphous, atonal, noir-ish chord stabs","Chugging, distorted basslines; field recordings","Prolific: In Pure Form is 25 numbered tools"],
+  tryit:"Use one atonal stab instead of a chord progression. It gives colour without stacking tension.",
+  tags:["hypnotic","tunnelling","functional","tribal","prolific"],
+  labels:"Modularz · Olympian · PoleGroup orbit · Semantica · Mote-Evolver",
+  src:[["RA biography","https://ra.co/dj/developer/biography"],["XLR8R","https://xlr8r.com/?p=83236"],["Stray Landings","https://straylandings.co.uk/_content/reviews/2013-04-03-47015036163/"]]},
+ {id:"sovage",name:"93sovage",x:180,y:445,min:197,zone:"machine",lx:0,ly:1,
+  who:"Paris area (Bagnolet) · modular artist, sound engineer and designer · Sovage Engineering",
+  aes:"Dark techno and noise from a musician who came up playing guitar, bass and vocals in metal, cold wave and shoegaze bands. His Refuge Worldwide show is called Ambient Hardcore, which is a fair summary.",
+  sig:["Techno foundation with metal, cold wave and shoegaze textures layered over it","Noise and ambient sit alongside hard, hitting techno rather than in separate projects","Plays hour-plus live modular sets, described as both groovy and trippy","Mostly self-released (Noizer Mixtape Vol. 2, 21 tracks, 2021); linked to the Mekanikal Bloodshed crew"],
+  tryit:"He builds the modules he plays: Sovage Engineering makes the OXYMORON, a drone and noise voice I'm considering. Hearing his sets first is the best demo.",
+  tags:["noise","dark techno","modular live","shoegaze","Paris"],
+  labels:"Self-released · Mekanikal Bloodshed · Sovage Engineering (hardware)",
+  src:[["Refuge Worldwide","https://refugeworldwide.com/artists/93sovage"],["Shotgun event","https://shotgun.live/fr/events/endless-octogone-w-93-sovage-live-dj-virage-sud"],["Bandcamp","https://93sovage.bandcamp.com/track/recoravery"]]},
+ {id:"truncate",name:"Truncate",x:765,y:255,min:119,zone:"loop",lx:0,ly:1,
+  who:"David Flores · Los Angeles",
+  aes:"Raw, stripped-down DJ-tool techno: deep, with an edge.",
+  sig:["Started as numbered DJ tools; wants tracks simple and not too complicated","Loop-based, few layers, made to be mixed","Jacking Chicago rhythm with cold European minimalism","Roots in rave, hardcore and drum & bass; some broken, off-beat percussion"],
+  tryit:"Number your tracks like tools. Tool 01 only has to work in a mix.",
+  tags:["stripped-down","DJ tool","loop","jacking","raw"],
+  labels:"Truncate · WRKTRX · Droid Behavior · 50 Weapons · Assailants with Ben Sims",
+  src:[["fabric","https://www.fabriclondon.com/posts/introducing-truncate-and-his-fabric-promo-mix"],["RA review","https://ra.co/reviews/18311"],["Exclaim","https://exclaim.ca/music/article/truncate-pressurize_ep"]]}
+];
+const THREADS = [
+ {id:"broken",name:"Broken rhythm under a straight kick",ids:["vsk","scalameriya","hh","t47","kangding","truncate"],
+  note:"Syncopated, broken percussion riding on or around the 4/4. Most of it comes from UK bass, jungle and drum & bass roots. This is where the industrial artists here get their swing."},
+ {id:"motif",name:"Motif, not melody",ids:["regis","ansome","developer","dotdat","truncate","surgeon"],
+  note:"One stab, one figure or one note, held. Colour comes from timbre and atonal stabs instead of chord changes. That's how they avoid piling up tension."},
+ {id:"scifi",name:"Machine-age worlds",ids:["vsk","scalameriya","t47","dotdat","kangding","hh"],
+  note:"Cosmology, anime and game sci-fi, ecological dystopia, architecture, gothic fiction. The concept frames the sound design, so noise reads as a place instead of a clash."},
+ {id:"subtract",name:"Subtraction is the method",ids:["kangding","regis","truncate","hh","surgeon"],
+  note:"Take away rather than add: no breakdowns, simple tools, less is more, arranging an improvisation by cutting. The same thing my own notes keep telling me."},
+ {id:"fx",name:"Effects as the instrument",ids:["t47","vsk","surgeon","regis","kangding"],
+  note:"Delay, dub sends, granular and resampling make the character. The source can be plain, a kick for example. Modular as a giant effects chain."},
+ {id:"improv",name:"Improvise first, arrange later",ids:["surgeon","ansome","kangding","hh","t47","sovage"],
+  note:"Hardware jams recorded, then shaped in the computer. Closest to my live-improv goal, with Bitwig doing the arranging."}
+];
+
+const SVGNS="http://www.w3.org/2000/svg";
+const nodesG=document.getElementById("nodes");
+const r=m=>10+Math.sqrt(m)*0.7;
+const maxMin=Math.max(...A.map(a=>a.min));
+A.forEach(a=>{
+  const g=document.createElementNS(SVGNS,"g");
+  g.setAttribute("class","node");g.setAttribute("tabindex","0");g.setAttribute("role","button");
+  g.setAttribute("aria-label",a.name);g.dataset.id=a.id;
+  const rad=r(a.min);
+  const halo=document.createElementNS(SVGNS,"circle");halo.setAttribute("class","halo");halo.setAttribute("cx",a.x);halo.setAttribute("cy",a.y);halo.setAttribute("r",rad+9);
+  const c=document.createElementNS(SVGNS,"circle");c.setAttribute("class","dot");c.setAttribute("cx",a.x);c.setAttribute("cy",a.y);c.setAttribute("r",rad);
+  const t=document.createElementNS(SVGNS,"text");t.setAttribute("x",a.x);t.setAttribute("y",a.y+rad+20);t.textContent=a.name.toUpperCase();
+  g.append(halo,c,t);nodesG.appendChild(g);
+  g.addEventListener("click",()=>select(a.id));
+  g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();select(a.id)}});
+});
+
+const panel=document.getElementById("panel");
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]))}
+function select(id){
+  const a=A.find(x=>x.id===id);
+  document.querySelectorAll(".node").forEach(n=>n.classList.toggle("sel",n.dataset.id===id));
+  const z=ZONES[a.zone];
+  const pillStyle=`background:${z.color}`;
+  const inThreads=THREADS.filter(t=>t.ids.includes(id)).map(t=>t.name);
+  panel.innerHTML=`
+    <div class="eyebrow">Readout</div>
+    <h2>${esc(a.name)}</h2>
+    <div class="meta">${esc(a.who)}</div>
+    <span class="zonepill" style="${pillStyle}">${esc(z.label)}</span>
+    <div class="mins">${a.min.toLocaleString()}+ min in my 2026 listening<div class="bar"><i style="width:${(a.min/maxMin*100).toFixed(1)}%"></i></div></div>
+    <p class="aes">${esc(a.aes)}</p>
+    <h3>Signature</h3>
+    <ul>${a.sig.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
+    <div class="try"><div class="eyebrow" style="margin-bottom:4px">Try this</div><p>${esc(a.tryit)}</p></div>
+    <h3>Threads</h3>
+    <div class="tags">${inThreads.map(n=>`<span>${esc(n)}</span>`).join("")||"<span>none</span>"}</div>
+    <h3>Tags</h3>
+    <div class="tags">${a.tags.map(s=>`<span>${esc(s)}</span>`).join("")}</div>
+    <h3>Labels &amp; scene</h3>
+    <div class="src">${esc(a.labels)}</div>
+    <h3>Sources</h3>
+    <div class="src">${a.src.map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${esc(n)}</a>`).join(" · ")}</div>`;
+  try{localStorage.setItem("tri-sel",id)}catch(e){}
+}
+
+const chips=document.getElementById("chips"),note=document.getElementById("threadnote");
+let active=null;
+THREADS.forEach(t=>{
+  const b=document.createElement("button");b.className="chip";b.type="button";b.id="chip-"+t.id;
+  b.textContent=t.name;b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>setThread(active===t.id?null:t.id));
+  chips.appendChild(b);
+});
+function setThread(id){
+  active=id;
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",String(c.id==="chip-"+id)));
+  const t=THREADS.find(x=>x.id===id);
+  document.querySelectorAll(".node").forEach(n=>{
+    const on=!t||t.ids.includes(n.dataset.id);
+    n.classList.toggle("dim",!!t&&!on);n.classList.toggle("lit",!!t&&on);
+  });
+  if(t){const names=t.ids.map(i=>A.find(a=>a.id===i).name).join(", ");note.innerHTML=`<b>${esc(t.name)}.</b> ${esc(t.note)} <br><span style="font-family:var(--mono);font-size:11.5px">${esc(names)}</span>`}
+  else note.textContent="Each thread cuts across the circles. Pick one to light up the artists who share it.";
+}
+let start="vsk";try{const s=localStorage.getItem("tri-sel");if(s&&A.some(a=>a.id===s))start=s}catch(e){}
+select(start);
+    </script>
+  </body>
+</html>

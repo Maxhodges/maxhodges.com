@@ -27,6 +27,9 @@ const blog = defineCollection({
       description: z.string(),
       pubDate: z.date(),
       heroImage: image(),
+      // Set when the article is a standalone interactive page: the blog
+      // index links there and no Markdown page is generated for the stub.
+      link: z.string().optional(),
     }),
 });
 

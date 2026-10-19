@@ -184,7 +184,29 @@ check(
   /ISO \d+/.test(galleryHtml),
 );
 
-// --- 11. Existing behavior preserved ---
+// --- 11. Interactive blog article: Triangulation ---
+{
+  const triPath = join(dist, "blog", "triangulation", "index.html");
+  const tri = existsSync(triPath) ? read("blog/triangulation/index.html") : "";
+  check(
+    "triangulation page is the interactive piece",
+    tri.includes("<h1>Triangulation</h1>") && tri.includes('id="nodes"'),
+  );
+  check(
+    "triangulation loads no Google Fonts",
+    tri !== "" && !tri.includes("fonts.googleapis.com"),
+  );
+  check(
+    "blog index card links to the interactive page",
+    blogIndex.includes('href="/blog/triangulation"'),
+  );
+  check(
+    "triangulation has social meta",
+    tri.includes('property="og:title"') && tri.includes('rel="canonical"'),
+  );
+}
+
+// --- 12. Existing behavior preserved ---
 check("blog index renders posts", blogIndex.includes("Nick Knight"));
 
 console.log("");

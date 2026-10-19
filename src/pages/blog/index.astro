@@ -38,7 +38,7 @@ const formatDate = (date) =>
       {
         posts.map((post, index) => (
           <a
-            href={`/blog/${post.slug}`}
+            href={post.data.link ?? `/blog/${post.slug}`}
             class="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_30px_70px_rgba(0,0,0,0.6)]"
           >
             <div class="aspect-[4/3] overflow-hidden">

@@ -5,10 +5,14 @@ import SiteLayout from "../../layouts/SiteLayout.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+  // Posts with `link` are stubs for standalone interactive pages,
+  // which own their own route.
+  return posts
+    .filter((post) => !post.data.link)
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
 }
 
 const { post } = Astro.props;
