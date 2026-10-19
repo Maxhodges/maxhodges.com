@@ -17,28 +17,66 @@ const formatExifDate = (date: Date) =>
     String(date.getUTCDate()).padStart(2, "0"),
   ].join("-");
 
+type ExifInfo = { line: string; date: Date | null };
+const exifCache = new Map<string, ExifInfo>();
+
 // "f/4 · 1/125 s · ISO 1600 · 24 mm · 2011-03-19", with missing
-// fields skipped; empty string when the file carries no camera EXIF.
-async function readExifLine(fsPath: string | undefined): Promise<string> {
-  if (!fsPath) return "";
+// fields skipped; empty line when the file carries no camera EXIF.
+async function readExif(fsPath: string | undefined): Promise<ExifInfo> {
+  if (!fsPath) return { line: "", date: null };
+  const cached = exifCache.get(fsPath);
+  if (cached) return cached;
+  let info: ExifInfo = { line: "", date: null };
   try {
     const { exif } = await sharp(await readFile(fsPath)).metadata();
-    if (!exif) return "";
-    const tags = exifReader(exif);
-    const photo = tags.Photo ?? {};
-    const parts: string[] = [];
-    if (photo.FNumber) parts.push(`f/${photo.FNumber}`);
-    if (photo.ExposureTime) parts.push(formatShutter(photo.ExposureTime));
-    const iso = photo.ISOSpeedRatings ?? photo.PhotographicSensitivity;
-    if (iso) parts.push(`ISO ${iso}`);
-    if (photo.FocalLength) parts.push(`${Math.round(photo.FocalLength)} mm`);
-    if (photo.DateTimeOriginal instanceof Date) {
-      parts.push(formatExifDate(photo.DateTimeOriginal));
+    if (exif) {
+      const tags = exifReader(exif);
+      const photo = tags.Photo ?? {};
+      const parts: string[] = [];
+      if (photo.FNumber) parts.push(`f/${photo.FNumber}`);
+      if (photo.ExposureTime) parts.push(formatShutter(photo.ExposureTime));
+      const iso = photo.ISOSpeedRatings ?? photo.PhotographicSensitivity;
+      if (iso) parts.push(`ISO ${iso}`);
+      if (photo.FocalLength) parts.push(`${Math.round(photo.FocalLength)} mm`);
+      const date =
+        photo.DateTimeOriginal instanceof Date ? photo.DateTimeOriginal : null;
+      if (date) parts.push(formatExifDate(date));
+      info = { line: parts.join(" · "), date };
     }
-    return parts.join(" · ");
   } catch {
-    return "";
+    // treat unreadable EXIF as absent
   }
+  exifCache.set(fsPath, info);
+  return info;
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+// "March 2011" (one month), "2011" (one year) or "2006–2012",
+// from the shoot dates of the photos that carry EXIF; "" when none do.
+export async function galleryDateRange(
+  gallery: CollectionEntry<"galleries">,
+): Promise<string> {
+  const dates: Date[] = [];
+  for (const image of gallery.data.images) {
+    const fsPath = typeof image.src === "string" ? undefined : image.src.fsPath;
+    const { date } = await readExif(fsPath);
+    if (date) dates.push(date);
+  }
+  if (dates.length === 0) return "";
+  const times = dates.map((d) => d.getTime());
+  const min = new Date(Math.min(...times));
+  const max = new Date(Math.max(...times));
+  if (min.getUTCFullYear() !== max.getUTCFullYear()) {
+    return `${min.getUTCFullYear()}–${max.getUTCFullYear()}`;
+  }
+  if (min.getUTCMonth() !== max.getUTCMonth()) {
+    return `${min.getUTCFullYear()}`;
+  }
+  return `${MONTHS[min.getUTCMonth()]} ${min.getUTCFullYear()}`;
 }
 
 export async function buildGalleryImages(
@@ -63,7 +101,7 @@ export async function buildGalleryImages(
         format: "webp",
       });
 
-      const exifLine = await readExifLine(
+      const { line: exifLine } = await readExif(
         typeof image.src === "string" ? undefined : image.src.fsPath,
       );
 

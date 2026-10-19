@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import { buildGalleryImages } from "../../lib/gallery-images";
+import { buildGalleryImages, galleryDateRange } from "../../lib/gallery-images";
 
 export async function getStaticPaths() {
   const galleries = await getCollection("galleries");
@@ -23,9 +23,11 @@ const ogImage = (
     format: "jpeg",
   })
 ).src;
-const description =
-  gallery.data.description ??
-  `${gallery.data.title} — a photo series by Max Hodges.`;
+const description = `${gallery.data.title} — a photo series by Max Hodges.`;
+const range = await galleryDateRange(gallery);
+const metaLine = [`${images.length} photographs`, range, "tap to view"]
+  .filter(Boolean)
+  .join(" · ");
 const pageSizes = "(max-width: 768px) 100vw, (max-width: 1104px) 92vw, 1024px";
 ---
 
@@ -44,15 +46,8 @@ const pageSizes = "(max-width: 768px) 100vw, (max-width: 1104px) 92vw, 1024px";
         {gallery.data.title}
       </h1>
       <div class="font-mono text-[0.7rem] tracking-[0.03em] text-[color:var(--muted)]">
-        {images.length} photographs · tap to view
+        {metaLine}
       </div>
-      {
-        gallery.data.description && (
-          <p class="w-full max-w-2xl text-[15px] leading-relaxed text-[color:var(--muted)]">
-            {gallery.data.description}
-          </p>
-        )
-      }
     </header>
 
     <div class="-mx-4 grid gap-3 sm:mx-0 sm:gap-6" data-pswp-gallery>

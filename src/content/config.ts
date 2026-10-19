@@ -5,7 +5,6 @@ const galleries = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      description: z.string().optional(),
       order: z.number().int(),
       visible: z.boolean().optional().default(true),
       // Optional — the first entry in `images` is the cover when omitted.

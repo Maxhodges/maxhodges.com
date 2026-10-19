@@ -122,10 +122,21 @@ check(
   !/(?:^|[;{])\s*(?:-webkit-)?backdrop-filter\s*:/.test(allCss),
 );
 
-// --- 7. Gallery descriptions surfaced ---
+// --- 7. EXIF date ranges instead of descriptions ---
 check(
-  "gallery description rendered on home page",
-  index.includes("sleepless town"),
+  "no gallery descriptions on home page",
+  !index.includes("sleepless town"),
+);
+check(
+  "home cards show EXIF date ranges",
+  index.includes("March 2011"),
+);
+check(
+  "gallery meta line includes date range",
+  /photographs · \d{4}[^·<]*· tap to view/.test(galleryHtml) ||
+    / · (January|February|March|April|May|June|July|August|September|October|November|December) \d{4} · /.test(
+      galleryHtml,
+    ),
 );
 
 // --- 8. Scrollable gallery + PhotoSwipe lightbox ---

@@ -2,10 +2,17 @@
 import { Picture, getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
+import { galleryDateRange } from "../lib/gallery-images";
 
 const galleries = (await getCollection("galleries"))
   .filter((gallery) => gallery.data.visible !== false)
   .sort((a, b) => a.data.order - b.data.order);
+
+const ranges = Object.fromEntries(
+  await Promise.all(
+    galleries.map(async (g) => [g.id, await galleryDateRange(g)]),
+  ),
+);
 
 const coverOf = (gallery) =>
   gallery.data.coverImage ?? gallery.data.images[0]?.src;
@@ -42,14 +49,14 @@ const ogImage =
               fetchpriority={index === 0 ? "high" : undefined}
             />
           </div>
-          <div class="grid gap-1.5 bg-[#141210] px-6 py-5">
+          <div class="flex items-baseline justify-between gap-4 bg-[#141210] px-6 py-5">
             <div class="font-display text-xl font-medium text-[color:var(--ink)]">
               {gallery.data.title}
             </div>
-            {gallery.data.description && (
-              <p class="text-[15px] leading-relaxed text-[color:var(--muted)]">
-                {gallery.data.description}
-              </p>
+            {ranges[gallery.id] && (
+              <div class="shrink-0 font-mono text-[0.7rem] tracking-[0.03em] text-[color:var(--muted)]">
+                {ranges[gallery.id]}
+              </div>
             )}
           </div>
         </a>
