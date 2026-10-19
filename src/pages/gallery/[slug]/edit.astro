@@ -4,13 +4,13 @@ import SiteLayout from "../../../layouts/SiteLayout.astro";
 import { buildGalleryImages } from "../../../lib/gallery-images";
 
 export async function getStaticPaths() {
+  // Unlike the public gallery pages, edit pages exist for hidden
+  // galleries too, so a series can be curated before it is published.
   const galleries = await getCollection("galleries");
-  return galleries
-    .filter((gallery) => gallery.data.visible !== false)
-    .map((gallery) => ({
-      params: { slug: gallery.id },
-      props: { gallery },
-    }));
+  return galleries.map((gallery) => ({
+    params: { slug: gallery.id },
+    props: { gallery },
+  }));
 }
 
 const { gallery } = Astro.props;
@@ -67,8 +67,8 @@ const rawImageItems = (() => {
   </style>
   <section class="gallery-grid" data-raw-yaml={rawYaml}>
     <div class="flex flex-wrap items-center justify-between gap-4">
-      <div class="font-display text-2xl">Contact Sheet</div>
-      <div class="text-xs uppercase tracking-[0.3em] text-[color:var(--sea)]">
+      <div class="font-display text-2xl font-medium">Contact Sheet</div>
+      <div class="font-mono text-[0.7rem] tracking-[0.03em] text-[color:var(--muted)]">
         {gallery.data.title}
       </div>
     </div>
@@ -102,7 +102,7 @@ const rawImageItems = (() => {
                 class="h-64 w-full rounded-xl object-contain"
               />
             </picture>
-            <figcaption class="mt-3 text-[10px] uppercase tracking-[0.2em] text-[color:var(--sea)]">
+            <figcaption class="mt-3 font-mono text-[11px] tracking-[0.03em] text-[color:var(--muted)]">
               <span data-index-label>{String(index + 1).padStart(2, "0")}</span>
               {" "}— {image.fileName}
             </figcaption>
@@ -111,7 +111,7 @@ const rawImageItems = (() => {
       }
     </div>
     <textarea
-      class="mt-6 w-full rounded-2xl border border-white/10 bg-black/40 p-4 font-sans text-[0.65rem] leading-relaxed text-[color:var(--ink)] opacity-70"
+      class="mt-6 w-full rounded-2xl border border-white/10 bg-black/40 p-4 font-mono text-[0.7rem] leading-relaxed text-[color:var(--ink)] opacity-70"
       rows="8"
       readonly
       spellcheck="false"
@@ -134,6 +134,11 @@ const rawImageItems = (() => {
         );
         const baseLines =
           imagesIndex >= 0 ? headerLines.slice(0, imagesIndex + 1) : ["images:"];
+        const coverHint =
+          "# coverImage is optional — omit it to use the first photo below as the gallery cover";
+        if (!baseLines.some((line) => line.includes("coverImage is optional"))) {
+          baseLines.splice(Math.max(baseLines.length - 1, 0), 0, coverHint);
+        }
         const updateYaml = () => {
           const items = Array.from(list.querySelectorAll("figure"));
           items.forEach((item, index) => {

@@ -1,7 +1,6 @@
 title: "Fashion"
 order: 500
 description: "Editorial archives and runway coverage. A collection of form, texture, and movement from Japan Fashion Week and private studio sessions."
-coverImage: "../../assets/images/fashion/tfr1_3_3.jpg"
 images:
   - src: "../../assets/images/fashion/tfr1_3_3.jpg"
     alt: "Editorial study - TFR series"

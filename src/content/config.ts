@@ -8,7 +8,8 @@ const galleries = defineCollection({
       description: z.string().optional(),
       order: z.number().int(),
       visible: z.boolean().optional().default(true),
-      coverImage: image(),
+      // Optional — the first entry in `images` is the cover when omitted.
+      coverImage: image().optional(),
       images: z.array(
         z.object({
           src: image(),
