@@ -7,9 +7,12 @@ const galleries = (await getCollection("galleries"))
   .filter((gallery) => gallery.data.visible !== false)
   .sort((a, b) => a.data.order - b.data.order);
 
+const coverOf = (gallery) =>
+  gallery.data.coverImage ?? gallery.data.images[0]?.src;
+
 const ogImage =
   galleries.length > 0
-    ? (await getImage({ src: galleries[0].data.coverImage, width: 1200, format: "jpeg" })).src
+    ? (await getImage({ src: coverOf(galleries[0]), width: 1200, format: "jpeg" })).src
     : undefined;
 ---
 
@@ -28,7 +31,7 @@ const ogImage =
         >
           <div class="overflow-hidden">
             <Picture
-              src={gallery.data.coverImage}
+              src={coverOf(gallery)}
               alt={`Cover image for ${gallery.data.title}`}
               widths={[480, 960, 1440]}
               formats={["webp", "jpeg"]}
@@ -39,12 +42,12 @@ const ogImage =
               fetchpriority={index === 0 ? "high" : undefined}
             />
           </div>
-          <div class="grid gap-1.5 bg-[#141311] px-6 py-5">
-            <div class="font-display text-xl text-[color:var(--ink)]">
+          <div class="grid gap-1.5 bg-[#141210] px-6 py-5">
+            <div class="font-display text-xl font-medium text-[color:var(--ink)]">
               {gallery.data.title}
             </div>
             {gallery.data.description && (
-              <p class="text-sm leading-relaxed text-[color:var(--ink)]/60">
+              <p class="text-[15px] leading-relaxed text-[color:var(--muted)]">
                 {gallery.data.description}
               </p>
             )}

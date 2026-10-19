@@ -1,5 +1,6 @@
-@import "@fontsource-variable/fraunces";
-@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/oxanium";
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/martian-mono";
 @import "tailwindcss";
 
 /* Build-check scripts mention CSS property names Tailwind would
@@ -7,28 +8,42 @@
 @source not "../../scripts";
 
 @theme {
-  --font-sans: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif,
-    system-ui, sans-serif;
-  --font-display: "Fraunces Variable", "Fraunces", Georgia, serif;
+  --font-sans: "Archivo Variable", "Helvetica Neue", Arial, ui-sans-serif,
+    sans-serif;
+  --font-display: "Oxanium Variable", Eurostile, ui-sans-serif, sans-serif;
+  --font-mono: "Martian Mono Variable", ui-monospace, monospace;
 }
 
 :root {
   color-scheme: dark;
-  --ink: #e7e2d8;
-  --sand: #12110f;
+  --ink: #ece7df;
+  --muted: #948d84;
+  --sand: #141210;
   --rust: #d07a4b;
-  --sea: #6c8fb8;
 }
 
 body {
   font-family: var(--font-sans);
+  line-height: 1.6;
   color: var(--ink);
-  background-color: #0c0b0a;
+  background-color: #1b1815;
   background-image:
-    radial-gradient(circle at 75% 0%, rgba(208, 122, 75, 0.1), transparent 55%),
-    radial-gradient(circle at 10% 100%, rgba(108, 143, 184, 0.08), transparent 50%),
-    radial-gradient(circle at 20% 0%, #1a1a18 0%, #12110f 45%, #0c0b0a 100%);
+    radial-gradient(circle at 75% 0%, rgba(208, 122, 75, 0.08), transparent 55%),
+    radial-gradient(circle at 10% 100%, rgba(148, 141, 132, 0.06), transparent 50%),
+    radial-gradient(circle at 20% 0%, #221e1a 0%, #1b1815 45%, #131110 100%);
   min-height: 100vh;
+}
+
+/* Camera-settings caption inside the PhotoSwipe lightbox. */
+.pswp__exif-caption {
+  position: absolute;
+  inset: auto auto 16px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
 }
 
 ::selection {
