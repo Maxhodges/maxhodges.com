@@ -43,6 +43,12 @@ check(
   "self-hosted font files shipped",
   readdirSync(join(dist, "_astro")).some((f) => f.endsWith(".woff2")),
 );
+for (const family of ["Oxanium", "Archivo", "Martian Mono"]) {
+  check(`font family bundled: ${family}`, allCss.includes(family));
+}
+for (const family of ["Fraunces", "Space Grotesk"]) {
+  check(`old font family removed: ${family}`, !allCss.includes(family));
+}
 
 // --- 2. LCP: above-the-fold images start from HTML with high priority ---
 check(
@@ -147,7 +153,38 @@ check(
   !galleryHtml.includes("astro-island"),
 );
 
-// --- 9. Existing behavior preserved ---
+// --- 9. Optional cover + hidden-gallery edit pages ---
+check(
+  "cover defaults to first image (fashion built without coverImage)",
+  index.includes("tfr1_3_3"),
+);
+check(
+  "hidden gallery gets an edit page",
+  existsSync(join(dist, "gallery", "fetish", "edit", "index.html")),
+);
+check(
+  "hidden gallery still has no public page",
+  !existsSync(join(dist, "gallery", "fetish", "index.html")),
+);
+check(
+  "edit tool explains optional coverImage",
+  existsSync(join(dist, "gallery", gallerySlug, "edit", "index.html")) &&
+    read(`gallery/${gallerySlug}/edit/index.html`).includes(
+      "coverImage is optional",
+    ),
+);
+
+// --- 10. EXIF metadata for the lightbox caption ---
+check(
+  "photos carry data-exif for the lightbox",
+  galleryHtml.includes("data-exif"),
+);
+check(
+  "EXIF line rendered with camera settings",
+  /ISO \d+/.test(galleryHtml),
+);
+
+// --- 11. Existing behavior preserved ---
 check("blog index renders posts", blogIndex.includes("Nick Knight"));
 
 console.log("");

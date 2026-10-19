@@ -17,7 +17,11 @@ export async function getStaticPaths() {
 const { gallery } = Astro.props;
 const images = await buildGalleryImages(gallery);
 const ogImage = (
-  await getImage({ src: gallery.data.coverImage, width: 1200, format: "jpeg" })
+  await getImage({
+    src: gallery.data.coverImage ?? gallery.data.images[0]?.src,
+    width: 1200,
+    format: "jpeg",
+  })
 ).src;
 const description =
   gallery.data.description ??
@@ -36,15 +40,15 @@ const pageSizes = "(max-width: 768px) 100vw, (max-width: 1104px) 92vw, 1024px";
 >
   <section class="mx-auto w-full max-w-5xl">
     <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pb-6 pt-2 sm:pt-4">
-      <h1 class="font-display text-3xl leading-tight sm:text-4xl">
+      <h1 class="font-display text-3xl font-medium leading-tight sm:text-4xl">
         {gallery.data.title}
       </h1>
-      <div class="text-[0.65rem] uppercase tracking-[0.3em] text-[color:var(--sea)]">
+      <div class="font-mono text-[0.7rem] tracking-[0.03em] text-[color:var(--muted)]">
         {images.length} photographs · tap to view
       </div>
       {
         gallery.data.description && (
-          <p class="w-full max-w-2xl text-sm leading-relaxed text-[color:var(--ink)]/60">
+          <p class="w-full max-w-2xl text-[15px] leading-relaxed text-[color:var(--muted)]">
             {gallery.data.description}
           </p>
         )
@@ -62,6 +66,7 @@ const pageSizes = "(max-width: 768px) 100vw, (max-width: 1104px) 92vw, 1024px";
             data-pswp-height={image.full.height}
             data-pswp-srcset={image.full.srcset}
             data-filename={image.fileName}
+            data-exif={image.exifLine || undefined}
             class="group block overflow-hidden sm:rounded-xl"
             aria-label={`View ${image.alt || `photo ${index + 1}`} full screen`}
           >
@@ -135,6 +140,23 @@ const pageSizes = "(max-width: 768px) 100vw, (max-width: 1104px) 92vw, 1024px";
     lightbox.on("change", () => {
       const element = lightbox?.pswp?.currSlide?.data?.element;
       syncUrl(element?.dataset.filename ?? null);
+    });
+    // Camera-settings caption, bottom-left, shown only when EXIF exists.
+    lightbox.on("uiRegister", () => {
+      lightbox?.pswp?.ui?.registerElement({
+        name: "exif-caption",
+        order: 9,
+        isButton: false,
+        appendTo: "root",
+        onInit: (el, pswp) => {
+          const update = () => {
+            const element = pswp.currSlide?.data?.element;
+            el.textContent = element?.dataset.exif ?? "";
+          };
+          pswp.on("change", update);
+          update();
+        },
+      });
     });
     lightbox.on("close", () => syncUrl(null));
     lightbox.init();
