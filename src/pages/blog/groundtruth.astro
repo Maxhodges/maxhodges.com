@@ -47,8 +47,8 @@ const ogImage = new URL(
         --line:#242b27;
         --fg:#e9ece7;
         --muted:#8d978f;
-        --accent:#e8a33b;
-        --accent-dim:#7a5a28;
+        --accent:#41e86e;
+        --accent-dim:#1f7a3c;
         --good:#9fc47a;
         --display:'Archivo Variable',system-ui,-apple-system,sans-serif;
         --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
@@ -90,7 +90,7 @@ const ogImage = new URL(
       .hero{position:relative;overflow:hidden}
       .stage{position:absolute;inset:0;perspective:1600px}
       .stage::before{content:"";position:absolute;inset:0;background:
-        radial-gradient(1000px 520px at 50% 38%, rgba(232,163,59,.13), transparent 65%),
+        radial-gradient(1000px 520px at 50% 38%, rgba(65,232,110,.13), transparent 65%),
         radial-gradient(1600px 900px at 50% 115%, rgba(0,0,0,.65), transparent 70%)}
       .unit{position:absolute;left:50%;top:42%;width:min(1560px,170vw);transform:translate(-50%,-50%) rotateX(26deg) rotateZ(-8deg);filter:drop-shadow(0 60px 80px rgba(0,0,0,.8))}
       .unit svg{width:100%;height:auto;display:block}
@@ -100,8 +100,8 @@ const ogImage = new URL(
       .hero .sub{font-size:clamp(16px,2vw,20px);color:var(--muted);max-width:54ch;text-shadow:0 2px 24px rgba(0,0,0,.95)}
       .hero .sub strong{color:var(--fg);font-weight:500}
       .ctarow{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-      .cta{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;background:var(--accent);color:#140d02;border:0;padding:17px 36px;cursor:pointer;transition:background .15s ease,transform .15s ease}
-      .cta:hover{background:#f2b452;transform:translateY(-1px)}
+      .cta{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;background:var(--accent);color:#06140a;border:0;padding:17px 36px;cursor:pointer;transition:background .15s ease,transform .15s ease}
+      .cta:hover{background:#67f08b;transform:translateY(-1px)}
       .ctanote{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 
       /* stat band under hero */
@@ -178,7 +178,7 @@ const ogImage = new URL(
       .tablewrap{overflow-x:auto}
 
       /* waitlist band */
-      .waitlist{background:radial-gradient(1100px 420px at 50% 120%, rgba(232,163,59,.1), transparent 70%)}
+      .waitlist{background:radial-gradient(1100px 420px at 50% 120%, rgba(65,232,110,.1), transparent 70%)}
       .waitlist .inner{padding-block:96px;display:grid;justify-items:center;gap:22px;text-align:center}
       .waitlist h2{font-weight:900;font-size:clamp(36px,6vw,68px);line-height:1;letter-spacing:-.02em}
       .waitlist .lede{text-align:center}
@@ -216,10 +216,10 @@ const ogImage = new URL(
           <stop offset="0" stop-color="#363c41"/><stop offset=".7" stop-color="#1a1d20"/><stop offset="1" stop-color="#111315"/>
         </radialGradient>
         <radialGradient id="ledG" cx=".5" cy=".5" r=".5">
-          <stop offset="0" stop-color="#ffd68a"/><stop offset=".4" stop-color="#e8a33b"/><stop offset="1" stop-color="#e8a33b" stop-opacity="0"/>
+          <stop offset="0" stop-color="#a8ffc4"/><stop offset=".4" stop-color="#41e86e"/><stop offset="1" stop-color="#41e86e" stop-opacity="0"/>
         </radialGradient>
         <linearGradient id="vuG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#2b2010"/><stop offset="1" stop-color="#140e06"/>
+          <stop offset="0" stop-color="#0e2416"/><stop offset="1" stop-color="#081408"/>
         </linearGradient>
         <clipPath id="vuClip"><rect x="1038" y="45" width="209" height="90" rx="4"/></clipPath>
 
@@ -228,7 +228,7 @@ const ogImage = new URL(
           <circle r="33" fill="url(#knobG)" stroke="#060708" stroke-width="1.5"/>
           <circle r="33" fill="none" stroke="#0b0d0e" stroke-width="2.5" stroke-dasharray="1.8 3.4"/>
           <circle r="21" fill="url(#capG)" stroke="#0b0d0e"/>
-          <line x1="0" y1="-30" x2="0" y2="-13" stroke="#e8a33b" stroke-width="4" stroke-linecap="round"/>
+          <line x1="0" y1="-30" x2="0" y2="-13" stroke="#41e86e" stroke-width="4" stroke-linecap="round"/>
         </g>
         <path id="tks" d="M -31.1 31.1 A 44 44 0 1 1 31.1 31.1" fill="none" stroke="#3a4146" stroke-width="3" stroke-dasharray="2 23.1"/>
         <g id="scrw">
@@ -256,11 +256,11 @@ const ogImage = new URL(
           <use href="#scrw" transform="translate(64 210) rotate(70)"/>
           <use href="#scrw" transform="translate(1256 210) rotate(-10)"/>
           <!-- branding -->
-          <text x="96" y="76" font-size="21" font-weight="600" letter-spacing="5" fill="#e9ece7">GROUND<tspan fill="#e8a33b">TRUTH</tspan></text>
+          <text x="96" y="76" font-size="21" font-weight="600" letter-spacing="5" fill="#e9ece7">GROUND<tspan fill="#41e86e">TRUTH</tspan></text>
           <text x="96" y="101" font-size="11.5" letter-spacing="2" fill="#8d978f">FRM-01 · SAT. CHANNEL</text>
           <line x1="96" y1="120" x2="250" y2="120" stroke="#272d31"/>
           <circle cx="104" cy="150" r="11" fill="url(#ledG)"/>
-          <circle cx="104" cy="150" r="3.5" fill="#ffdf9e"/>
+          <circle cx="104" cy="150" r="3.5" fill="#c9ffd9"/>
           <text x="92" y="182" font-size="10" letter-spacing="2" fill="#8d978f">SIG</text>
           <use href="#tgl" transform="translate(172 150)"/>
           <text x="158" y="182" font-size="10" letter-spacing="2" fill="#8d978f">HPF</text>
@@ -282,10 +282,10 @@ const ogImage = new URL(
           <!-- VU meter -->
           <rect x="1038" y="45" width="209" height="90" rx="4" fill="url(#vuG)" stroke="#272d31" stroke-width="1.5"/>
           <g clip-path="url(#vuClip)">
-            <circle cx="1142" cy="150" r="110" fill="#e8a33b" opacity=".07"/>
-            <path d="M 1062 128 A 92 92 0 0 1 1222 128" fill="none" stroke="#9a7f4d" stroke-width="2" stroke-dasharray="2 12.5"/>
-            <line x1="1142" y1="168" x2="1176" y2="74" stroke="#e8a33b" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="1142" cy="168" r="7" fill="#1a150b" stroke="#9a7f4d"/>
+            <circle cx="1142" cy="150" r="110" fill="#41e86e" opacity=".07"/>
+            <path d="M 1062 128 A 92 92 0 0 1 1222 128" fill="none" stroke="#4d9a68" stroke-width="2" stroke-dasharray="2 12.5"/>
+            <line x1="1142" y1="168" x2="1176" y2="74" stroke="#41e86e" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="1142" cy="168" r="7" fill="#0b1a10" stroke="#4d9a68"/>
           </g>
           <text x="1048" y="62" font-size="10" letter-spacing="2" fill="#8d978f">VU</text>
           <text x="1142" y="182" font-size="11" letter-spacing="2.5" fill="#8d978f" text-anchor="middle">TRANSFORMER</text>
@@ -383,7 +383,7 @@ const ogImage = new URL(
               </g>
               <text x="225" y="226" fill="#8d978f" font-size="11" text-anchor="middle">DRIVE →</text>
               <text x="22" y="112" fill="#8d978f" font-size="11" text-anchor="middle" transform="rotate(-90 22 112)">COLOR →</text>
-              <g fill="#e8a33b">
+              <g fill="#41e86e">
                 <circle cx="75" cy="178" r="5"/><circle cx="155" cy="120" r="5"/><circle cx="225" cy="165" r="5"/><circle cx="305" cy="80" r="5"/><circle cx="385" cy="48" r="5"/>
               </g>
               <text x="225" y="18" fill="#8d978f" font-size="11" text-anchor="middle">5 states · the rest is interpolation</text>
@@ -398,7 +398,7 @@ const ogImage = new URL(
               </g>
               <text x="225" y="226" fill="#8d978f" font-size="11" text-anchor="middle">DRIVE →</text>
               <text x="22" y="112" fill="#8d978f" font-size="11" text-anchor="middle" transform="rotate(-90 22 112)">COLOR →</text>
-              <g fill="#e8a33b" fill-opacity="0.85">
+              <g fill="#41e86e" fill-opacity="0.85">
                 <circle cx="60" cy="40" r="2.2"/><circle cx="90" cy="40" r="2.2"/><circle cx="120" cy="40" r="2.2"/><circle cx="150" cy="40" r="2.2"/><circle cx="180" cy="40" r="2.2"/><circle cx="210" cy="40" r="2.2"/><circle cx="240" cy="40" r="2.2"/><circle cx="270" cy="40" r="2.2"/><circle cx="300" cy="40" r="2.2"/><circle cx="330" cy="40" r="2.2"/><circle cx="360" cy="40" r="2.2"/><circle cx="390" cy="40" r="2.2"/>
                 <circle cx="60" cy="72" r="2.2"/><circle cx="90" cy="72" r="2.2"/><circle cx="120" cy="72" r="2.2"/><circle cx="150" cy="72" r="2.2"/><circle cx="180" cy="72" r="2.2"/><circle cx="210" cy="72" r="2.2"/><circle cx="240" cy="72" r="2.2"/><circle cx="270" cy="72" r="2.2"/><circle cx="300" cy="72" r="2.2"/><circle cx="330" cy="72" r="2.2"/><circle cx="360" cy="72" r="2.2"/><circle cx="390" cy="72" r="2.2"/>
                 <circle cx="60" cy="104" r="2.2"/><circle cx="90" cy="104" r="2.2"/><circle cx="120" cy="104" r="2.2"/><circle cx="150" cy="104" r="2.2"/><circle cx="180" cy="104" r="2.2"/><circle cx="210" cy="104" r="2.2"/><circle cx="240" cy="104" r="2.2"/><circle cx="270" cy="104" r="2.2"/><circle cx="300" cy="104" r="2.2"/><circle cx="330" cy="104" r="2.2"/><circle cx="360" cy="104" r="2.2"/><circle cx="390" cy="104" r="2.2"/>
@@ -446,10 +446,10 @@ const ogImage = new URL(
               </g>
               <text x="432" y="118" fill="#8d978f" font-size="10" text-anchor="end">IN</text>
               <text x="248" y="30" fill="#8d978f" font-size="10">OUT</text>
-              <path d="M 60 190 C 150 170, 200 150, 240 125 C 280 100, 330 80, 420 60" fill="none" stroke="#7a5a28" stroke-width="1.6"/>
-              <path d="M 60 203 C 140 185, 205 155, 240 125 C 275 95, 340 65, 420 47" fill="none" stroke="#a87a30" stroke-width="1.6"/>
-              <path d="M 60 214 C 130 200, 208 160, 240 125 C 272 90, 350 50, 420 36" fill="none" stroke="#cc9036" stroke-width="1.8"/>
-              <path d="M 60 222 C 120 213, 212 165, 240 125 C 268 85, 360 37, 420 28" fill="none" stroke="#e8a33b" stroke-width="2"/>
+              <path d="M 60 190 C 150 170, 200 150, 240 125 C 280 100, 330 80, 420 60" fill="none" stroke="#1f7a3c" stroke-width="1.6"/>
+              <path d="M 60 203 C 140 185, 205 155, 240 125 C 275 95, 340 65, 420 47" fill="none" stroke="#2a9c50" stroke-width="1.6"/>
+              <path d="M 60 214 C 130 200, 208 160, 240 125 C 272 90, 350 50, 420 36" fill="none" stroke="#35c75f" stroke-width="1.8"/>
+              <path d="M 60 222 C 120 213, 212 165, 240 125 C 268 85, 360 37, 420 28" fill="none" stroke="#41e86e" stroke-width="2"/>
               <text x="60" y="243" fill="#8d978f" font-size="10">measured transfer curves · one control sweep, 41 steps (4 of 41 shown)</text>
             </svg>
             <figcaption>Fig. 2 — Drive sweep, measured at the output transformer</figcaption>
