@@ -15,7 +15,7 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 const currentPath = Astro.url.pathname;
 const navItems = [
   { label: "Galleries", href: "/" },
-  { label: "Blog", href: "/blog" },
+  { label: "Projects", href: "/blog" },
 ];
 const isActive = (href) =>
   href === "/" ? currentPath === "/" || currentPath.startsWith("/gallery") : currentPath.startsWith(href);
