@@ -23,7 +23,10 @@ const blogIndex = read("blog/index.html");
 const blogDirs = readdirSync(join(dist, "blog")).filter(
   (d) => !d.includes("."),
 );
-const blogPost = read(`blog/${blogDirs[0]}/index.html`);
+// Standalone interactive pages (groundtruth, fremitus, …) have no hero <img>;
+// the LCP check applies to the markdown posts rendered by [slug].astro.
+const blogPages = blogDirs.map((d) => read(`blog/${d}/index.html`));
+const blogPost = blogPages.find((html) => html.includes("<img")) ?? "";
 const cssFiles = readdirSync(join(dist, "_astro")).filter((f) =>
   f.endsWith(".css"),
 );
