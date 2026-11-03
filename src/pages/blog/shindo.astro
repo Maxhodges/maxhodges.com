@@ -1,0 +1,738 @@
+---
+// Interactive blog article: concept page for the Shindo Versio firmware.
+// Deliberately standalone (no SiteLayout/Tailwind) to keep the piece's
+// own art direction; fonts are self-hosted like the rest of the site.
+// The A–E typeface picker needs every pairing's family shipped.
+import "@fontsource/archivo-black";
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/big-shoulders-display";
+import "@fontsource/barlow/400.css";
+import "@fontsource/barlow/500.css";
+import "@fontsource/barlow/700.css";
+import "@fontsource-variable/schibsted-grotesk";
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource/saira-stencil-one";
+import "@fontsource-variable/saira";
+import "@fontsource/noto-sans-jp/900.css";
+import "@fontsource/ibm-plex-mono/500.css";
+import "@fontsource/ibm-plex-mono/600.css";
+import { getImage } from "astro:assets";
+import heroSrc from "../../assets/images/blog/shindo.jpg";
+
+const title = "Shindo Versio — Max Hodges";
+const description =
+  "Concept firmware for the Noise Engineering Versio: Shindo converts any kick into ducked rumble and texture layers — three reverb engines, staged drive, a rumble/texture split, and built-in sidechain ducking, one knob per job.";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(
+  (await getImage({ src: heroSrc, width: 1200, format: "jpeg" })).src,
+  Astro.site,
+).href;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Max Hodges" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <style is:global>
+/* Layout: one product page that doubles as the manual, set like a Japanese industrial spec sheet:
+   white paper, black ink, one signal red; square corners, ruled sections, numbered parts. */
+:root {
+  --bg: #f4f5f3;
+  --panel: #ffffff;
+  --ink: #141414;
+  --muted: #5d6063;
+  --line: #d3d5d2;
+  --red: #d6000f;
+  --rumble: var(--red);
+  --kick: var(--ink);
+  --duck: #6d7074;
+  --on-red: #ffffff;
+  /* The duck scope is a screen, dark in both themes, in the sandbox's colours. */
+  --scope-bg: #121110; --scope-ink: #ece8e2; --scope-muted: #9a948b; --scope-line: #3a3632;
+  --scope-kick: #3ef07a; --scope-rumble: #ff3ea5; --scope-texture: #ffb000;
+  --scope-hold: #3b82f6; --scope-release: #a855f7;
+  /* Typeface pairings, picked with the A–E selector in the maker strip (A is the default). */
+  --display: "Archivo Black", "Arial Black", Impact, system-ui, sans-serif;
+  --dw: 400;
+  --body: "Archivo Variable", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --kanji: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111213; --panel: #191a1c; --ink: #f0f0ee; --muted: #9b9ea2; --line: #2f3134;
+    --red: #ff3d33; --duck: #a9acb0; --on-red: #111213; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111213; --panel: #191a1c; --ink: #f0f0ee; --muted: #9b9ea2; --line: #2f3134;
+  --red: #ff3d33; --duck: #a9acb0; --on-red: #111213; color-scheme: dark;
+}
+:root[data-font="b"] { --display: "Big Shoulders Display Variable", "Arial Narrow", Impact, sans-serif; --dw: 900; --body: "Barlow", "Helvetica Neue", Arial, sans-serif; }
+:root[data-font="c"] { --display: "Schibsted Grotesk Variable", "Helvetica Neue", Arial, sans-serif; --dw: 900; --body: "Schibsted Grotesk Variable", "Helvetica Neue", Arial, sans-serif; }
+:root[data-font="d"] { --display: "JetBrains Mono Variable", ui-monospace, Menlo, monospace; --dw: 800; --body: "JetBrains Mono Variable", ui-monospace, Menlo, monospace; }
+:root[data-font="e"] { --display: "Saira Stencil One", Impact, sans-serif; --dw: 400; --body: "Saira Variable", "Helvetica Neue", Arial, sans-serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+img { max-width: 100%; }
+main { max-width: 1040px; margin: 0 auto; padding-block: 28px 72px; display: flex; flex-direction: column; gap: 64px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-family: var(--display); font-weight: var(--dw); font-size: clamp(2.6rem, 9vw, 5.2rem); letter-spacing: 0; line-height: 0.92; text-transform: uppercase; }
+h2 { font-family: var(--body); font-size: 1.6rem; font-weight: 700; padding-top: 10px; border-top: 3px solid var(--ink); }
+h3 { font-family: var(--body); font-size: 1.12rem; font-weight: 700; }
+h4 { margin: 0; font-family: var(--mono); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--red); }
+.eyebrow { font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+section, header { display: flex; flex-direction: column; gap: 16px; }
+.lede { font-size: 1.18rem; }
+.lede b { color: var(--red); }
+.k { color: var(--kick); font-weight: 700; }
+.r { color: var(--red); font-weight: 700; }
+.note { color: var(--muted); font-size: 0.93rem; }
+.todo { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--bg); background: var(--muted); padding: 1px 6px; white-space: nowrap; }
+
+/* Site breadcrumb above the sheet */
+.sitenav { max-width: 1040px; margin: 0 auto; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; padding-block: 14px; }
+.sitenav a { color: var(--muted); text-decoration: none; }
+.sitenav a:hover { color: var(--ink); }
+.sitenav span { color: var(--line); padding: 0 6px; }
+.sitenav-band { border-bottom: 1px solid var(--line); }
+
+/* Hero */
+.maker { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid var(--ink); }
+.maker b { font-weight: 600; }
+.maker > span { color: var(--muted); }
+.fontpick { display: flex; align-items: center; gap: 4px; }
+.fontpick span { color: var(--muted); margin-right: 4px; }
+.fontpick button { font: 600 0.72rem var(--mono); color: var(--ink); background: none; border: 1px solid var(--line); width: 24px; height: 22px; padding: 0; cursor: pointer; }
+.fontpick button[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: var(--on-red); }
+.title { display: grid; grid-template-columns: 1fr auto; gap: 6px 22px; align-items: end; }
+.title h1 { grid-column: 1; grid-row: 1; }
+.title .tagline { grid-column: 1; grid-row: 2; font-family: var(--mono); font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.kanji { grid-column: 2; grid-row: 1 / span 2; align-self: start; font-family: var(--kanji); font-weight: 900; color: var(--red); font-size: clamp(3.4rem, 13vw, 7rem); line-height: 0.9; }
+@media (max-width: 520px) { .kanji { font-size: 3rem; } }
+
+/* Features follows straight on from the intro: no section rule, less space above. */
+#features { margin-top: -28px; }
+#features h2 { border-top: 0; padding-top: 0; }
+/* Hero: text left, the module straight on at the right. */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) 130px; gap: 48px; align-items: center; padding-right: 40px; }
+.hero-text { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.hero-panel { margin: 0; }
+.hero-svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.22)); }
+@media (max-width: 720px) { .hero { grid-template-columns: 1fr; } .hero-panel { display: none; } }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--mono); font-size: 0.85rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-block: 10px; }
+nav.toc a { color: var(--muted); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); }
+
+ul.features { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px 28px; }
+ul.features li { border-left: 3px solid var(--red); padding-left: 12px; min-width: 0; }
+ul.features b { display: block; }
+ul.features span { color: var(--muted); font-size: 0.95rem; }
+ul.features ul.sub3 { margin: 2px 0 0; padding-left: 18px; color: var(--muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 2px; }
+ul.features ul.sub3 li { border: 0; padding: 0; }
+ul.features ul.sub3 b { display: inline; color: var(--ink); font-weight: 500; }
+
+.box { background: var(--panel); border: 1px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.scope { background: var(--scope-bg); border-color: var(--scope-line); }
+.scope svg { width: 100%; height: auto; display: block; }
+.scope svg text { font-family: var(--mono); font-size: 11px; fill: var(--scope-muted); }
+.scope svg text.tag { font-size: 13px; fill: var(--scope-ink); stroke: var(--scope-bg); stroke-width: 4px; }
+.scope .legend { color: var(--scope-muted); }
+.scope .legend .lk { color: var(--scope-kick); } .scope .legend .lr { color: var(--scope-rumble); }
+.scope .legend .lt { color: var(--scope-texture); } .scope .legend .ld { color: var(--scope-ink); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.85rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 3px; vertical-align: middle; margin-right: 6px; background: currentColor; }
+.legend .lk { color: var(--kick); } .legend .lr { color: var(--rumble); } .legend .ld { color: var(--duck); }
+
+/* Listen */
+.presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 720px) { .presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.preset { background: var(--panel); border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.preset b { font-family: var(--body); font-weight: 700; font-size: 1.1rem; }
+.preset .d { color: var(--muted); font-size: 0.9rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); overflow: hidden; align-self: flex-start; }
+.seg button { font: 600 0.8rem var(--mono); color: var(--muted); background: none; border: 0; padding: 5px 10px; cursor: not-allowed; }
+.seg button + button { border-left: 1px solid var(--line); }
+
+/* Signal flow */
+.flowwrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); padding: 12px; }
+.flowwrap svg { display: block; width: 100%; min-width: 760px; height: auto; }
+.sf text { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; fill: var(--ink); }
+.sf .sub { font-size: 10.5px; fill: var(--muted); letter-spacing: 0.03em; }
+.sf .sec { font-family: var(--display); font-weight: var(--dw); font-size: 19px; letter-spacing: 0.04em; }
+.sf .arrow { fill: var(--ink); }
+.sf .ink { stroke: var(--ink); }
+.sf .frame { fill: none; stroke: var(--line); stroke-width: 2; }
+.sf .blk { fill: var(--bg); stroke: var(--ink); stroke-width: 2; }
+.sf .w { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.sf .norm { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 2 4; }
+.sf .dot { fill: var(--ink); }
+.sf .tag-r { fill: var(--red); } .sf .tag-k { fill: var(--ink); }
+.sf .tagt { fill: var(--bg); font-weight: 600; }
+.sf .mix { fill: var(--bg); stroke: var(--ink); stroke-width: 1.6; }
+
+/* Panel */
+.panel-fig { margin: 0; display: flex; justify-content: center; }
+.panel-fig svg { width: min(520px, 100%); height: auto; display: block; }
+.pt { font-family: var(--mono); fill: #f3eef8; }
+.pt.title { font-family: var(--display); font-size: 4.4px; letter-spacing: 0.06em; }
+.pt.lbl { font-size: 1.85px; letter-spacing: 0.04em; }
+.pt.tiny { font-size: 1.45px; fill: #8e8898; }
+.co circle { fill: var(--red); }
+.co text { font-family: var(--mono); font-weight: 600; font-size: 3.2px; fill: #ffffff; }
+.co line, .co polyline { stroke: var(--red); stroke-width: 0.35; }
+.co .dot { fill: var(--red); }
+.num { width: 26px; height: 26px; background: var(--red); color: var(--on-red); font-family: var(--mono); font-weight: 600; font-size: 0.82rem; display: grid; place-items: center; font-variant-numeric: tabular-nums; flex: none; }
+
+/* Controls reference */
+.ref { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+.ref article { display: grid; grid-template-columns: 34px 1fr; gap: 14px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+.ref article > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ref .hd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.ref .range { font-family: var(--mono); font-size: 0.82rem; color: var(--red); }
+.ref ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; max-width: 66ch; }
+.ref ul li::marker { color: var(--muted); }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+.tablewrap { overflow-x: auto; }
+th, td { text-align: left; vertical-align: top; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); }
+th { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td:first-child { white-space: nowrap; font-weight: 600; }
+td.mono { font-family: var(--mono); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+
+.patches { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.patch { background: var(--panel); border: 1px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.patch ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.patch .why { color: var(--muted); font-size: 0.92rem; }
+
+footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: 0.92rem; display: flex; flex-direction: column; gap: 8px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+    </style>
+
+    <div class="sitenav-band">
+      <nav class="sitenav" aria-label="Site">
+        <a href="/">Max Hodges</a><span>/</span><a href="/blog">Projects</a>
+      </nav>
+    </div>
+
+<main>
+  <!-- ============ OVERVIEW ============ -->
+  <header id="overview">
+    <div class="maker"><b>Nippon Industrial Noise</b><div class="fontpick" role="group" aria-label="Typeface"><span>Type</span><button type="button" data-f="a">A</button><button type="button" data-f="b">B</button><button type="button" data-f="c">C</button><button type="button" data-f="d">D</button><button type="button" data-f="e">E</button></div><span>Building New Futures</span></div>
+    <div class="hero">
+      <div class="hero-text">
+    <div class="title">
+      <div class="kanji" lang="ja" aria-hidden="true">震度</div>
+      <h1>Shindo Versio</h1>
+      <div class="tagline">Seismic Rumble &amp; Texture Engine</div>
+    </div>
+    <p class="lede">Shindo Versio converts any kick drum into responsive rumble and texture layers, ducking them out of the way on every hit.</p>
+    <p>Feed it a clean kick. The signal flow delays the audio to lock the groove before fracturing it into a sustained reverb cloud. A bi-directional, DJ-style filter dials in the character, shifting from dark low-pass weight to bright high-pass grit while the integrated sidechain clamps the output on every hit. Three selectable engines vary the texture of the space. The layout remains strictly one knob per function, with seven dedicated CV inputs mapping directly to the front panel. Nothing is hidden in a menu.</p>
+    <div class="eyebrow">Eurorack firmware · Noise Engineering Versio · 10 HP</div>
+      </div>
+      <figure class="hero-panel"><svg class="hero-svg" viewBox="-0.5 -0.5 51.5 129.5" aria-hidden="true">
+        <rect x="0" y="0" width="50.5" height="128.5" rx="0.8" fill="#221d2a" stroke="#3a3345" stroke-width="0.4"></rect>
+        <g fill="#3a3345"><circle cx="7.65" cy="3" r="1.6"></circle><circle cx="43.21" cy="3" r="1.6"></circle><circle cx="7.65" cy="125.5" r="1.6"></circle><circle cx="43.21" cy="125.5" r="1.6"></circle></g>
+        <text x="25.25" y="10.6" text-anchor="middle" class="pt title">SHINDO</text>
+        <g><circle cx="17.3" cy="19.8" r="1.2" fill="#ff3d33"></circle><circle cx="22.38" cy="19.8" r="1.2" fill="#ffffff"></circle><circle cx="29.36" cy="19.8" r="1.2" fill="#4a4256"></circle><circle cx="34.44" cy="19.8" r="1.2" fill="#4a4256"></circle></g>
+        <use href="#cap" x="7.77" y="18.53"></use><use href="#cap" x="43.33" y="18.53"></use><use href="#cap" x="25.17" y="28.69"></use>
+        <use href="#cap" x="7.77" y="39.49"></use><use href="#cap" x="43.33" y="39.49"></use><use href="#cap" x="25.17" y="49.33"></use>
+        <use href="#cap" x="43.33" y="60.44"></use>
+        <g class="pt lbl" text-anchor="middle">
+          <text x="7.77" y="26.1">PREDELAY</text><text x="43.33" y="26.1">SMEAR</text><text x="25.17" y="36.3">DRIVE</text>
+          <text x="7.77" y="47.1">FEEDBACK</text><text x="43.33" y="47.1">SPLIT</text><text x="25.17" y="56.9">HOLD</text>
+          <text x="43.33" y="68">RELEASE</text>
+        </g>
+        <g class="pt tiny" text-anchor="middle"><text x="43.33" y="49.4">out 1 · out 2</text><text x="25.17" y="59.2">duck</text><text x="43.33" y="70.3">duck</text></g>
+        <g><rect x="6.9" y="55.6" width="3" height="4.6" rx="0.6" fill="#bdb8c6"></rect><circle cx="8.4" cy="56.8" r="1.1" fill="#f3eef8"></circle>
+           <rect x="6.9" y="65.1" width="3" height="4.6" rx="0.6" fill="#bdb8c6"></rect><circle cx="8.4" cy="66.3" r="1.1" fill="#f3eef8"></circle></g>
+        <g class="pt tiny"><text x="11.4" y="56.3">SUB</text><text x="11.4" y="58.4">TEXTURE</text><text x="11.4" y="60.5">MUTABLE</text>
+          <text x="11.4" y="65.8">TUBE</text><text x="11.4" y="67.9">TAPE</text><text x="11.4" y="70">FOLD</text></g>
+        <text x="8.4" y="53.6" text-anchor="middle" class="pt lbl">ENGINE</text>
+        <text x="8.4" y="73.4" text-anchor="middle" class="pt lbl">DRIVE TYPE</text>
+        <circle cx="26.18" cy="69.33" r="2.6" fill="#ff3d33" stroke="#0d0b10" stroke-width="0.3"></circle>
+        <text x="26.18" y="74.6" text-anchor="middle" class="pt lbl">TAP</text>
+        <g>
+          <use href="#jack" x="5.23" y="83.3"></use><use href="#jack" x="18.57" y="83.3"></use><use href="#jack" x="31.9" y="83.3"></use><use href="#jack" x="44.6" y="83.3"></use>
+          <use href="#jack" x="5.23" y="97.27"></use><use href="#jack" x="18.57" y="97.27"></use><use href="#jack" x="31.9" y="97.27"></use><use href="#jack" x="44.6" y="97.27"></use>
+          <use href="#jack" x="5.23" y="111.24"></use><use href="#jack" x="18.57" y="111.24"></use><use href="#jack" x="31.9" y="111.24"></use><use href="#jack" x="44.6" y="111.24"></use>
+        </g>
+        <g class="pt lbl" text-anchor="middle">
+          <text x="5.23" y="89">PRE</text><text x="18.57" y="89">DRIVE</text><text x="31.9" y="89">SMEAR</text><text x="44.6" y="89">REL</text>
+          <text x="5.23" y="103">FDBK</text><text x="18.57" y="103">HOLD</text><text x="31.9" y="103">SPLIT</text><text x="44.6" y="103" fill="#ffffff">GATE</text>
+          <text x="5.23" y="117" fill="#ffffff">KICK</text><text x="18.57" y="117">MIX IN</text><text x="31.9" y="117" fill="#ff3d33">RUMBLE</text><text x="44.6" y="117" fill="#ff3d33">TEXTURE</text>
+        </g>
+        <g class="pt tiny" text-anchor="middle"><text x="31.9" y="119.2">out 1</text><text x="44.6" y="119.2">out 2</text></g>
+      </svg></figure>
+    </div>
+    <nav class="toc" aria-label="On this page">
+      <a href="#features">Features</a><a href="#listen">Listen</a><a href="#flow">Signal flow</a><a href="#panel">Panel</a><a href="#controls">Controls</a><a href="#duck">The duck</a><a href="#patches">Patch ideas</a><a href="#specs">Specs</a>
+    </nav>
+  </header>
+
+  <!-- ============ FEATURES ============ -->
+  <section id="features" aria-labelledby="features-h">
+    <h2 id="features-h">Features</h2>
+    <ul class="features">
+      <li><b>Three reverb engines</b><ul class="sub3">
+        <li><b>Dark FDN 1 (Sub):</b> a feedback delay network built for low end, tuned to keep the kick's fundamental punch.</li>
+        <li><b>Dark FDN 2 (Texture):</b> the same network, larger and fully diffused, with slow, constant modulation: a bright, moving wash.</li>
+        <li><b>Mutable:</b> the plate reverb from Mutable Instruments' Rings, open source.</li></ul></li>
+      <li><b>Staged Drive</b><span>Saturation in three types, chosen on the switch. Drive grips the band above 90 Hz first, so the sub stays clean; the last quarter of the knob brings the sub in too, for a fully driven rumble.</span></li>
+      <li><b>Split: rumble and texture, two outputs</b><span>A crossover from 40 Hz to 2 kHz, about 120 Hz at noon. Everything below it goes to Out 1 as rumble; everything above goes to Out 2 as texture. Both are ducked, and the two add back up to the whole sound.</span></li>
+      <li><b>Predelay and Feedback</b><span>Up to 666 ms of predelay pushes the swell off the kick. Turn up Feedback and the delay repeats, each repeat re-triggering the reverb, so the swells stack into a rolling rumble. Even at full, the repeats fade out on their own.</span></li>
+      <li><b>Built-in sidechain ducking</b><span>Fired by a gate, or detected from the kick itself. The rumble on Out 1 drops out completely on every hit, so the kick has the low end to itself; the texture on Out 2 isn't ducked. With a gate, its length sets how long the rumble stays down, and Release sets how long it takes to swell back, as a share of that length, so a sequencer reshapes every duck. The Hold knob sets how long it stays down with no gate, and stretches or shortens every gate's hold with one.</span></li>
+      <li><b>Mix In</b><span>Noise or any other source joins after Drive, just before the split. It skips the reverb and Drive, so it stays clean. Most of it lands on Out 2, where it plays straight through; the part below the split pumps with the rumble.</span></li>
+      <li><b>Automatic input level</b><span>Quiet and hot kicks drive the rumble the same way. No input gain to set.</span></li>
+      <li><b>Hot outputs</b><span>Both outputs run near full level, with a soft clipper as a safety net. Set the level at your mixer or an attenuator. For the dry kick, take it from a stackcable or mult before the input.</span></li>
+      <li><b>CV for every knob</b><span>Seven CV inputs, one per knob, for per-step modulation. Four lights show the trigger source, the gate, the rumble level and the predelay repeats.</span></li>
+    </ul>
+  </section>
+
+  <!-- ============ LISTEN ============ -->
+  <section id="listen" aria-labelledby="listen-h">
+    <h2 id="listen-h">Listen</h2>
+    <p>Each loop plays in three versions that stay in sync: the <span class="k">kick</span> alone, the <span class="r">rumble</span> alone, and the two mixed. Switch between them while it plays to hear what Shindo Versio adds.</p>
+    <div class="presets">
+      <div class="preset"><b>Rolling</b><span class="d">Mutable plate, predelay repeats stacked with Feedback.</span><div class="seg" role="group" aria-label="Rolling: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
+      <div class="preset"><b>Deep</b><span class="d">Dark FDN 1, Out 1, Split low: a sub that breathes with the kick.</span><div class="seg" role="group" aria-label="Deep: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
+      <div class="preset"><b>Texture</b><span class="d">Dark FDN 2, Out 2: a moving mid-range wash.</span><div class="seg" role="group" aria-label="Texture: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
+      <div class="preset"><b>Triplet</b><span class="d">Predelay on a dotted eighth: repeats drift 3 against 4.</span><div class="seg" role="group" aria-label="Triplet: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
+    </div>
+    <p class="note"><span class="todo">Coming</span> The recordings are made once the sound is final, from the same engine that runs on the module.</p>
+  </section>
+
+  <!-- ============ SIGNAL FLOW ============ -->
+  <section id="flow" aria-labelledby="flow-h">
+    <h2 id="flow-h">Signal flow</h2>
+    <div class="flowwrap">
+      <svg class="sf" viewBox="0 0 1000 930" role="img" aria-label="Signal flow. Input and trigger: the kick input goes through the automatic input level to the rumble and the kick detector; a switch picks the gate (when patched) or the detector to trigger the duck. Rumble: predelay with a feedback loop, smear, drive, then Mix In joins and Split divides the sound. Duck and output: below the split, a 30 Hz high-pass, the duck VCA and a soft clipper to Out 1; above it, a soft clipper to Out 2, not ducked. The duck is shaped by attack, hold and release, and always drops all the way.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrow" d="M0 0 L10 5 L0 10 z"></path></marker>
+        </defs>
+
+        <!-- INPUT + TRIGGER -->
+        <rect class="frame" x="20" y="10" width="960" height="225" rx="22"></rect>
+        <text class="sec" x="44" y="215">INPUT + TRIGGER</text>
+        <text x="44" y="75">KICK INPUT</text>
+        <line class="w" x1="140" y1="70" x2="188" y2="70" marker-end="url(#ar)"></line>
+        <rect class="blk" x="190" y="40" width="140" height="60"></rect>
+        <text x="260" y="67" text-anchor="middle">AUTO</text><text x="260" y="85" text-anchor="middle">LEVEL</text>
+        <line class="w" x1="330" y1="70" x2="370" y2="70"></line>
+        <circle class="dot" cx="370" cy="70" r="4"></circle>
+        <line class="w" x1="370" y1="70" x2="468" y2="70" marker-end="url(#ar)"></line>
+        <rect class="blk" x="470" y="40" width="160" height="60"></rect>
+        <text x="550" y="67" text-anchor="middle">KICK</text><text x="550" y="85" text-anchor="middle">DETECTOR</text>
+        <text x="392" y="165">GATE</text>
+        <line class="w" x1="436" y1="160" x2="468" y2="160" marker-end="url(#ar)"></line>
+        <rect class="blk" x="470" y="130" width="160" height="60"></rect>
+        <text x="550" y="157" text-anchor="middle">GATE · TAP</text><text class="sub" x="550" y="176" text-anchor="middle">input or button</text>
+        <!-- either/or switch: a patched gate wins -->
+        <polyline class="w" points="630,70 672,70 672,98"></polyline>
+        <polyline class="w" points="630,160 672,160 672,132"></polyline>
+        <circle class="dot" cx="672" cy="98" r="3.5"></circle><circle class="dot" cx="672" cy="132" r="3.5"></circle>
+        <line class="w" x1="720" y1="115" x2="674" y2="131"></line>
+        <circle class="dot" cx="720" cy="115" r="4"></circle>
+        <polyline class="w" points="720,115 962,115 962,552 485,552 485,573" marker-end="url(#ar)"></polyline>
+        <text class="sub" x="700" y="186">either / or: a patched gate wins;</text>
+        <text class="sub" x="700" y="202">after 4 s without gates, the detector</text>
+
+        <!-- RUMBLE -->
+        <rect class="frame" x="20" y="255" width="960" height="245" rx="22"></rect>
+        <text class="sec" x="44" y="482">RUMBLE</text>
+        <polyline class="w" points="370,70 370,272 60,272 60,320 70,320"></polyline>
+        <circle class="mix" cx="82" cy="330" r="12"></circle><path class="w" d="M74 330 H90 M82 322 V338"></path>
+        <line class="w" x1="94" y1="330" x2="118" y2="330" marker-end="url(#ar)"></line>
+        <rect class="blk" x="120" y="300" width="150" height="60"></rect>
+        <text x="195" y="327" text-anchor="middle">PREDELAY</text><text class="sub" x="195" y="346" text-anchor="middle">0–666 ms</text>
+        <line class="w" x1="270" y1="330" x2="300" y2="330"></line>
+        <circle class="dot" cx="300" cy="330" r="4"></circle>
+        <polyline class="w" points="300,330 300,410 272,410" marker-end="url(#ar)"></polyline>
+        <rect class="blk" x="120" y="385" width="150" height="50"></rect>
+        <text x="195" y="407" text-anchor="middle">FEEDBACK</text><text class="sub" x="195" y="424" text-anchor="middle">damped repeats</text>
+        <polyline class="w" points="120,410 82,410 82,344" marker-end="url(#ar)"></polyline>
+        <line class="w" x1="300" y1="330" x2="338" y2="330" marker-end="url(#ar)"></line>
+        <rect class="blk" x="340" y="300" width="160" height="60"></rect>
+        <text x="420" y="327" text-anchor="middle">SMEAR</text><text class="sub" x="420" y="346" text-anchor="middle">FDN 1 · FDN 2 · MUTABLE</text>
+        <line class="w" x1="500" y1="330" x2="538" y2="330" marker-end="url(#ar)"></line>
+        <rect class="blk" x="540" y="300" width="160" height="60"></rect>
+        <text x="620" y="327" text-anchor="middle">DRIVE</text><text class="sub" x="620" y="346" text-anchor="middle">90 Hz split · 3 types</text>
+        <line class="w" x1="700" y1="330" x2="746" y2="330" marker-end="url(#ar)"></line>
+        <circle class="mix" cx="760" cy="330" r="12"></circle><path class="w" d="M752 330 H768 M760 322 V338"></path>
+        <line class="w" x1="760" y1="405" x2="760" y2="346" marker-end="url(#ar)"></line>
+        <text x="748" y="402" text-anchor="end">MIX IN</text>
+        <text class="sub" x="748" y="420" text-anchor="end">normalled to the kick input,</text>
+        <text class="sub" x="748" y="435" text-anchor="end">ignored when it's the kick</text>
+        <line class="w" x1="772" y1="330" x2="788" y2="330" marker-end="url(#ar)"></line>
+        <rect class="blk" x="790" y="300" width="150" height="60"></rect>
+        <text x="865" y="327" text-anchor="middle">SPLIT</text><text class="sub" x="865" y="346" text-anchor="middle">40 Hz – 2 kHz</text>
+        <text class="sub" x="836" y="380">above</text><text class="sub" x="906" y="380">below</text>
+        <polyline class="w" points="830,360 830,495 36,495 36,812 478,812" marker-end="url(#ar)"></polyline>
+        <polyline class="w" points="900,360 900,505 60,505 60,720 118,720" marker-end="url(#ar)"></polyline>
+
+        <!-- DUCK + OUTPUT -->
+        <rect class="frame" x="20" y="520" width="960" height="350" rx="22"></rect>
+        <text class="sec" x="44" y="852">DUCK + OUTPUT</text>
+        <!-- duck envelope: attack, hold, release; the VCA always drops all the way -->
+        <rect class="blk" x="430" y="575" width="110" height="50"></rect>
+        <text x="485" y="597" text-anchor="middle">ATTACK</text><text class="sub" x="485" y="614" text-anchor="middle">2 ms</text>
+        <line class="w" x1="540" y1="600" x2="568" y2="600" marker-end="url(#ar)"></line>
+        <rect class="blk" x="570" y="575" width="130" height="50"></rect>
+        <text x="635" y="597" text-anchor="middle">HOLD</text><text class="sub" x="635" y="614" text-anchor="middle">gate, or Hold knob</text>
+        <line class="w" x1="700" y1="600" x2="728" y2="600" marker-end="url(#ar)"></line>
+        <rect class="blk" x="730" y="575" width="150" height="50"></rect>
+        <text x="805" y="597" text-anchor="middle">RELEASE</text><text class="sub" x="805" y="614" text-anchor="middle">swell · % of gate</text>
+        <polyline class="w" points="880,600 915,600 915,660 370,660 370,688" marker-end="url(#ar)"></polyline>
+        <text class="sub" x="560" y="654">full depth</text>
+        <!-- below the split: high-pass, then the duck -->
+        <rect class="blk" x="120" y="695" width="140" height="50"></rect>
+        <text x="190" y="717" text-anchor="middle">HIGH-PASS</text><text class="sub" x="190" y="734" text-anchor="middle">30 Hz</text>
+        <line class="w" x1="260" y1="720" x2="298" y2="720" marker-end="url(#ar)"></line>
+        <!-- the duck VCA is on Out 1 only; the texture passes beneath it, not ducked -->
+        <rect class="blk" x="300" y="690" width="140" height="60"></rect>
+        <text x="370" y="717" text-anchor="middle">DUCK</text><text x="370" y="735" text-anchor="middle">VCA</text>
+        <line class="w" x1="440" y1="720" x2="478" y2="720" marker-end="url(#ar)"></line>
+        <text class="sub" x="300" y="804">not ducked</text>
+        <rect class="blk" x="480" y="695" width="140" height="50"></rect>
+        <text x="550" y="725" text-anchor="middle">SOFT CLIP</text>
+        <rect class="blk" x="480" y="787" width="140" height="50"></rect>
+        <text x="550" y="817" text-anchor="middle">SOFT CLIP</text>
+        <line class="w" x1="620" y1="720" x2="834" y2="720" marker-end="url(#ar)"></line>
+        <text class="sub" x="640" y="712">below the split</text>
+        <rect class="tag-r" x="836" y="707" width="138" height="26" rx="5"></rect>
+        <text class="tagt" x="905" y="725" text-anchor="middle">OUT 1 · RUMBLE</text>
+        <line class="w" x1="620" y1="812" x2="834" y2="812" marker-end="url(#ar)"></line>
+        <text class="sub" x="640" y="804">above the split</text>
+        <rect class="tag-r" x="836" y="799" width="138" height="26" rx="5"></rect>
+        <text class="tagt" x="905" y="817" text-anchor="middle">OUT 2 · TEXTURE</text>
+
+        <!-- legend -->
+        <g transform="translate(40 905)">
+          <line class="ink" x1="0" y1="-12" x2="0" y2="4" stroke-width="2"></line><text x="12" y="0">INPUT</text>
+          <rect class="tag-r" x="110" y="-15" width="22" height="20" rx="4"></rect><text x="142" y="0">OUTPUT</text>
+          <line class="w" x1="250" y1="-5" x2="300" y2="-5" marker-end="url(#ar)"></line><text x="312" y="0">CONNECTION</text>
+          <circle class="mix" cx="470" cy="-5" r="10"></circle><path class="w" d="M463 -5 H477 M470 -12 V2"></path><text x="490" y="0">MIXER</text>
+          <circle class="dot" cx="580" cy="-5" r="4"></circle><text x="594" y="0">SPLIT</text>
+          <g transform="translate(680 0)"><circle class="dot" cx="0" cy="-12" r="3"></circle><circle class="dot" cx="0" cy="4" r="3"></circle><line class="w" x1="24" y1="-4" x2="2" y2="3"></line><circle class="dot" cx="24" cy="-4" r="3"></circle><text x="38" y="0">SWITCH</text></g>
+        </g>
+      </svg>
+    </div>
+    <p>The kick goes two ways: to the detector, and into the rumble path: predelay (with its feedback loop), smear and drive. Mix In joins after Drive. Then Split divides the sound: below it goes to <b>Out 1</b> as rumble, above it to <b>Out 2</b> as texture. The duck is fired by a patched gate, or by the detector when there is none. It pulls Out 1 all the way down on each trigger, with an attack, a hold (the gate's length, or the Hold knob with no gate) and a swelling release. Out 2 isn't ducked.</p>
+  </section>
+
+  <!-- ============ PANEL ============ -->
+  <section id="panel" aria-labelledby="panel-h">
+    <h2 id="panel-h">Panel</h2>
+    <figure class="panel-fig">
+      <svg id="panelsvg" viewBox="-24 -1 98.5 130.5" role="img" aria-label="Mock-up of the Shindo Versio panel with numbered callouts 1 to 17, explained under Controls">
+        <defs>
+          <g id="cap"><circle r="5.2" fill="#2a2433" stroke="#0d0b10" stroke-width="0.4"></circle><circle r="4.2" fill="#3a3345"></circle><line x1="0" y1="-1.2" x2="0" y2="-4" stroke="#f3eef8" stroke-width="0.6" stroke-linecap="round"></line></g>
+          <g id="jack"><circle r="3.1" fill="#bdb8c6" stroke="#8e8898" stroke-width="0.3"></circle><circle r="1.8" fill="#0d0b10"></circle></g>
+        </defs>
+        <rect x="0" y="0" width="50.5" height="128.5" rx="0.8" fill="#221d2a" stroke="#3a3345" stroke-width="0.4"></rect>
+        <g fill="#3a3345"><circle cx="7.65" cy="3" r="1.6"></circle><circle cx="43.21" cy="3" r="1.6"></circle><circle cx="7.65" cy="125.5" r="1.6"></circle><circle cx="43.21" cy="125.5" r="1.6"></circle></g>
+        <text x="25.25" y="10.6" text-anchor="middle" class="pt title">SHINDO</text>
+        <g><circle cx="17.3" cy="19.8" r="1.2" fill="#ff3d33"></circle><circle cx="22.38" cy="19.8" r="1.2" fill="#ffffff"></circle><circle cx="29.36" cy="19.8" r="1.2" fill="#4a4256"></circle><circle cx="34.44" cy="19.8" r="1.2" fill="#4a4256"></circle></g>
+        <use href="#cap" x="7.77" y="18.53"></use><use href="#cap" x="43.33" y="18.53"></use><use href="#cap" x="25.17" y="28.69"></use>
+        <use href="#cap" x="7.77" y="39.49"></use><use href="#cap" x="43.33" y="39.49"></use><use href="#cap" x="25.17" y="49.33"></use>
+        <use href="#cap" x="43.33" y="60.44"></use>
+        <g class="pt lbl" text-anchor="middle">
+          <text x="7.77" y="26.1">PREDELAY</text><text x="43.33" y="26.1">SMEAR</text><text x="25.17" y="36.3">DRIVE</text>
+          <text x="7.77" y="47.1">FEEDBACK</text><text x="43.33" y="47.1">SPLIT</text><text x="25.17" y="56.9">HOLD</text>
+          <text x="43.33" y="68">RELEASE</text>
+        </g>
+        <g class="pt tiny" text-anchor="middle"><text x="43.33" y="49.4">out 1 · out 2</text><text x="25.17" y="59.2">duck</text><text x="43.33" y="70.3">duck</text></g>
+        <g><rect x="6.9" y="55.6" width="3" height="4.6" rx="0.6" fill="#bdb8c6"></rect><circle cx="8.4" cy="56.8" r="1.1" fill="#f3eef8"></circle>
+           <rect x="6.9" y="65.1" width="3" height="4.6" rx="0.6" fill="#bdb8c6"></rect><circle cx="8.4" cy="66.3" r="1.1" fill="#f3eef8"></circle></g>
+        <g class="pt tiny"><text x="11.4" y="56.3">SUB</text><text x="11.4" y="58.4">TEXTURE</text><text x="11.4" y="60.5">MUTABLE</text>
+          <text x="11.4" y="65.8">TUBE</text><text x="11.4" y="67.9">TAPE</text><text x="11.4" y="70">FOLD</text></g>
+        <text x="8.4" y="53.6" text-anchor="middle" class="pt lbl">ENGINE</text>
+        <text x="8.4" y="73.4" text-anchor="middle" class="pt lbl">DRIVE TYPE</text>
+        <circle cx="26.18" cy="69.33" r="2.6" fill="#ff3d33" stroke="#0d0b10" stroke-width="0.3"></circle>
+        <text x="26.18" y="74.6" text-anchor="middle" class="pt lbl">TAP</text>
+        <g>
+          <use href="#jack" x="5.23" y="83.3"></use><use href="#jack" x="18.57" y="83.3"></use><use href="#jack" x="31.9" y="83.3"></use><use href="#jack" x="44.6" y="83.3"></use>
+          <use href="#jack" x="5.23" y="97.27"></use><use href="#jack" x="18.57" y="97.27"></use><use href="#jack" x="31.9" y="97.27"></use><use href="#jack" x="44.6" y="97.27"></use>
+          <use href="#jack" x="5.23" y="111.24"></use><use href="#jack" x="18.57" y="111.24"></use><use href="#jack" x="31.9" y="111.24"></use><use href="#jack" x="44.6" y="111.24"></use>
+        </g>
+        <g class="pt lbl" text-anchor="middle">
+          <text x="5.23" y="89">PRE</text><text x="18.57" y="89">DRIVE</text><text x="31.9" y="89">SMEAR</text><text x="44.6" y="89">REL</text>
+          <text x="5.23" y="103">FDBK</text><text x="18.57" y="103">HOLD</text><text x="31.9" y="103">SPLIT</text><text x="44.6" y="103" fill="#ffffff">GATE</text>
+          <text x="5.23" y="117" fill="#ffffff">KICK</text><text x="18.57" y="117">MIX IN</text><text x="31.9" y="117" fill="#ff3d33">RUMBLE</text><text x="44.6" y="117" fill="#ff3d33">TEXTURE</text>
+        </g>
+        <g class="pt tiny" text-anchor="middle"><text x="31.9" y="119.2">out 1</text><text x="44.6" y="119.2">out 2</text></g>
+        <g id="callouts" class="co"></g>
+      </svg>
+    </figure>
+    <p class="note">A mock-up on the Versio's real hole layout, numbered as the Versio panel numbers its knobs and CV jacks. The numbers match the sections under Controls.</p>
+  </section>
+
+  <!-- ============ CONTROLS ============ -->
+  <section id="controls" aria-labelledby="controls-h">
+    <h2 id="controls-h">Controls</h2>
+    <p>Listed in signal order. Numbers follow the Versio panel: by column, top to bottom. Every knob has a CV input with the same number, which adds to the knob's position.</p>
+    <div class="ref">
+      <article><span class="num">1</span><div>
+        <div class="hd"><h3>Predelay</h3><span class="range">0–666 ms · free-running</span></div>
+        <p>How long after the kick the rumble starts. Pushing the swell later moves it off the kick and into the gap before the next one.</p>
+        <ul><li>Squared taper: the first 60% of the knob covers 0–250 ms, where most rumbles live.</li><li>666 ms is a quarter note at 90 BPM. Not synced to tempo: dial it by ear, or try a dotted eighth (about 346 ms at 130 BPM) for repeats that drift 3 against 4.</li><li>Smoothed, so turning it doesn't zipper.</li></ul>
+      </div></article>
+      <article><span class="num">2</span><div>
+        <div class="hd"><h3>Feedback</h3><span class="range">0–100%</span></div>
+        <p>Feeds the predelay back into itself. At 0 you get one swell per kick; turned up, each repeat re-triggers the smear at the predelay interval, for a denser, rolling rumble.</p>
+        <ul><li>Level-compensated: more Feedback makes the rumble more rolling, not louder.</li><li>The loop is damped (about 1.5 kHz), so each repeat is a little darker.</li><li>100% stays just under unity inside: even at the top, the rumble fades out by itself after the kicks stop.</li></ul>
+      </div></article>
+      <article><span class="num">5</span><div>
+        <div class="hd"><h3>Smear</h3><span class="range">size + decay, one macro</span></div>
+        <p>How big and how long the cloud is. Low settings give a short, tight bloom; high settings a slow, wide swell that rings out between bars.</p>
+        <ul><li>Dark FDN engines: the space grows mostly in the top half of the knob, and the decay runs from about a quarter of a second to about 5 seconds.</li><li>Long tails stack up across kicks, so the output is trimmed a little as Smear rises: Smear changes how long it rings, not how loud it is.</li></ul>
+      </div></article>
+      <article><span class="num">3</span><div>
+        <div class="hd"><h3>Drive</h3><span class="range">staged · sub joins past 3/4</span></div>
+        <p>Saturation, with the type set by switch 9. Up to three-quarters of the knob, only the band above 90 Hz is driven, so the grit sits on top and the sub keeps its weight and pitch. Past three-quarters, the sub blends into the saturator too, and at full Drive the whole rumble is driven.</p>
+        <ul><li>About ×6 gain at the middle of the knob, ×16 at full.</li><li>Level-matched: Drive changes character, not loudness.</li><li>Drive sits before Split. Its grit is mostly above the split, so you hear most of it on Out 2.</li></ul>
+      </div></article>
+      <article><span class="num">6</span><div>
+        <div class="hd"><h3>Split</h3><span class="range">40 Hz – 2 kHz · 24 dB/oct crossover</span></div>
+        <p>Where the sound divides between the two outputs. Below the split is the rumble, on Out 1; above it is the texture, on Out 2. Noon is about 120 Hz, the usual top of a rumble.</p>
+        <ul><li>The two halves add back up to the whole sound, so Out 1 and Out 2 mixed at equal level sound like one unsplit rumble.</li><li>Turn it down for a tighter, darker rumble and more texture; turn it up to put more of the sound on Out 1.</li></ul>
+      </div></article>
+      <article><span class="num">4</span><div>
+        <div class="hd"><h3>Duck hold</h3><span class="range">no gate: 5–400 ms · gate: 0.25×–4× its length</span></div>
+        <p>How long the rumble stays down after each kick. With no gate patched, it's a time: set it to about the length of the kick's body, so the rumble comes back as the kick ends. Noon is about 45 ms.</p>
+        <ul><li>With a gate patched, it multiplies each gate's length, so you can lengthen or shorten every duck without reprogramming the sequencer. Noon is 1×, the gate as it is, with a little play either side so it stays exactly 1× near noon. The release scales with it.</li><li>Above 1× is exact on every gate. Below 1×, the module can't know a gate's length until it ends, so it uses the previous gate's: exact on a steady pattern, approximate when step lengths vary.</li><li>The duck itself is always full: the rumble drops out completely on every hit.</li></ul>
+      </div></article>
+      <article><span class="num">7</span><div>
+        <div class="hd"><h3>Duck release</h3><span class="range">gate: 10–200% of gate · no gate: 30 ms–1.5 s</span></div>
+        <p>How long the rumble takes to swell back after the hold.</p>
+        <ul><li>With a gate patched, Release is a share of each gate's length, so the whole duck stretches with every step. Around 10 o'clock is 25%. The floor is 10 ms, so very short gates don't click.</li><li>With no gate, it's a time in milliseconds.</li></ul>
+      </div></article>
+      <article><span class="num">8</span><div>
+        <div class="hd"><h3>Engine switch</h3><span class="range">Sub · Texture · Mutable</span></div>
+        <p>Chooses the smear engine.</p>
+        <ul><li><b>Dark FDN 1 (Sub):</b> an 8-line feedback delay network built for low end. Light diffusion and slow modulation keep some punch and a steady sub pitch.</li><li><b>Dark FDN 2 (Texture):</b> the same network, larger, fully diffused, with deeper modulation and a brighter loop: a moving wash that suits Out 2.</li><li><b>Mutable:</b> the plate reverb from Mutable Instruments' Rings. Brighter and familiar.</li><li>Both Dark FDNs run on one network, so switching between them mid-sound is smooth.</li></ul>
+      </div></article>
+      <article><span class="num">9</span><div>
+        <div class="hd"><h3>Drive type switch</h3><span class="range">three types</span></div>
+        <p>Chooses the saturation curve for Drive.</p>
+        <ul><li><b>Tube:</b> asymmetric, adds even harmonics.</li><li><b>Tape:</b> a soft knee that rolls the top off as Drive rises: rounded, more glue than grit.</li><li><b>Wavefolder:</b> folds peaks back on themselves, for metallic growl.</li></ul>
+        <p class="note"><span class="todo">Being decided</span> A pentode (hard-knee, odd harmonics) and a rectifier (octave-up grit) are being auditioned for these three positions.</p>
+      </div></article>
+      <article><span class="num">10</span><div>
+        <div class="hd"><h3>Tap button</h3><span class="range">a gate by hand</span></div>
+        <p>Fires the duck, and holds it down for as long as you hold the button, just like a gate on the Gate input.</p>
+      </div></article>
+      <article><span class="num">11</span><div>
+        <div class="hd"><h3>Lights</h3><span class="range">four, left to right</span></div>
+        <ul><li><b>Trigger:</b> flashes on each duck. Green when a gate fired it, pink when it was detected from the kick.</li><li><b>Gate:</b> lit while the Gate input or the Tap button is held.</li><li><b>Rumble:</b> follows the rumble's volume: bright at rest, dark on the duck, fading back up with the release.</li><li><b>Predelay:</b> pulses on each predelay repeat, each pulse dimmer by the Feedback amount. With Feedback at 0, one pulse per kick.</li></ul>
+      </div></article>
+      <article><span class="num">12</span><div>
+        <div class="hd"><h3>CV inputs</h3><span class="range">seven, one per knob</span></div>
+        <p>Each adds to its knob, so a sequencer can move hold, release or drive per step. Drive's CV sweeps through the staged range, so you can modulate from clean grit into a fully driven sub.</p>
+        <p class="note"><span class="todo">To confirm</span> CV range per the Versio hardware.</p>
+      </div></article>
+      <article><span class="num">13</span><div>
+        <div class="hd"><h3>Gate input</h3><span class="range">rising edge fires · high holds</span></div>
+        <p>Fires the duck on each rising edge and keeps it down while the gate is high. While gates are arriving, the kick detector is ignored; after 4 seconds without a gate, the duck goes back to listening to the kick.</p>
+      </div></article>
+      <article><span class="num">14</span><div>
+        <div class="hd"><h3>Kick Input</h3><span class="range">any level</span></div>
+        <p>Your kick. The rumble path levels it automatically: it follows the loudest hit of the last 1–2 seconds and brings it to a fixed reference (up to +20 dB for quiet kicks, down to −6 dB for hot ones).</p>
+      </div></article>
+      <article><span class="num">15</span><div>
+        <div class="hd"><h3>Mix In</h3><span class="range">joins before the split</span></div>
+        <p>A second source, mixed in after Drive and before the split. It isn't smeared or driven, so it stays clean. Noise is the classic choice: slow sample-and-hold for dark grit, white noise for air. Most noise sits above the split, so it lands on Out 2 and plays straight through; only the part below the split ducks with the rumble.</p>
+        <ul><li>Normalled to the Kick Input on the panel. When it only carries the kick, it's ignored.</li></ul>
+      </div></article>
+      <article><span class="num">16</span><div>
+        <div class="hd"><h3>Out 1 · rumble</h3><span class="range">below the split · hot</span></div>
+        <p>The rumble: everything below the split, ducked, with a 30 Hz high-pass to keep the deepest sub out of the way. It runs hot, so set its level at the mixer or with an attenuator.</p>
+        <ul><li>A soft clipper at the end is a safety net. With default settings it barely works; with Smear, Feedback and Drive all pushed up, it adds some saturation.</li></ul>
+      </div></article>
+      <article><span class="num">17</span><div>
+        <div class="hd"><h3>Out 2 · texture</h3><span class="range">above the split · hot</span></div>
+        <p>The texture: everything above the split, not ducked, with its own soft clipper. Use it as a second layer, or process it on its own: a high-pass, a delay, a different reverb. High-pass it above the kick's body (about 200–300 Hz) and it won't compete with the kick.</p>      </div></article>
+    </div>
+  </section>
+
+  <!-- ============ THE DUCK ============ -->
+  <section id="duck" aria-labelledby="duck-h">
+    <h2 id="duck-h">The duck</h2>
+    <p>The kick and the rumble share the same low frequencies, so they take turns. On every kick the rumble drops out, then swells back in before the next one. That push and pull is what makes a rumble groove.</p>
+    <div class="box scope">
+      <svg id="scope" viewBox="0 0 720 220" role="img" aria-label="One beat rendered by the engine: the kick, the rumble on Out 1 dropping out under it for a 98 ms hold and swelling back over about 104 ms, as the kick's body fades, and the texture on Out 2 playing straight through"></svg>
+      <script type="application/json" id="beat-data" is:inline>{"ms":461.5,"kick":[[0.95,0.6,0.57,0.0,0.0,0.0,0.07,0.52,0.57,0.57,0.47,0.0,0.0,0.0,0.0,0.5,0.57,0.58,0.54,0.24,0.0,0.0,0.0,0.03,0.5,0.58,0.59,0.57,0.42,0.0,0.0,0.0,0.0,0.06,0.49,0.59,0.6,0.59,0.51,0.18,0.0,0.0,0.0,0.0,0.0,0.46,0.6,0.61,0.61,0.58,0.43,0.0,0.0,0.0,0.0,0.0,0.0,0.31,0.58,0.63,0.63,0.62,0.59,0.45,0.05,0.0,0.0,0.0,0.0,0.0,0.0,0.35,0.6,0.64,0.65,0.63,0.61,0.56,0.38,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.46,0.64,0.66,0.66,0.64,0.62,0.58,0.5,0.23,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.19,0.55,0.66,0.67,0.66,0.65,0.62,0.59,0.55,0.44,0.1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.22,0.54,0.66,0.67,0.67,0.66,0.63,0.6,0.57,0.54,0.44,0.15,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.37,0.6,0.67,0.68,0.67,0.65,0.63,0.6,0.57,0.55,0.5,0.36,0.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.51,0.64,0.67,0.67,0.66,0.64,0.62,0.59,0.57,0.55,0.51,0.42,0.23,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.22,0.45,0.59,0.65,0.66,0.66,0.64,0.62,0.6,0.58,0.56,0.54,0.5,0.41,0.26,0.03,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.06,0.28,0.46,0.57,0.62,0.63,0.63,0.63,0.61,0.59,0.57,0.55,0.53,0.49,0.42,0.31,0.16,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1,0.27,0.41,0.51,0.56,0.58,0.59,0.59,0.58,0.57,0.55,0.52,0.49,0.46,0.4,0.32,0.21,0.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.15,0.28,0.38,0.44,0.49,0.51,0.51,0.51,0.51,0.5,0.48,0.45,0.42,0.38,0.32,0.25,0.17,0.06,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.04,0.14,0.23,0.3,0.35,0.39,0.41,0.42,0.42,0.41,0.4,0.39,0.36,0.34,0.3,0.25,0.2,0.14,0.06,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.06,0.13,0.19,0.24,0.27,0.3,0.31,0.32,0.32,0.31,0.3,0.29,0.27,0.25,0.22,0.18,0.14,0.09,0.03,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.05,0.09,0.13,0.17,0.2,0.22,0.23,0.23,0.23,0.23,0.22,0.21,0.2,0.18,0.15,0.13,0.1,0.06,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.03,0.06,0.09,0.12,0.14,0.15,0.16,0.16,0.16,0.16,0.16,0.15,0.14,0.12,0.11,0.09,0.07,0.04,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.04,0.07,0.08,0.1,0.11,0.11,0.11,0.11,0.11,0.11,0.1,0.09,0.09,0.07,0.06,0.05,0.03,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.03,0.04,0.06,0.07,0.07,0.08,0.08,0.08,0.08,0.07,0.07,0.06,0.06,0.05,0.04,0.03,0.02,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.02,0.03,0.04,0.04,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.04,0.04,0.03,0.03,0.02,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.02,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.02,0.02,0.01,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.02,0.01,0.01,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,-0.42,-0.57,-0.6,-0.6,-0.56,0.0,0.0,0.0,-0.22,-0.53,-0.57,-0.57,-0.5,0.0,0.0,0.0,0.0,-0.38,-0.56,-0.58,-0.57,-0.46,0.0,0.0,0.0,0.0,-0.12,-0.52,-0.59,-0.59,-0.58,-0.43,0.0,0.0,0.0,0.0,0.0,-0.36,-0.57,-0.61,-0.61,-0.58,-0.44,0.0,0.0,0.0,0.0,0.0,0.0,-0.45,-0.6,-0.62,-0.62,-0.6,-0.51,-0.2,0.0,0.0,0.0,0.0,0.0,0.0,-0.41,-0.61,-0.64,-0.64,-0.63,-0.59,-0.49,-0.14,0.0,0.0,0.0,0.0,0.0,0.0,-0.06,-0.49,-0.64,-0.65,-0.65,-0.63,-0.61,-0.56,-0.39,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.24,-0.57,-0.66,-0.66,-0.66,-0.64,-0.61,-0.58,-0.51,-0.26,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.34,-0.61,-0.67,-0.67,-0.66,-0.64,-0.61,-0.59,-0.56,-0.47,-0.2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.24,-0.54,-0.66,-0.68,-0.67,-0.66,-0.63,-0.6,-0.58,-0.55,-0.5,-0.32,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.26,-0.53,-0.65,-0.67,-0.67,-0.66,-0.64,-0.61,-0.59,-0.56,-0.54,-0.48,-0.33,-0.06,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.03,-0.33,-0.54,-0.64,-0.67,-0.67,-0.65,-0.64,-0.61,-0.59,-0.57,-0.55,-0.52,-0.44,-0.29,-0.05,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.21,-0.42,-0.56,-0.63,-0.65,-0.65,-0.64,-0.62,-0.6,-0.58,-0.56,-0.54,-0.5,-0.44,-0.33,-0.15,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.03,-0.23,-0.4,-0.52,-0.58,-0.61,-0.61,-0.61,-0.6,-0.59,-0.57,-0.55,-0.52,-0.49,-0.43,-0.35,-0.23,-0.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.08,-0.24,-0.37,-0.46,-0.52,-0.55,-0.56,-0.56,-0.55,-0.54,-0.52,-0.5,-0.47,-0.43,-0.38,-0.31,-0.22,-0.11,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.05,-0.16,-0.26,-0.35,-0.4,-0.44,-0.46,-0.47,-0.47,-0.46,-0.45,-0.43,-0.41,-0.38,-0.33,-0.28,-0.22,-0.14,-0.05,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.02,-0.1,-0.17,-0.24,-0.29,-0.33,-0.35,-0.36,-0.37,-0.37,-0.36,-0.34,-0.33,-0.3,-0.27,-0.23,-0.19,-0.13,-0.07,-0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.02,-0.08,-0.13,-0.18,-0.22,-0.25,-0.26,-0.27,-0.27,-0.27,-0.27,-0.26,-0.24,-0.22,-0.2,-0.17,-0.13,-0.09,-0.05,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.02,-0.06,-0.1,-0.13,-0.16,-0.18,-0.19,-0.19,-0.2,-0.19,-0.19,-0.18,-0.17,-0.16,-0.14,-0.12,-0.09,-0.06,-0.03,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.01,-0.04,-0.07,-0.09,-0.11,-0.12,-0.13,-0.14,-0.14,-0.14,-0.13,-0.13,-0.12,-0.11,-0.1,-0.08,-0.06,-0.04,-0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.01,-0.03,-0.05,-0.06,-0.07,-0.08,-0.09,-0.09,-0.09,-0.09,-0.09,-0.09,-0.08,-0.07,-0.07,-0.06,-0.04,-0.03,-0.02,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.01,-0.02,-0.03,-0.04,-0.05,-0.06,-0.06,-0.06,-0.06,-0.06,-0.06,-0.06,-0.06,-0.05,-0.04,-0.04,-0.03,-0.02,-0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.01,-0.02,-0.03,-0.03,-0.04,-0.04,-0.04,-0.04,-0.04,-0.04,-0.04,-0.04,-0.03,-0.03,-0.03,-0.02,-0.01,-0.01,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.01,-0.01,-0.02,-0.02,-0.03,-0.03,-0.03,-0.03,-0.03,-0.03,-0.03,-0.02,-0.02,-0.02,-0.02,-0.01,-0.01,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0]],"rumble":[[0.16,0.08,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.01,0.01,0.01,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.01,0.01,0.01,0.02,0.02,0.02,0.02,0.02,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.0,0.01,0.02,0.03,0.04,0.05,0.06,0.06,0.05,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.01,0.08,0.09,0.11,0.12,0.13,0.08,0.0,0.0,0.0,0.03,0.03,0.01,0.0,0.0,0.0,0.0,0.0,0.0,0.04,0.13,0.13,0.04,0.0,0.01,0.15,0.22,0.23,0.23,0.1,0.0,0.0,0.0,0.0,0.19,0.24,0.21,0.08,0.0,0.0,0.0,0.0,0.06,0.18,0.16,0.13,0.1,0.0,0.03,0.11,0.2,0.25,0.25,0.18,0.14,0.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1,0.22,0.23,0.19,0.0,0.0,0.0,0.0,0.17,0.25,0.25,0.19,0.08,0.0,0.0,0.0,0.0,0.33,0.58,0.65,0.65,0.49,0.24,0.0,0.0,0.0,0.0,0.0,0.26,0.54,0.59,0.53,0.34,0.24,0.24,0.18,0.06,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.34,0.5,0.49,0.42,0.39,0.36,0.24,0.11,0.06,0.08,0.04,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.31,0.65,0.76,0.76,0.68,0.49,0.18,0.0,0.0,0.0,0.0,0.02,0.12,0.12,0.09,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.03,0.04,0.07,0.23,0.37,0.42,0.46,0.46,0.43,0.26,0.02,0.0,0.0,0.0,0.16,0.29,0.29,0.12,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.36,0.62,0.79,0.93,0.95,0.91,0.78,0.63,0.41,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.21,0.42,0.61,0.79,0.82,0.81,0.7,0.52,0.29,0.14,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.04,0.11,0.13,0.13,0.09,0.02,0.02,0.14,0.23,0.23,0.19,0.14,0.05,0.0,0.0,0.0,0.17,0.37,0.58,0.61,0.59,0.47,0.27,0.02,0.0,0.0,0.01,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.09,0.36,0.48,0.51,0.52,0.55,0.55,0.58,0.6,0.6,0.55,0.42,0.32,0.21,0.1,0.03,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.04,0.2,0.26,0.3,0.3,0.24,0.26,0.37,0.49,0.57,0.61,0.61,0.58,0.42,0.2,0.01,0.0,0.0,0.0,0.06,0.19,0.21,0.18,0.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.15,0.28,0.31,0.3,0.25,0.19,0.05,0.12,0.23,0.24,0.21,0.11,0.06,0.09,0.08,0.17,0.3,0.41,0.47,0.47,0.41,0.24,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.04,0.21,0.34,0.48,0.51,0.51,0.48,0.47,0.43,0.31,0.17,0.08,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.09,0.15,0.24,0.36,0.41,0.41,0.4,0.38,0.35,0.3,0.21,0.05,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.1,0.27,0.37,0.43,0.44,0.42,0.31,0.18,0.09,0.0,0.0,0.11,0.21,0.22],[0.0,-0.01,-0.03,-0.03,-0.02,-0.01,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.0,-0.01,-0.01,-0.01,-0.01,-0.0,-0.01,-0.01,-0.01,-0.01,-0.01,-0.0,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.01,-0.02,-0.02,-0.03,-0.03,-0.03,-0.03,-0.03,-0.03,-0.02,-0.01,-0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.02,-0.05,-0.07,-0.07,-0.04,-0.03,-0.04,-0.04,-0.04,-0.03,0.0,0.0,0.0,0.0,0.0,0.0,-0.07,-0.13,-0.13,-0.1,-0.01,0.0,-0.02,-0.1,-0.16,-0.13,-0.04,-0.06,-0.06,0.0,0.0,0.0,-0.04,-0.05,-0.05,0.0,0.0,0.0,0.0,-0.04,-0.21,-0.21,-0.11,-0.11,-0.05,0.0,0.0,-0.05,-0.22,-0.28,-0.33,-0.32,-0.2,0.0,0.0,0.0,-0.0,-0.13,-0.12,0.0,0.0,0.0,0.0,0.0,0.0,-0.13,-0.16,-0.16,-0.21,-0.23,-0.19,-0.1,-0.04,-0.01,0.0,0.0,-0.01,-0.2,-0.21,-0.18,-0.14,0.0,0.0,0.0,0.0,-0.12,-0.24,-0.35,-0.39,-0.38,-0.12,0.0,0.0,0.0,0.0,-0.05,-0.45,-0.76,-0.84,-0.83,-0.64,-0.22,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.09,-0.1,-0.07,-0.14,-0.38,-0.54,-0.59,-0.57,-0.42,-0.2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.09,-0.11,-0.09,-0.07,-0.13,-0.22,-0.34,-0.51,-0.62,-0.62,-0.51,-0.14,0.0,0.0,0.0,0.0,0.0,-0.09,-0.3,-0.36,-0.35,-0.23,-0.09,0.0,0.0,-0.04,-0.16,-0.21,-0.22,-0.28,-0.33,-0.33,-0.22,-0.03,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.09,-0.16,-0.2,-0.2,-0.08,0.0,0.0,-0.19,-0.53,-0.79,-0.86,-0.85,-0.77,-0.63,-0.33,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.29,-0.39,-0.39,-0.36,-0.32,-0.34,-0.37,-0.48,-0.63,-0.64,-0.52,-0.21,-0.07,-0.06,-0.02,-0.03,-0.04,-0.04,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.15,-0.36,-0.63,-0.83,-0.85,-0.82,-0.71,-0.5,-0.17,0.0,0.0,0.0,0.0,-0.01,-0.02,0.0,0.0,0.0,0.0,0.0,-0.06,-0.16,-0.17,-0.15,-0.02,0.0,0.0,0.0,0.0,0.0,0.0,-0.15,-0.18,-0.18,-0.08,-0.02,-0.09,-0.19,-0.38,-0.46,-0.46,-0.39,-0.38,-0.43,-0.43,-0.38,-0.35,-0.35,-0.34,-0.16,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.05,-0.19,-0.35,-0.49,-0.75,-0.9,-0.92,-0.92,-0.88,-0.77,-0.54,-0.23,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.11,-0.18,-0.18,-0.13,-0.05,0.0,0.0,0.0,-0.05,-0.17,-0.35,-0.5,-0.64,-0.68,-0.67,-0.6,-0.5,-0.29,-0.05,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.18,-0.22,-0.22,-0.3,-0.44,-0.52,-0.54,-0.54,-0.51,-0.47,-0.42,-0.31,-0.13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.08,-0.19,-0.25,-0.25,-0.23,-0.27,-0.32,-0.32,-0.32,-0.32,-0.31,-0.22,-0.04,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.06,-0.12,-0.15,-0.16,-0.15,-0.14,-0.19,-0.31,-0.41,-0.43,-0.43,-0.43,-0.42,-0.34,-0.14,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-0.01,-0.08,-0.09,-0.04,0.0,0.0]],"texture":[[0.02,0.04,0.03,0.05,0.02,0.01,0.04,0.03,0.04,0.03,0.04,0.03,0.03,0.01,0.01,0.03,0.01,0.01,0.02,0.02,0.02,0.02,0.01,0.01,0.05,0.01,0.01,0.03,0.02,0.01,0.02,0.03,0.02,0.03,0.01,0.01,0.02,0.0,0.02,0.02,0.03,0.03,0.02,0.01,0.02,0.02,0.01,0.01,0.02,0.02,0.01,0.0,0.03,0.03,0.01,0.01,0.01,0.02,0.02,0.0,0.02,0.03,0.01,0.02,0.01,0.02,0.01,0.01,0.0,0.02,0.01,0.01,0.01,0.01,0.03,0.02,0.01,0.01,0.01,0.02,0.03,0.02,0.02,0.01,0.02,0.02,0.01,0.02,0.02,0.02,0.03,0.03,0.03,0.01,0.01,0.02,0.01,0.01,0.02,0.01,0.02,0.02,0.03,0.03,0.02,0.01,0.03,0.0,0.03,0.02,0.02,0.0,0.04,0.0,0.0,0.02,0.02,0.02,0.01,0.03,0.04,0.01,0.02,0.02,0.02,0.02,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.03,0.01,0.02,0.0,0.02,0.02,0.0,0.02,0.02,0.02,0.01,0.01,0.01,0.01,0.01,0.02,0.02,0.0,0.01,0.01,0.0,0.03,0.04,0.01,0.01,0.01,0.01,0.01,0.02,0.02,0.01,0.01,0.01,0.02,0.0,0.01,0.01,0.01,0.02,0.0,0.03,0.01,0.01,0.01,0.02,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.0,0.02,0.0,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.0,0.0,0.01,0.01,0.0,0.01,0.01,0.01,0.0,0.01,0.0,0.0,0.0,0.01,0.01,0.0,0.0,0.0,0.01,0.01,0.0,0.0,0.01,0.0,0.0,0.0,0.01,0.01,0.01,0.01,0.0,0.01,0.01,0.0,0.0,0.01,0.01,0.0,0.0,0.01,0.01,0.0,0.01,0.01,0.0,0.0,0.01,0.01,0.01,0.0,0.01,0.0,0.01,0.01,0.0,0.01,0.01,0.0,0.0,0.0,0.01,0.0,0.01,0.01,0.01,0.0,0.01,0.0,0.0,0.01,0.0,0.0,0.01,0.01,0.0,0.0,0.01,0.0,0.0,0.01,0.01,0.07,0.12,0.01,0.08,0.17,0.2,0.09,0.08,0.17,0.27,0.1,0.08,0.05,0.21,0.16,0.1,0.15,0.15,0.21,0.2,0.19,0.26,0.25,0.4,0.3,0.18,0.24,0.37,0.25,0.16,0.39,0.33,0.47,0.55,0.31,0.54,0.28,0.23,0.19,0.57,0.6,0.37,0.46,0.45,0.16,0.49,0.49,0.68,0.54,0.4,0.35,0.95,0.47,0.34,0.41,0.35,0.15,0.28,0.6,0.56,0.19,0.27,0.66,0.5,0.8,0.56,0.18,0.24,0.47,0.36,0.12,0.4,0.42,0.46,0.31,0.1,0.4,0.52,0.09,0.27,0.46,0.44,0.18,0.18,0.14,0.35,0.33,0.24,0.48,0.11,0.18,0.32,0.18,0.42,0.42,0.17,0.16,0.23,0.21,0.4,0.41,0.14,0.21,0.21,0.12,0.15,0.11,0.05,0.09,0.1,0.35,0.18,0.39,0.04,0.23,0.3,0.19,0.12,0.15,0.18,0.18,0.13,0.11,0.21,0.19,0.16,0.03,0.11,0.15,0.19,0.24,0.25,0.2,0.1,0.12,0.33,0.09,0.2,0.18,0.13,0.07,0.15,0.06,0.12,0.1,0.07,0.04,0.08,0.0,0.19,0.13,0.05,0.05,0.17,0.06,0.06,0.07,0.0,0.07,0.1,0.12,0.14,0.06,0.11,0.07,0.02,0.03,0.08,0.04,0.05,0.1,0.06,0.15,0.08,0.06,0.19,0.12,0.12,0.07,0.08,0.11,0.04,0.1,0.1,0.1,0.05,0.11,0.02,0.06,0.14,0.12,0.11,0.1,0.1,0.05,0.11,0.14,0.06,0.11,0.12,0.09,0.05,0.05,0.06,0.08,0.01,0.04,0.05,0.03,0.05,0.06,0.02,0.07,0.09,0.02,0.04,0.11,0.02,0.09,0.16,0.09,0.06,0.03,0.02,0.09,0.02,0.05,0.08,0.06,0.05,0.08,0.08,0.04,0.09,0.08,0.08,0.02,0.03,0.05,0.0,0.0,0.12,0.0,0.06,0.03,0.03,0.07,0.0,0.05,0.08,0.09,0.05,0.04,0.04,0.04,0.03,0.04,0.05,0.05,0.06,0.06,0.05,0.04,0.09,0.05,0.04,0.04,0.07,0.11,0.01,0.13,0.07,0.09,0.08,0.05,0.08,0.08,0.02,0.07,0.0,0.11,0.04,0.09,0.1,0.09,0.03,0.02,0.05,0.03,0.11,0.1,0.15,0.06,0.08,0.12,0.03,0.15,0.11,0.1,0.07,0.21,0.08,0.03,0.02,0.08,0.08,0.03,0.06,0.13,0.06,0.06,0.13,0.16,0.11,0.14,0.1,0.04,0.08,0.05,0.05,0.03,0.1,0.02,0.06,0.01,0.02,0.04,0.11,0.05,0.09,0.06,0.05,0.05,0.03,0.01,0.07,0.03,0.06,0.11,0.05,0.05,0.03,0.05,0.1,0.02,0.04,0.07,0.05,0.01,0.08,0.07,0.11,0.04,0.04,0.07,0.01,0.01,0.04,0.03,0.08,0.08,0.05,0.09,0.01,0.02,0.06,0.02,0.05,0.05,0.05,0.03,0.04,0.03,0.03,0.05,0.02,0.03,0.02,0.04,0.03,0.03,0.0,0.03,0.04,0.01,0.04,0.05,0.05,0.04,0.01,0.03,0.04,0.04,0.0,0.02,0.04,0.03,0.03,0.02,0.03,0.02,0.01,0.0,0.05,0.0,0.01,0.0,0.0,0.04,0.03,0.0,0.03,0.02,0.02,0.01,0.02,0.03,0.04,0.02,0.02,0.04,0.03,0.03,0.01,0.02,0.05,0.03,0.01,0.03,0.02,0.02,0.01,0.02,0.03,0.01,0.0,0.02,0.02],[-0.02,-0.02,-0.05,-0.03,-0.01,-0.03,-0.03,-0.02,-0.02,-0.02,-0.03,-0.02,-0.03,-0.01,-0.02,-0.01,-0.01,-0.01,-0.04,-0.02,-0.02,-0.01,-0.04,-0.02,-0.01,-0.03,-0.04,-0.02,-0.01,-0.02,-0.0,-0.03,-0.01,-0.03,-0.02,-0.01,-0.01,-0.02,-0.01,-0.02,-0.01,-0.01,-0.02,-0.01,-0.01,-0.02,-0.01,-0.04,-0.04,-0.0,-0.01,-0.02,-0.01,-0.02,-0.02,-0.01,-0.01,-0.01,-0.01,-0.02,-0.0,-0.01,-0.02,-0.02,-0.02,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.02,-0.02,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.04,-0.01,-0.0,-0.01,-0.02,-0.02,-0.02,-0.01,-0.02,-0.02,-0.02,-0.01,-0.02,-0.01,-0.02,0.0,-0.02,-0.02,-0.03,-0.01,-0.03,-0.01,-0.01,-0.02,-0.01,-0.01,-0.02,-0.02,-0.01,-0.01,-0.02,-0.0,-0.02,-0.01,-0.01,-0.04,-0.02,-0.01,-0.02,-0.0,-0.02,-0.01,-0.02,-0.01,-0.0,-0.01,-0.02,-0.01,-0.0,-0.04,-0.01,-0.02,-0.01,-0.01,-0.02,-0.03,-0.01,-0.02,-0.02,-0.01,-0.0,-0.0,-0.02,-0.01,-0.02,-0.01,-0.02,-0.01,-0.01,-0.02,-0.01,-0.01,-0.02,-0.0,-0.01,-0.02,-0.02,-0.02,-0.0,-0.01,-0.03,-0.0,-0.01,-0.01,-0.01,0.0,-0.02,-0.02,-0.01,-0.01,-0.01,-0.01,-0.02,-0.0,-0.0,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,0.0,-0.02,-0.01,-0.01,-0.03,-0.03,-0.01,-0.0,-0.01,-0.01,-0.0,-0.01,-0.0,-0.01,-0.01,-0.01,-0.01,-0.01,-0.01,-0.0,-0.01,-0.01,-0.0,-0.0,-0.01,-0.01,-0.01,-0.01,-0.01,-0.0,-0.0,-0.01,-0.0,-0.0,-0.01,-0.0,-0.0,-0.01,-0.01,-0.01,-0.01,-0.0,-0.01,-0.0,-0.0,-0.01,-0.01,-0.0,-0.01,-0.01,-0.01,-0.01,-0.0,-0.01,-0.01,-0.0,-0.01,-0.0,-0.01,-0.0,-0.0,-0.01,-0.01,-0.0,-0.01,-0.0,-0.01,-0.01,-0.0,-0.0,-0.01,-0.0,-0.01,-0.0,-0.01,-0.0,-0.01,-0.0,-0.0,-0.01,-0.0,-0.01,-0.0,-0.01,-0.01,-0.0,-0.0,-0.01,-0.01,-0.0,-0.01,-0.0,-0.0,-0.01,-0.16,-0.15,-0.03,-0.08,-0.14,-0.16,-0.15,-0.1,-0.14,-0.21,-0.15,-0.11,-0.12,-0.09,-0.13,-0.11,-0.13,-0.22,-0.07,-0.2,-0.19,-0.38,-0.23,-0.4,-0.14,-0.24,-0.28,-0.46,-0.33,-0.13,-0.37,-0.72,-0.23,-0.62,-0.29,-0.63,-0.28,-0.17,-0.15,-0.39,-0.41,-0.42,-0.39,-0.64,-0.36,-0.57,-0.48,-0.57,-0.32,-0.42,-0.67,-0.79,-0.29,-0.4,-0.07,-0.38,-0.28,-0.33,-0.64,-0.36,-0.09,-0.46,-0.4,-0.6,-0.82,-0.46,-0.37,-0.12,-0.44,-0.41,-0.16,-0.3,-0.37,-0.22,-0.1,-0.29,-0.21,-0.46,-0.34,-0.15,-0.62,-0.44,-0.51,-0.17,-0.03,-0.33,-0.36,-0.3,-0.31,-0.23,-0.1,-0.26,-0.14,-0.38,-0.17,-0.26,-0.14,-0.14,-0.29,-0.09,-0.4,-0.29,-0.14,-0.22,-0.11,-0.18,-0.06,-0.11,-0.03,-0.25,-0.25,-0.17,-0.23,-0.26,-0.14,-0.33,-0.16,-0.11,-0.2,-0.28,-0.1,-0.11,-0.29,-0.13,-0.24,-0.1,-0.09,-0.06,-0.23,0.0,-0.2,-0.22,-0.09,-0.14,-0.01,-0.26,-0.2,-0.03,-0.17,-0.12,-0.03,-0.2,-0.08,-0.16,-0.03,-0.06,-0.09,-0.06,-0.09,-0.13,-0.12,-0.11,-0.04,-0.12,-0.07,-0.06,-0.04,-0.07,-0.07,-0.07,-0.12,-0.12,-0.1,-0.08,-0.1,-0.07,-0.04,-0.02,-0.1,-0.15,-0.16,-0.04,-0.14,-0.19,-0.09,-0.14,-0.1,-0.08,-0.13,-0.05,-0.11,-0.09,-0.07,-0.11,-0.15,-0.11,-0.02,-0.06,-0.07,-0.15,-0.08,-0.11,-0.06,-0.07,-0.09,-0.15,-0.14,-0.09,-0.07,-0.11,-0.03,-0.09,-0.07,-0.04,-0.02,-0.06,-0.07,-0.05,-0.05,-0.05,-0.05,-0.04,-0.02,-0.09,-0.09,-0.06,-0.01,-0.1,-0.11,-0.15,-0.18,-0.09,-0.11,-0.07,-0.02,-0.08,-0.07,-0.06,-0.06,-0.02,-0.1,-0.07,-0.06,-0.04,-0.06,-0.02,-0.05,-0.04,-0.03,-0.03,-0.04,-0.04,-0.04,-0.04,-0.04,-0.07,-0.04,-0.05,-0.04,-0.06,-0.04,-0.05,-0.04,-0.03,-0.03,-0.06,-0.03,-0.04,-0.09,-0.04,-0.04,-0.07,-0.07,-0.07,-0.08,-0.06,-0.06,-0.06,-0.06,-0.08,-0.07,-0.12,-0.12,-0.13,-0.02,-0.08,-0.1,-0.12,-0.0,-0.05,-0.16,-0.1,-0.12,-0.1,-0.05,-0.11,-0.04,-0.03,-0.1,-0.1,-0.12,-0.08,-0.14,-0.12,-0.05,-0.1,-0.15,-0.11,-0.06,-0.08,-0.15,-0.07,-0.08,-0.02,-0.07,-0.07,-0.05,-0.11,-0.13,-0.08,-0.08,-0.09,-0.13,-0.15,-0.11,-0.07,-0.06,-0.03,-0.06,-0.04,-0.04,-0.05,-0.11,-0.01,-0.04,-0.04,-0.08,-0.08,-0.06,-0.07,-0.07,-0.08,-0.01,-0.04,-0.03,-0.06,-0.06,-0.05,-0.04,-0.04,-0.02,-0.04,-0.04,-0.05,-0.08,-0.06,-0.03,-0.07,-0.05,-0.05,-0.07,-0.04,-0.06,-0.08,-0.01,-0.05,-0.04,-0.03,-0.03,-0.09,-0.02,-0.04,-0.05,-0.03,-0.08,-0.05,-0.02,-0.01,-0.04,-0.04,-0.04,-0.01,-0.02,-0.05,-0.06,-0.05,-0.04,-0.05,-0.03,-0.02,-0.03,-0.03,-0.03,-0.03,-0.05,-0.05,-0.05,-0.04,-0.04,-0.04,-0.03,-0.03,-0.01,-0.03,-0.02,-0.02,-0.03,-0.03,-0.02,-0.01,-0.02,-0.02,-0.02,-0.01,-0.02,-0.01,-0.01,-0.02,-0.01,-0.01,-0.03,-0.02,-0.02,-0.01,-0.02,-0.01,-0.04,-0.0,-0.03,-0.02,-0.01,-0.01,-0.03,-0.02,-0.02,-0.02,-0.04,-0.03,-0.02,-0.01,-0.03,-0.03,-0.01,-0.03,-0.03,-0.02,-0.01,-0.03]],"gain":[0.994,0.885,0.592,0.281,0.11,0.04,0.014,0.004,0.001,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.002,0.006,0.009,0.01,0.011,0.011,0.012,0.012,0.012,0.013,0.013,0.013,0.014,0.014,0.014,0.015,0.015,0.016,0.016,0.017,0.017,0.018,0.018,0.019,0.019,0.02,0.02,0.021,0.021,0.022,0.023,0.023,0.024,0.025,0.025,0.026,0.027,0.028,0.028,0.029,0.03,0.031,0.032,0.033,0.034,0.035,0.036,0.037,0.038,0.039,0.04,0.041,0.042,0.043,0.045,0.046,0.047,0.049,0.05,0.051,0.053,0.054,0.056,0.058,0.059,0.061,0.063,0.064,0.066,0.068,0.07,0.072,0.074,0.076,0.078,0.081,0.083,0.085,0.088,0.09,0.093,0.096,0.098,0.101,0.104,0.107,0.11,0.113,0.116,0.12,0.123,0.127,0.13,0.134,0.138,0.142,0.146,0.15,0.154,0.159,0.163,0.168,0.173,0.178,0.183,0.188,0.194,0.199,0.205,0.211,0.217,0.223,0.229,0.236,0.242,0.249,0.256,0.264,0.271,0.279,0.287,0.295,0.304,0.312,0.321,0.33,0.34,0.35,0.36,0.37,0.38,0.391,0.403,0.414,0.426,0.438,0.451,0.464,0.477,0.49,0.504,0.519,0.533,0.549,0.565,0.581,0.597,0.614,0.632,0.65,0.669,0.687,0.707,0.728,0.749,0.769,0.792,0.814,0.838,0.861,0.886,0.912,0.938,0.965,0.984,0.994,0.998,0.999,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0],"hold":[4.0,101.9],"release":[101.9,205.4]}</script>
+      <div class="legend"><span class="lk">kick</span><span class="lr">rumble, Out 1</span><span class="lt">texture, Out 2</span><span class="ld">duck (Out 1 volume)</span></div>
+    </div>
+    <h3>One envelope, three stages</h3>
+    <ul class="features">
+      <li><b>Attack: 2 ms</b><span>A smooth S-curve down. It hides under the kick's own transient, so it never clicks.</span></li>
+      <li><b>Hold: the gate's length</b><span>The rumble stays down while the gate is high, with no minimum: a 1 ms trigger gets just the attack, then the release. The Hold knob stretches or shortens it, 0.25× to 4×. With no gate, the Hold knob sets it, 5–400 ms.</span></li>
+      <li><b>Release: a mild swell</b><span>Rises evenly in loudness from the ducked level back to full, so the swell is audible all the way up instead of popping back.</span></li>
+    </ul>
+    <h3>Two ways to trigger it</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Mode</th><th>How it fires</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td>Gate</td><td>Each rising edge on the Gate input, or the Tap button. Gate length × the Hold knob sets the hold, and Release is a share of it.</td><td>Sequenced ducks: per-step lengths, off-beat ducks, ghost ducks without a kick.</td></tr>
+        <tr><td>Detect</td><td>Automatic: no gate for 4 seconds, and Shindo Versio listens for hits in the kick itself. The Hold knob sets the hold.</td><td>Patch-and-play: one cable, the duck follows whatever kick you send.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">The trigger source changes only the timing, never the shape, so a patch sounds the same with or without a gate.</p>
+  </section>
+
+  <!-- ============ PATCH IDEAS ============ -->
+  <section id="patches" aria-labelledby="patches-h">
+    <h2 id="patches-h">Patch ideas</h2>
+    <div class="patches">
+      <div class="patch"><h3>First rumble</h3><ol><li>Kick through a stackcable: one end to your mixer, the other into the Kick Input. Out 1 to the mixer too, turned down to start.</li><li>Engine on Sub, Split at noon, Smear at noon.</li><li>Hold at noon, Release around 300 ms.</li><li>Predelay up until the swell lands between kicks.</li></ol><span class="why">The classic dark rumble: one cable in, the duck detected from the kick.</span></div>
+      <div class="patch"><h3>Sequenced duck</h3><ol><li>Patch your sequencer's gate into Gate.</li><li>Vary gate lengths per step: short for a quick dip, long for a gated chop.</li><li>Set Release to around 25% of the gate.</li></ol><span class="why">Every step gets its own duck shape, and the swell scales with each gate.</span></div>
+      <div class="patch"><h3>Rolling triplets</h3><ol><li>Predelay to a dotted eighth (about 346 ms at 130 BPM).</li><li>Feedback around 50%.</li><li>Engine on Texture, Out 2 to the mixer alongside Out 1.</li></ol><span class="why">The repeats fall 3 against 4 and drift across the bar, lining up again every 3 bars.</span></div>
+      <div class="patch"><h3>Noise bed</h3><ol><li>Noise into Mix In: slow sample-and-hold for grit, white noise for air.</li><li>Set the noise level at the source, or through a VCA to modulate it.</li></ol><span class="why">The noise pumps with the rumble but stays clean, adding texture on top of the smear.</span></div>
+      <div class="patch"><h3>Breathing drive</h3><ol><li>A slow LFO into the Drive CV, Drive knob around 2 o'clock.</li><li>Drive type on Tube or Tape.</li></ol><span class="why">The LFO sweeps from grit on top into a fully driven sub and back.</span></div>
+      <div class="patch"><h3>Breakdown</h3><ol><li>Smear near full, Feedback around 60%.</li><li>Stop the kick.</li></ol><span class="why">The rumble rings out as a drone for a few seconds, then fades by itself.</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SPECS ============ -->
+  <section id="specs" aria-labelledby="specs-h">
+    <h2 id="specs-h">Specs</h2>
+    <div class="tablewrap"><table>
+      <tbody>
+        <tr><td>Format</td><td>Eurorack, 10 HP</td></tr>
+        <tr><td>Platform</td><td>Noise Engineering Versio (Electro-Smith Daisy Seed). Shindo Versio is alternate firmware: install it on a Versio module.</td></tr>
+        <tr><td>Audio</td><td class="mono">48 kHz</td></tr>
+        <tr><td>Inputs</td><td>Kick Input, Mix In (normalled to the Kick Input), Gate, 7 × CV</td></tr>
+        <tr><td>Outputs</td><td>Out 1 (rumble, below the split), Out 2 (texture, above it). Both hot.</td></tr>
+        <tr><td>Controls</td><td>7 knobs, 2 three-way switches, 1 button, 4 RGB lights</td></tr>
+        <tr><td>Depth, power</td><td>As the Versio hardware. <span class="todo">To confirm</span></td></tr>
+        <tr><td>Install</td><td>Flashed over USB, as other Versio firmware. <span class="todo">Instructions coming</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <footer>
+    <p><b>Status:</b> proof of concept. The sound engine runs on a computer, with a web sandbox for tuning settings by ear. It hasn't been put on the module yet, so details on this page can still change.</p>
+    <p><b>Credits:</b> the Mutable engine is the reverb from Mutable Instruments' Rings by Émilie Gillet, used under the MIT license. Versio is a platform by Noise Engineering; Shindo Versio is independent firmware by Nippon Industrial Noise, not made by them.</p>
+  </footer>
+</main>
+
+<script is:inline>
+// Typeface selector: A–E set data-font on the page root; the pick is remembered per viewer.
+(function () {
+  const root = document.documentElement, buttons = document.querySelectorAll('.fontpick button');
+  function pick(f) {
+    if (f === 'a') delete root.dataset.font; else root.dataset.font = f;
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === f)));
+    try { localStorage.setItem('shindo-font', f); } catch (e) {}
+  }
+  let saved = 'a';
+  try { saved = localStorage.getItem('shindo-font') || 'a'; } catch (e) {}
+  pick(/^[a-e]$/.test(saved) ? saved : 'a');
+  buttons.forEach(b => b.addEventListener('click', () => pick(b.dataset.f)));
+})();
+(function () {
+  const ns = 'http://www.w3.org/2000/svg';
+  function add(parent, tag, attrs, text) {
+    const e = document.createElementNS(ns, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    parent.appendChild(e); return e;
+  }
+
+  // The duck, one beat, drawn like the sandbox's Beat view from a real render of the engine
+  // (#beat-data: RK_IT8_Kick_16, a kick whose attack stands above its body, at 130 BPM, Dark
+  // FDN 2, Split 1.1 kHz, quarter-note gates at 1+ (123 ms), Hold ×0.82, Release 105% of the
+  // hold: a 98 ms hold and a 104 ms release). Per pixel min/max of each channel, each scaled to its own peak; the duck's
+  // gain; the hold and release spans in ms.
+  const svg = document.getElementById('scope'), B = JSON.parse(document.getElementById('beat-data').textContent);
+  const W = 720, H = 220, ruler = 18, top = 8, area = H - ruler - top - 4, mid = top + area / 2;
+  const xMs = ms => ms / B.ms * W;
+  const defs = add(svg, 'defs', {});
+  const shade = (from, to, color, op) =>
+    add(svg, 'rect', { x: xMs(from), y: top, width: xMs(to) - xMs(from), height: area, fill: color, 'fill-opacity': op });
+  shade(B.hold[0], B.hold[1], 'var(--scope-hold)', 0.16);
+  shade(B.release[0], B.release[1], 'var(--scope-release)', 0.12);
+  // A channel as a filled outline, the fill fading towards the centre line.
+  const outline = (name, color, alpha) => {
+    const g = add(defs, 'linearGradient', { id: 'g-' + name, x1: 0, y1: 0, x2: 0, y2: 1 });
+    add(g, 'stop', { offset: 0, 'stop-color': color });
+    add(g, 'stop', { offset: 0.5, 'stop-color': color, 'stop-opacity': 0.33 });
+    add(g, 'stop', { offset: 1, 'stop-color': color });
+    const [hi, lo] = B[name];
+    let d = '';
+    for (let x = 0; x < W; x++) d += (x ? 'L' : 'M') + x + ' ' + (mid - hi[x] * area / 2).toFixed(1);
+    for (let x = W - 1; x >= 0; x--) d += 'L' + x + ' ' + (mid - lo[x] * area / 2).toFixed(1);
+    add(svg, 'path', { d: d + 'Z', fill: `url(#g-${name})`, 'fill-opacity': alpha, stroke: color,
+                       'stroke-opacity': Math.min(1, alpha + 0.3), 'stroke-width': 1 });
+  };
+  outline('kick', 'var(--scope-kick)', 0.55);
+  outline('rumble', 'var(--scope-rumble)', 0.45);
+  outline('texture', 'var(--scope-texture)', 0.4);
+  let d = '';
+  B.gain.forEach((v, x) => { d += (x ? 'L' : 'M') + x + ' ' + (top + (1 - v) * area).toFixed(1); });
+  add(svg, 'path', { d, fill: 'none', stroke: 'var(--scope-ink)', 'stroke-width': 1.5 });
+  // hold and release labels, on top of the waveforms
+  const label = (x, y, text) => add(svg, 'text', { x, y, class: 'tag', 'paint-order': 'stroke' }, text);
+  label(xMs(B.hold[0]) + 6, top + 16, `hold ${Math.round(B.hold[1] - B.hold[0])} ms`);
+  label(xMs(B.release[0]) + 6, top + 34, `release ${Math.round(B.release[1] - B.release[0])} ms`);
+  // millisecond ruler
+  for (let ms = 0; ms <= B.ms; ms += 10) {
+    const x = xMs(ms) + 0.5, major = ms % 100 === 0;
+    add(svg, 'line', { x1: x, x2: x, y1: H - ruler, y2: H - ruler + (major ? 7 : 3), stroke: 'var(--scope-line)' });
+    if (major && ms > 0) add(svg, 'text', { x: x + 3, y: H - 3 }, `${ms} ms`);
+  }
+
+  // Panel callouts: [number, side, callout y, target x, target y, target radius, elbow]
+  const co = document.getElementById('callouts');
+  const L = -17, R = 67.5;
+  [
+    [1, L, 18.5, 7.77, 18.53, 5.4], [3, L, 30, 25.17, 28.69, 5.4], [2, L, 39.5, 7.77, 39.49, 5.4],
+    [4, L, 49.3, 25.17, 49.33, 5.4], [8, L, 57.9, 6.9, 57.9, 0], [9, L, 67.4, 6.9, 67.4, 0],
+    [12, L, 88, 5.23, 83.3, 3.3], [14, L, 108, 5.23, 111.24, 3.3], [15, L, 121.5, 18.57, 111.24, 3.3, true],
+    [5, R, 18.5, 43.33, 18.53, 5.4], [11, R, 28, 34.44, 19.8, 1.4, true], [6, R, 39.5, 43.33, 39.49, 5.4],
+    [7, R, 60.4, 43.33, 60.44, 5.4], [10, R, 71, 26.18, 69.33, 2.8],
+    [13, R, 97.3, 44.6, 97.27, 3.3], [16, R, 105.5, 31.9, 111.24, 3.3, true], [17, R, 119, 44.6, 111.24, 3.3],
+  ].forEach(([n, x, y, tx, ty, tr, elbow]) => {
+    const r = 3.2, dir = Math.sign(tx - x), sx = x + dir * r;
+    let ex, ey;
+    if (elbow) {
+      ex = tx; ey = ty + Math.sign(y - ty) * tr;
+      add(co, 'polyline', { points: `${sx},${y} ${tx},${y} ${ex},${ey}`, fill: 'none' });
+    } else {
+      const dx = tx - sx, dy = ty - y, len = Math.hypot(dx, dy);
+      ex = tx - dx / len * tr; ey = ty - dy / len * tr;
+      add(co, 'line', { x1: sx, y1: y, x2: ex, y2: ey });
+    }
+    add(co, 'circle', { class: 'dot', cx: ex, cy: ey, r: 0.55 });
+    add(co, 'circle', { cx: x, cy: y, r });
+    add(co, 'text', { x, y: y + 1.2, 'text-anchor': 'middle' }, n);
+  });
+})();
+</script>
+  </body>
+</html>
