@@ -154,20 +154,20 @@ ul.features ul.sub3 b { display: inline; color: var(--ink); font-weight: 500; }
 .legend .lk { color: var(--kick); } .legend .lr { color: var(--rumble); } .legend .ld { color: var(--duck); }
 
 /* Listen */
-.player .ptop { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.player button { font: 600 0.8rem var(--mono); letter-spacing: 0.08em; color: #ffffff; background: #d6000f; border: 0; padding: 8px 18px; cursor: pointer; }
-.player button:hover { background: #ff3d33; }
-.player .pname { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.06em; color: var(--scope-ink); }
-.player .ptime { margin-left: auto; font-family: var(--mono); font-size: 0.8rem; color: var(--scope-muted); font-variant-numeric: tabular-nums; }
-#demo-wave { cursor: pointer; }
 .presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 720px) { .presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.presets.demos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 720px) { .presets.demos { grid-template-columns: 1fr; } }
 .preset { background: var(--panel); border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .preset b { font-family: var(--body); font-weight: 700; font-size: 1.1rem; }
 .preset .d { color: var(--muted); font-size: 0.9rem; }
 .seg { display: inline-flex; border: 1px solid var(--line); overflow: hidden; align-self: flex-start; }
-.seg button { font: 600 0.8rem var(--mono); color: var(--muted); background: none; border: 0; padding: 5px 10px; cursor: not-allowed; }
+.seg button { font: 600 0.8rem var(--mono); color: var(--muted); background: none; border: 0; padding: 5px 10px; cursor: pointer; }
 .seg button + button { border-left: 1px solid var(--line); }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--red); color: var(--on-red); }
+.demo-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.demo .pl { font: 600 0.8rem var(--mono); letter-spacing: 0.08em; color: var(--on-red); background: var(--red); border: 0; padding: 7px 16px; cursor: pointer; }
 
 /* Signal flow */
 .flowwrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); padding: 12px; }
@@ -307,26 +307,34 @@ footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--mute
   <!-- ============ LISTEN ============ -->
   <section id="listen" aria-labelledby="listen-h">
     <h2 id="listen-h">Listen</h2>
-    <p>A first render from the engine: two bars of the <span class="k">kick</span> alone, four bars with the <span class="r">rumble</span> underneath, then the rumble on its own, ringing out on the feedback. Click the waveform to jump around.</p>
-    <div class="box scope player">
-      <div class="ptop">
-        <button id="demo-play" type="button" aria-label="Play the demo">PLAY</button>
-        <span class="pname">RK IT6 Kick 05 · 136 BPM · Mutable engine</span>
-        <span class="ptime" id="demo-time">0:00 / 0:22</span>
+    <p>First renders from the engine. Pick a layer and it loops until you stop it: the <span class="k">kick</span> alone, the kick with the <span class="r">rumble</span> under it, or the rumble on its own. Switching layers mid-play keeps the groove running.</p>
+    <div class="presets demos">
+      <div class="preset demo" data-demo="d1">
+        <b>Demo 1</b>
+        <span class="d">136 BPM · Mutable engine</span>
+        <div class="demo-controls">
+          <button class="pl" type="button" aria-label="Play Demo 1">PLAY</button>
+          <div class="seg" role="group" aria-label="Demo 1: layer">
+            <button type="button" data-sec="kick" aria-pressed="false">Kick</button>
+            <button type="button" data-sec="mix" aria-pressed="false">Kick + Rumble</button>
+            <button type="button" data-sec="rum" aria-pressed="false">Rumble</button>
+          </div>
+        </div>
       </div>
-      <svg id="demo-wave" viewBox="0 0 720 150" role="img" aria-label="Waveform of the demo: two bars of kick, four bars of kick with rumble, then the rumble alone ringing out. Click to seek."></svg>
-      <script type="application/json" id="demo-data" is:inline>{"dur":21.917,"bpm":136,"bar":1.76471,"sections":[[0,2,"KICK"],[2,6,"KICK + RUMBLE"],[6,12.42,"RUMBLE"]],"hi":[71,75,83,89,87,80,72,47,21,0,0,0,0,0,63,75,80,87,89,86,80,64,26,4,0,0,0,0,0,71,75,83,89,87,80,72,47,20,0,0,0,0,0,63,75,80,87,89,86,80,64,26,3,0,0,0,0,19,71,75,83,89,87,80,72,47,16,0,0,0,0,0,63,75,80,87,89,86,80,64,26,3,0,0,0,0,26,71,75,83,89,87,80,72,47,11,0,0,0,0,0,63,75,80,87,89,86,80,64,26,3,0,0,0,0,55,68,74,87,90,91,85,90,71,32,34,30,27,49,27,67,74,83,90,93,82,91,72,68,28,38,37,53,22,54,69,78,91,93,89,85,96,66,13,12,15,16,30,17,66,76,88,91,90,85,96,71,70,41,43,36,52,30,54,70,79,87,91,86,91,77,69,33,44,28,38,43,32,68,74,84,88,93,90,98,77,63,33,27,35,46,27,47,68,78,85,91,90,94,78,72,12,12,11,12,27,18,68,72,83,91,90,86,88,72,66,22,30,38,51,34,55,68,84,93,92,90,88,87,69,37,31,36,34,55,22,68,77,85,91,91,85,95,75,68,37,38,39,54,29,56,66,79,87,88,82,93,74,68,9,14,12,23,29,19,65,73,87,84,87,88,89,72,65,44,40,34,46,31,57,69,80,89,89,82,90,75,67,29,37,27,39,44,34,65,73,89,86,89,91,86,75,63,34,37,35,49,36,55,71,80,86,91,86,95,75,73,10,11,12,25,22,17,65,74,84,88,91,89,82,75,62,32,31,28,49,29,23,10,10,8,10,8,15,27,41,36,33,37,51,43,38,17,10,8,11,12,17,27,25,44,26,32,41,50,27,23,12,10,12,13,13,22,26,20,11,12,16,29,17,19,12,12,10,10,14,20,24,24,41,45,37,30,56,31,25,11,9,9,12,18,19,24,33,31,44,25,44,25,33,33,9,11,10,14,22,18,24,42,39,30,33,46,30,38,9,9,8,12,12,16,30,25,8,14,10,25,14,21,18,9,10,11,9,18,24,27,35,27,32,32,50,28,24,43,26,25,30,26,33,28,24,32,28,30,25,18,14,21,26,18,19,26,15,29,21,21,18,17,17,21,12,20,24,13,16,11,15,13,14,17,20,16,10,14,11,12,15,14,8,11,13,15,9,11,12,11,13,8,8,10,7,11,9,8,8,9,7,7,8,7,7,9,8,7,8,6,6,7,6,7,7,6,5,5,5,5,4,7,7,4,6,4,5,4,3,3,6,4,4,4,3,4,4,5,4,4,4,3,4,4,3,3,3,4,4,2,3,2,3,4,3,2,3,3,2,3,3,2,4,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,2,1,1,1,1,2,2,2,2,2,2,1,1,1,2,2,2,2,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"lo":[-82,-76,-86,-89,-89,-78,-68,-54,-18,0,0,0,0,0,-82,-73,-81,-88,-89,-89,-77,-57,-32,-2,0,0,0,0,-23,-82,-76,-86,-89,-89,-78,-68,-51,-18,0,0,0,0,0,-82,-73,-81,-88,-89,-89,-77,-57,-32,-2,0,0,0,0,-57,-82,-76,-86,-89,-89,-78,-68,-48,-18,0,0,0,0,0,-82,-73,-81,-88,-89,-89,-77,-57,-32,-2,0,0,0,0,-57,-82,-76,-86,-89,-89,-78,-68,-45,-18,0,0,0,0,0,-82,-73,-81,-88,-89,-89,-77,-57,-31,-2,0,0,0,0,-56,-84,-84,-88,-90,-99,-90,-87,-58,-48,-31,-34,-31,-28,-21,-82,-75,-86,-93,-97,-89,-88,-61,-43,-29,-31,-40,-36,-24,-52,-81,-86,-91,-97,-95,-90,-81,-40,-25,-9,-15,-20,-14,-20,-81,-76,-87,-91,-94,-90,-93,-74,-45,-39,-29,-35,-39,-34,-55,-82,-86,-91,-94,-98,-85,-86,-49,-46,-38,-27,-36,-27,-29,-81,-72,-85,-96,-99,-92,-92,-74,-46,-32,-34,-29,-33,-34,-81,-72,-83,-88,-94,-99,-85,-90,-42,-25,-8,-11,-18,-19,-17,-85,-77,-85,-88,-100,-94,-88,-63,-39,-32,-27,-35,-33,-26,-85,-73,-85,-90,-96,-93,-91,-83,-56,-45,-28,-45,-35,-31,-27,-78,-75,-89,-91,-96,-92,-90,-61,-46,-31,-30,-33,-35,-32,-75,-75,-85,-89,-90,-97,-91,-87,-43,-27,-9,-13,-19,-19,-19,-81,-75,-87,-89,-98,-89,-87,-77,-46,-36,-31,-40,-37,-31,-84,-74,-85,-91,-95,-98,-85,-89,-52,-49,-28,-31,-37,-29,-28,-85,-76,-87,-91,-99,-92,-88,-78,-49,-32,-31,-27,-33,-30,-83,-71,-83,-89,-93,-98,-87,-92,-40,-25,-13,-10,-16,-16,-17,-83,-74,-83,-92,-97,-87,-93,-63,-48,-29,-31,-30,-29,-25,-20,-11,-10,-7,-10,-13,-22,-21,-38,-29,-24,-32,-32,-27,-25,-23,-8,-10,-10,-13,-17,-23,-33,-35,-25,-41,-40,-35,-20,-31,-9,-11,-9,-13,-13,-23,-18,-16,-10,-11,-15,-18,-16,-20,-14,-10,-12,-12,-13,-31,-21,-30,-44,-39,-27,-32,-39,-29,-30,-11,-10,-8,-11,-16,-25,-22,-35,-39,-37,-31,-34,-33,-29,-30,-12,-8,-11,-13,-24,-24,-29,-35,-36,-28,-23,-33,-30,-26,-11,-8,-7,-12,-15,-27,-22,-16,-8,-8,-10,-17,-18,-18,-19,-8,-9,-10,-10,-22,-24,-28,-38,-26,-35,-32,-33,-29,-21,-37,-31,-22,-28,-28,-31,-29,-34,-23,-24,-28,-21,-14,-20,-21,-25,-27,-17,-20,-14,-21,-13,-22,-21,-18,-17,-22,-16,-18,-16,-14,-16,-10,-15,-11,-16,-16,-12,-19,-10,-16,-13,-12,-11,-11,-9,-13,-14,-11,-16,-7,-10,-13,-12,-12,-8,-8,-9,-9,-8,-9,-9,-12,-8,-6,-10,-8,-8,-6,-7,-8,-8,-6,-6,-6,-7,-4,-7,-6,-4,-6,-5,-5,-4,-5,-7,-5,-5,-6,-6,-4,-5,-4,-6,-4,-4,-4,-4,-4,-4,-4,-3,-4,-4,-3,-4,-3,-3,-4,-4,-3,-3,-4,-3,-3,-3,-3,-2,-4,-1,-2,-3,-2,-3,-3,-3,-3,-2,-3,-2,-2,-2,-3,-2,-2,-2,-2,-1,-2,-3,-1,-1,-2,-1,-1,-1,-2,-2,-2,-2,-2,-2,-2,-1,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-2,-1,-1,-1,-2,-1,-1,-1,-1,-2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,0,-1,-1,0,-1,-1,0,-1,-1,-1,-1,0,0,0,0,0,0,0,0,-1,0,0,-1,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}</script>
-      <audio id="demo-audio" src="/audio/shindo-demo-1.m4a" preload="metadata"></audio>
+      <div class="preset demo" data-demo="d2">
+        <b>Demo 2</b>
+        <span class="d">132 BPM</span>
+        <div class="demo-controls">
+          <button class="pl" type="button" aria-label="Play Demo 2">PLAY</button>
+          <div class="seg" role="group" aria-label="Demo 2: layer">
+            <button type="button" data-sec="kick" aria-pressed="false">Kick</button>
+            <button type="button" data-sec="mix" aria-pressed="false">Kick + Rumble</button>
+            <button type="button" data-sec="rum" aria-pressed="false">Rumble</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <p class="note">Settings: predelay 158 ms · smear 0.73 · color 0.70 · drive 0.35, tape · duck depth 0.69 · release 194 ms, swell · feedback 0.20. Rendered by an early version of the engine, rumble output only — the current engine sounds different and adds the texture split.</p>
-    <p>Each preset below will play in three versions that stay in sync: the <span class="k">kick</span> alone, the <span class="r">rumble</span> alone, and the two mixed. Switch between them while it plays to hear what Shindo Versio adds.</p>
-    <div class="presets">
-      <div class="preset"><b>Rolling</b><span class="d">Mutable plate, predelay repeats stacked with Feedback.</span><div class="seg" role="group" aria-label="Rolling: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
-      <div class="preset"><b>Deep</b><span class="d">Dark FDN 1, Out 1, Split low: a sub that breathes with the kick.</span><div class="seg" role="group" aria-label="Deep: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
-      <div class="preset"><b>Texture</b><span class="d">Dark FDN 2, Out 2: a moving mid-range wash.</span><div class="seg" role="group" aria-label="Texture: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
-      <div class="preset"><b>Triplet</b><span class="d">Predelay on a dotted eighth: repeats drift 3 against 4.</span><div class="seg" role="group" aria-label="Triplet: version"><button disabled>Kick</button><button disabled>Rumble</button><button disabled>Mix</button></div></div>
-    </div>
-    <p class="note"><span class="todo">Coming</span> The recordings are made once the sound is final, from the same engine that runs on the module.</p>
+    <p class="note"><span class="todo">Coming</span> More presets, recorded once the sound is final, from the same engine that runs on the module.</p>
   </section>
 
   <!-- ============ SIGNAL FLOW ============ -->
@@ -724,60 +732,83 @@ footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--mute
   });
 })();
 
-// Demo player: waveform from precomputed peaks (#demo-data), section shading, click to seek.
+// Demo players: each card loops one bar-aligned window of its render (Web Audio,
+// gapless), and switching layers mid-play jumps to the same phase in the new window.
 (function () {
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.getElementById('demo-wave');
-  if (!svg) return;
-  const D = JSON.parse(document.getElementById('demo-data').textContent);
-  const audio = document.getElementById('demo-audio');
-  const btn = document.getElementById('demo-play');
-  const timeEl = document.getElementById('demo-time');
-  const W = 720, H = 150, ruler = 18, top = 20, area = H - ruler - top - 4, mid = top + area / 2;
-  const xSec = s => s / D.dur * W;
-  function add(tag, attrs, text) {
-    const e = document.createElementNS(ns, tag);
-    for (const k in attrs) e.setAttribute(k, attrs[k]);
-    if (text != null) e.textContent = text;
-    svg.appendChild(e); return e;
+  const cards = document.querySelectorAll('.demo');
+  if (!cards.length) return;
+  const DEMOS = {
+    d1: { src: '/audio/shindo-demo-1.m4a', bar: 240 / 136, secs: { kick: [0, 2], mix: [2, 6], rum: [6, 8] } },
+    d2: { src: '/audio/shindo-demo-2.m4a', bar: 240 / 132, secs: { kick: [0, 2], mix: [2, 6], rum: [6, 8] } },
+  };
+  const FADE = 0.012;
+  let ctx = null, cur = null, seq = 0;
+  const buffers = {};
+  async function buffer(id) {
+    if (!buffers[id]) {
+      const res = await fetch(DEMOS[id].src);
+      buffers[id] = await ctx.decodeAudioData(await res.arrayBuffer());
+    }
+    return buffers[id];
   }
-  const secFill = { 'KICK': 'var(--scope-kick)', 'KICK + RUMBLE': 'var(--scope-rumble)', 'RUMBLE': 'var(--scope-rumble)' };
-  D.sections.forEach(([b0, b1, name]) => {
-    const x0 = xSec(b0 * D.bar), x1 = Math.min(xSec(b1 * D.bar), W);
-    add('rect', { x: x0, y: top, width: x1 - x0, height: area, fill: secFill[name],
-                  'fill-opacity': name === 'KICK + RUMBLE' ? 0.06 : 0.13 });
-    add('text', { x: x0 + 6, y: top - 7, class: 'tag', 'paint-order': 'stroke' }, name);
-  });
-  let d = '';
-  for (let x = 0; x < W; x++) d += (x ? 'L' : 'M') + x + ' ' + (mid - D.hi[x] / 100 * area / 2).toFixed(1);
-  for (let x = W - 1; x >= 0; x--) d += 'L' + x + ' ' + (mid - D.lo[x] / 100 * area / 2).toFixed(1);
-  add('path', { d: d + 'Z', fill: 'var(--scope-ink)', 'fill-opacity': 0.75 });
-  for (let b = 0; b * D.bar <= D.dur; b++) {
-    const x = xSec(b * D.bar) + 0.5, major = b % 4 === 0;
-    add('line', { x1: x, x2: x, y1: H - ruler, y2: H - ruler + (major ? 7 : 3), stroke: 'var(--scope-line)' });
-    if (major && b > 0) add('text', { x: x + 3, y: H - 3 }, 'bar ' + b);
+  const win = (id, sec) => DEMOS[id].secs[sec].map(b => b * DEMOS[id].bar);
+  function pos() {
+    const [s, e] = win(cur.id, cur.sec), len = e - s;
+    let x = cur.startOff + (ctx.currentTime - cur.startT);
+    if (x > e) x = s + ((x - s) % len);
+    return x;
   }
-  const ph = add('line', { x1: 0, x2: 0, y1: top, y2: top + area, stroke: 'var(--scope-ink)', 'stroke-width': 1.5, opacity: 0 });
-  const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
-  function tick() {
-    const t = Math.min(audio.currentTime, D.dur);
-    ph.setAttribute('x1', xSec(t)); ph.setAttribute('x2', xSec(t));
-    ph.setAttribute('opacity', 1);
-    timeEl.textContent = fmt(t) + ' / ' + fmt(D.dur);
-    if (!audio.paused) requestAnimationFrame(tick);
+  function stop() {
+    if (!cur) return;
+    const now = ctx.currentTime;
+    cur.gain.gain.setValueAtTime(cur.gain.gain.value, now);
+    cur.gain.gain.linearRampToValueAtTime(0, now + FADE);
+    cur.node.stop(now + FADE + 0.01);
+    cur = null;
+    paint();
   }
-  btn.addEventListener('click', () => {
-    if (audio.paused) {
-      if (audio.ended || audio.currentTime >= D.dur - 0.05) audio.currentTime = 0;
-      audio.play();
-    } else audio.pause();
-  });
-  audio.addEventListener('play', () => { btn.textContent = 'STOP'; requestAnimationFrame(tick); });
-  audio.addEventListener('pause', () => { btn.textContent = 'PLAY'; });
-  svg.addEventListener('click', (e) => {
-    const r = svg.getBoundingClientRect();
-    audio.currentTime = Math.max(0, Math.min(D.dur - 0.01, (e.clientX - r.left) / r.width * D.dur));
-    tick();
+  async function play(id, sec) {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') await ctx.resume();
+    let offset = null;
+    if (cur && cur.id === id && cur.sec !== sec) {
+      const [cs] = win(id, cur.sec), [ns, ne] = win(id, sec);
+      offset = ns + ((pos() - cs) % (ne - ns));
+    }
+    const mySeq = ++seq;
+    const buf = await buffer(id);
+    if (mySeq !== seq) return;
+    stop();
+    const [s, e] = win(id, sec);
+    const node = ctx.createBufferSource(), gain = ctx.createGain();
+    node.buffer = buf; node.loop = true; node.loopStart = s; node.loopEnd = e;
+    node.connect(gain); gain.connect(ctx.destination);
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(1, now + FADE);
+    const off = offset == null ? s : offset;
+    node.start(now, off);
+    cur = { id, sec, node, gain, startT: now, startOff: off };
+    paint();
+  }
+  function paint() {
+    cards.forEach(card => {
+      const mine = cur && cur.id === card.dataset.demo;
+      card.querySelector('.pl').textContent = mine ? 'STOP' : 'PLAY';
+      card.querySelectorAll('.seg button').forEach(b =>
+        b.setAttribute('aria-pressed', String(!!mine && b.dataset.sec === cur.sec)));
+    });
+  }
+  cards.forEach(card => {
+    const id = card.dataset.demo;
+    card.querySelector('.pl').addEventListener('click', () => {
+      if (cur && cur.id === id) { seq++; stop(); } else play(id, 'mix');
+    });
+    card.querySelectorAll('.seg button').forEach(b =>
+      b.addEventListener('click', () => {
+        if (cur && cur.id === id && cur.sec === b.dataset.sec) { seq++; stop(); }
+        else play(id, b.dataset.sec);
+      }));
   });
 })();
 </script>
