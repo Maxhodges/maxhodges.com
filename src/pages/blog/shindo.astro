@@ -116,8 +116,9 @@ section, header { display: flex; flex-direction: column; gap: 24px; }
 .title { display: grid; grid-template-columns: 1fr auto; gap: 10px 22px; align-items: end; }
 .title h1 { grid-column: 1; grid-row: 1; }
 .title .tagline { grid-column: 1; grid-row: 2; font-family: var(--mono); font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; }
-.kanji { grid-column: 2; grid-row: 1 / span 2; align-self: start; font-family: var(--kanji); font-weight: 900; color: var(--red); font-size: clamp(3.4rem, 13vw, 7rem); line-height: 0.9; text-align: right; }
-.kanji small { display: block; font-size: 0.22em; letter-spacing: 0.3em; margin-top: 0.9em; margin-right: -0.3em; font-weight: 900; }
+.kanji { grid-column: 2; grid-row: 1 / span 2; align-self: start; justify-self: end; width: fit-content; font-family: var(--kanji); font-weight: 900; color: var(--red); font-size: clamp(3.4rem, 13vw, 7rem); line-height: 0.9; }
+/* ヴェルシオ justified to the exact width of 震度 above it (均等割付) */
+.kanji small { display: block; font-size: 0.22em; margin-top: 0.9em; font-weight: 900; text-align: justify; text-align-last: justify; }
 @media (max-width: 520px) { .kanji { font-size: 3rem; } }
 
 /* Features follows straight on from the intro: no section rule. */
