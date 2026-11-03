@@ -2,17 +2,10 @@
 // Interactive blog article: concept page for the Shindo Versio firmware.
 // Deliberately standalone (no SiteLayout/Tailwind) to keep the piece's
 // own art direction; fonts are self-hosted like the rest of the site.
-// The A–E typeface picker needs every pairing's family shipped.
-import "@fontsource/archivo-black";
-import "@fontsource-variable/archivo";
 import "@fontsource-variable/big-shoulders-display";
 import "@fontsource/barlow/400.css";
 import "@fontsource/barlow/500.css";
 import "@fontsource/barlow/700.css";
-import "@fontsource-variable/schibsted-grotesk";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource/saira-stencil-one";
-import "@fontsource-variable/saira";
 import "@fontsource/noto-sans-jp/900.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "@fontsource/ibm-plex-mono/600.css";
@@ -67,10 +60,9 @@ const ogImage = new URL(
   --scope-bg: #121110; --scope-ink: #ece8e2; --scope-muted: #9a948b; --scope-line: #3a3632;
   --scope-kick: #3ef07a; --scope-rumble: #ff3ea5; --scope-texture: #ffb000;
   --scope-hold: #3b82f6; --scope-release: #a855f7;
-  /* Typeface pairings, picked with the A–E selector in the maker strip (A is the default). */
-  --display: "Archivo Black", "Arial Black", Impact, system-ui, sans-serif;
-  --dw: 400;
-  --body: "Archivo Variable", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --display: "Big Shoulders Display Variable", "Arial Narrow", Impact, sans-serif;
+  --dw: 700;
+  --body: "Barlow", "Helvetica Neue", Arial, system-ui, sans-serif;
   --kanji: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   color-scheme: light;
@@ -85,10 +77,6 @@ const ogImage = new URL(
   --bg: #111213; --panel: #191a1c; --ink: #f0f0ee; --muted: #9b9ea2; --line: #2f3134;
   --red: #ff3d33; --duck: #a9acb0; --on-red: #111213; color-scheme: dark;
 }
-:root[data-font="b"] { --display: "Big Shoulders Display Variable", "Arial Narrow", Impact, sans-serif; --dw: 900; --body: "Barlow", "Helvetica Neue", Arial, sans-serif; }
-:root[data-font="c"] { --display: "Schibsted Grotesk Variable", "Helvetica Neue", Arial, sans-serif; --dw: 900; --body: "Schibsted Grotesk Variable", "Helvetica Neue", Arial, sans-serif; }
-:root[data-font="d"] { --display: "JetBrains Mono Variable", ui-monospace, Menlo, monospace; --dw: 800; --body: "JetBrains Mono Variable", ui-monospace, Menlo, monospace; }
-:root[data-font="e"] { --display: "Saira Stencil One", Impact, sans-serif; --dw: 400; --body: "Saira Variable", "Helvetica Neue", Arial, sans-serif; }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
@@ -97,16 +85,16 @@ body {
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 img { max-width: 100%; }
-main { max-width: 1040px; margin: 0 auto; padding-block: 28px 72px; display: flex; flex-direction: column; gap: 64px; }
+main { max-width: 1040px; margin: 0 auto; padding-block: 36px 96px; display: flex; flex-direction: column; gap: 96px; }
 h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.1; }
 h1 { font-family: var(--display); font-weight: var(--dw); font-size: clamp(2.6rem, 9vw, 5.2rem); letter-spacing: 0; line-height: 0.92; text-transform: uppercase; }
-h2 { font-family: var(--body); font-size: 1.6rem; font-weight: 700; padding-top: 10px; border-top: 3px solid var(--ink); }
+h2 { font-family: var(--body); font-size: 1.6rem; font-weight: 700; padding-top: 14px; border-top: 1px solid var(--ink); }
 h3 { font-family: var(--body); font-size: 1.12rem; font-weight: 700; }
 h4 { margin: 0; font-family: var(--mono); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 p { margin: 0; max-width: 68ch; }
 a { color: var(--red); }
 .eyebrow { font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-section, header { display: flex; flex-direction: column; gap: 16px; }
+section, header { display: flex; flex-direction: column; gap: 24px; }
 .lede { font-size: 1.18rem; }
 .lede b { color: var(--red); }
 .k { color: var(--kick); font-weight: 700; }
@@ -125,22 +113,17 @@ section, header { display: flex; flex-direction: column; gap: 16px; }
 .maker { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid var(--ink); }
 .maker b { font-weight: 600; }
 .maker > span { color: var(--muted); }
-.fontpick { display: flex; align-items: center; gap: 4px; }
-.fontpick span { color: var(--muted); margin-right: 4px; }
-.fontpick button { font: 600 0.72rem var(--mono); color: var(--ink); background: none; border: 1px solid var(--line); width: 24px; height: 22px; padding: 0; cursor: pointer; }
-.fontpick button[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: var(--on-red); }
-.title { display: grid; grid-template-columns: 1fr auto; gap: 6px 22px; align-items: end; }
+.title { display: grid; grid-template-columns: 1fr auto; gap: 10px 22px; align-items: end; }
 .title h1 { grid-column: 1; grid-row: 1; }
 .title .tagline { grid-column: 1; grid-row: 2; font-family: var(--mono); font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; }
-.kanji { grid-column: 2; grid-row: 1 / span 2; align-self: start; font-family: var(--kanji); font-weight: 900; color: var(--red); font-size: clamp(3.4rem, 13vw, 7rem); line-height: 0.9; }
-@media (max-width: 520px) { .kanji { font-size: 3rem; } }
+.kanji { grid-column: 2; grid-row: 1 / span 2; align-self: start; font-family: var(--kanji); font-weight: 900; color: var(--red); font-size: clamp(2.2rem, 6vw, 3.9rem); line-height: 1; text-align: right; white-space: nowrap; }
+@media (max-width: 520px) { .kanji { font-size: 1.9rem; } }
 
-/* Features follows straight on from the intro: no section rule, less space above. */
-#features { margin-top: -28px; }
+/* Features follows straight on from the intro: no section rule. */
 #features h2 { border-top: 0; padding-top: 0; }
 /* Hero: text left, the module straight on at the right. */
 .hero { display: grid; grid-template-columns: minmax(0, 1fr) 130px; gap: 48px; align-items: center; padding-right: 40px; }
-.hero-text { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.hero-text { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
 .hero-panel { margin: 0; }
 .hero-svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.22)); }
 @media (max-width: 720px) { .hero { grid-template-columns: 1fr; } .hero-panel { display: none; } }
@@ -148,8 +131,8 @@ nav.toc { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--mono
 nav.toc a { color: var(--muted); text-decoration: none; }
 nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); }
 
-ul.features { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px 28px; }
-ul.features li { border-left: 3px solid var(--red); padding-left: 12px; min-width: 0; }
+ul.features { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px 28px; }
+ul.features li { border-left: 1.5px solid var(--red); padding-left: 12px; min-width: 0; }
 ul.features b { display: block; }
 ul.features span { color: var(--muted); font-size: 0.95rem; }
 ul.features ul.sub3 { margin: 2px 0 0; padding-left: 18px; color: var(--muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 2px; }
@@ -242,11 +225,11 @@ footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--mute
 <main>
   <!-- ============ OVERVIEW ============ -->
   <header id="overview">
-    <div class="maker"><b>Nippon Industrial Noise</b><div class="fontpick" role="group" aria-label="Typeface"><span>Type</span><button type="button" data-f="a">A</button><button type="button" data-f="b">B</button><button type="button" data-f="c">C</button><button type="button" data-f="d">D</button><button type="button" data-f="e">E</button></div><span>Building New Futures</span></div>
+    <div class="maker"><b>Nippon Industrial Noise</b><span>Building New Futures</span></div>
     <div class="hero">
       <div class="hero-text">
     <div class="title">
-      <div class="kanji" lang="ja" aria-hidden="true">震度</div>
+      <div class="kanji" lang="ja" aria-hidden="true">震度ヴェルシオ</div>
       <h1>Shindo Versio</h1>
       <div class="tagline">Seismic Rumble &amp; Texture Engine</div>
     </div>
@@ -642,19 +625,6 @@ footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--mute
 </main>
 
 <script is:inline>
-// Typeface selector: A–E set data-font on the page root; the pick is remembered per viewer.
-(function () {
-  const root = document.documentElement, buttons = document.querySelectorAll('.fontpick button');
-  function pick(f) {
-    if (f === 'a') delete root.dataset.font; else root.dataset.font = f;
-    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === f)));
-    try { localStorage.setItem('shindo-font', f); } catch (e) {}
-  }
-  let saved = 'a';
-  try { saved = localStorage.getItem('shindo-font') || 'a'; } catch (e) {}
-  pick(/^[a-e]$/.test(saved) ? saved : 'a');
-  buttons.forEach(b => b.addEventListener('click', () => pick(b.dataset.f)));
-})();
 (function () {
   const ns = 'http://www.w3.org/2000/svg';
   function add(parent, tag, attrs, text) {

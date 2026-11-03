@@ -17,22 +17,10 @@ importers:
       '@fontsource-variable/big-shoulders-display':
         specifier: ^5.3.0
         version: 5.3.0
-      '@fontsource-variable/jetbrains-mono':
-        specifier: ^5.3.0
-        version: 5.3.0
       '@fontsource-variable/martian-mono':
         specifier: ^5.3.0
         version: 5.3.0
       '@fontsource-variable/oxanium':
-        specifier: ^5.3.0
-        version: 5.3.0
-      '@fontsource-variable/saira':
-        specifier: ^5.3.0
-        version: 5.3.0
-      '@fontsource-variable/schibsted-grotesk':
-        specifier: ^5.3.0
-        version: 5.3.0
-      '@fontsource/archivo-black':
         specifier: ^5.3.0
         version: 5.3.0
       '@fontsource/barlow':
@@ -44,9 +32,6 @@ importers:
       '@fontsource/noto-sans-jp':
         specifier: ^5.3.1
         version: 5.3.1
-      '@fontsource/saira-stencil-one':
-        specifier: ^5.3.0
-        version: 5.3.0
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(vite@6.4.1(@types/node@24.19.2)(jiti@2.6.1)(lightningcss@1.30.2))
@@ -277,23 +262,11 @@ packages:
   '@fontsource-variable/big-shoulders-display@5.3.0':
     resolution: {integrity: sha512-7k1REXMZFEa7gSWOURbmCJW5Gv9D0EbEFQgosZidM8Ob/qpPlK96vqyIzCTnNZ/C0XFZWxeKU53D3QdeHctYCA==}
 
-  '@fontsource-variable/jetbrains-mono@5.3.0':
-    resolution: {integrity: sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw==}
-
   '@fontsource-variable/martian-mono@5.3.0':
     resolution: {integrity: sha512-0wVODx9ILwNnaYC4XCuSaFRYtj1Prd89MRVaSuv2ng6zLiQkS4SepaWEPefs7vqCZS8sbEOA8jb/4F5KNMnGdg==}
 
   '@fontsource-variable/oxanium@5.3.0':
     resolution: {integrity: sha512-oVOH5mHRMDLQsxG6h2XAOCxyD+uQL2w5zAjy1FgnAlqt183JDVGPxy9FWK7dDnhEO8huXfP6V2C3QJUj1Ac/Sw==}
-
-  '@fontsource-variable/saira@5.3.0':
-    resolution: {integrity: sha512-C1rm7n1OuEx4Se/SAB/5EeUuCviGFFnYTr5vxuQQm2YIOfgbQWx/P6qqhdXlVCBRm/1UzNWCtDK5jNbVmO6W2w==}
-
-  '@fontsource-variable/schibsted-grotesk@5.3.0':
-    resolution: {integrity: sha512-ndS6H/KICWANchlHF3q4UdZD+xrZ3Ji0rUobIuXlgvDUzDfqZDsVuXPXZb636nJZMHE9zZ9Fmwgqazm8hMB50Q==}
-
-  '@fontsource/archivo-black@5.3.0':
-    resolution: {integrity: sha512-7EsTIQ+Blf96ktpzTUpI7msi+u9/AJxM/GZxOSkEubVd1jSTrFSTNxMgfpX/8rQsjZ+19a+qvRbtcTEp5J/72g==}
 
   '@fontsource/barlow@5.3.0':
     resolution: {integrity: sha512-tGR0y6QObRtKv71MOth44222+mdNFM/ZWFWDV1VLzNbG4oK9PNRlyJzmkck4vHAi9ibHBXgt4SlY51amFP55CA==}
@@ -303,9 +276,6 @@ packages:
 
   '@fontsource/noto-sans-jp@5.3.1':
     resolution: {integrity: sha512-9NNBB/M9PextLYVXGSfIaLZsPnrt5UDw8g2B6T0M775H2yb/oekApSjuS1XKOP7FPcMMEnTavR5rJGDM66qKtA==}
-
-  '@fontsource/saira-stencil-one@5.3.0':
-    resolution: {integrity: sha512-b7ILM7KrAWTIUSWKuzV29lTQZV5QOGhlmXXEt3Dsg/rJ4lo1kjUjuo6dBG9Iq+pR7wRZCVXftinVHDof+i9nSA==}
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -1953,25 +1923,15 @@ snapshots:
 
   '@fontsource-variable/big-shoulders-display@5.3.0': {}
 
-  '@fontsource-variable/jetbrains-mono@5.3.0': {}
-
   '@fontsource-variable/martian-mono@5.3.0': {}
 
   '@fontsource-variable/oxanium@5.3.0': {}
-
-  '@fontsource-variable/saira@5.3.0': {}
-
-  '@fontsource-variable/schibsted-grotesk@5.3.0': {}
-
-  '@fontsource/archivo-black@5.3.0': {}
 
   '@fontsource/barlow@5.3.0': {}
 
   '@fontsource/ibm-plex-mono@5.3.0': {}
 
   '@fontsource/noto-sans-jp@5.3.1': {}
-
-  '@fontsource/saira-stencil-one@5.3.0': {}
 
   '@img/colour@1.0.0': {}
 
